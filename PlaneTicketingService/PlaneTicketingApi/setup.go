@@ -16,7 +16,7 @@ import (
 func SetupPort() string {
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
-		port = "9000"
+		port = "8080"
 	}
 	return port
 }
