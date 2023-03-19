@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"planeTicketing/database"
 	"time"
 )
 
@@ -13,9 +14,10 @@ func main() {
 
 	logger, storeLogger := SetupLoggers()
 
-	db := SetupDb(timeoutContext, storeLogger, logger)
-	defer db.Disconnect(timeoutContext)
+	database.MongoInstance = database.SetupDb(timeoutContext, storeLogger, logger)
+	defer database.MongoInstance.Disconnect(timeoutContext)
 
+	database.OpenCollection(database.MongoInstance, "user")
 	//Distribute all the connections to goroutines
 	server := SetupServer(port, logger)
 

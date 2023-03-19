@@ -1,6 +1,8 @@
 package model
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Ticket struct {
-	Id    uint64
+	Id    primitive.ObjectID
 	Price float64
 }

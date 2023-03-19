@@ -14,10 +14,11 @@ services:
     #Mapping ports
     ports:
       # <port_on_local>:<port_in_machine>
-      - 9000:9000
+      - ${SERVER_PORT}:${SERVER_PORT}
     #Will be accessible through os.Getenv("PORT")
     environment:
-      - PORT=9000
+      - PORT=${SERVER_PORT}
+      - DB_NAME=${DATABASE_NAME}
       # NoSQL: environment variable holding connection URI for Mongo database
       # protocol://username:password@hostname:port
       - MONGO_DB_URI=mongodb://mongo:27017
@@ -38,7 +39,7 @@ services:
     ports:
       - "28000:27017"
     environment:
-      MONGO_INITDB_DATABASE: ticketingDB
+      MONGO_INITDB_DATABASE: ${DATABASE_NAME}
     # Docker healtcheck - checks if database is "alive"
     healthcheck:
       test: echo 'db.runCommand("ping").ok'

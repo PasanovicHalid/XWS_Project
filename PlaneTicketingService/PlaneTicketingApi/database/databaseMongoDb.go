@@ -1,4 +1,4 @@
-package repositories
+package database
 
 import (
 	"context"
@@ -14,9 +14,16 @@ import (
 )
 
 type DatabaseMongoDb struct {
-	cli    *mongo.Client
+	client *mongo.Client
 	logger *log.Logger
 }
+
+type DatabaseCollection struct {
+	Collection *mongo.Collection
+	Logger     *log.Logger
+}
+
+var MongoInstance *DatabaseMongoDb
 
 func NewDb(ctx context.Context, logger *log.Logger) (*DatabaseMongoDb, error) {
 	dburi := os.Getenv("MONGO_DB_URI")
@@ -35,13 +42,13 @@ func NewDb(ctx context.Context, logger *log.Logger) (*DatabaseMongoDb, error) {
 	}
 
 	return &DatabaseMongoDb{
-		cli:    client,
+		client: client,
 		logger: logger,
 	}, nil
 }
 
 func (db *DatabaseMongoDb) Disconnect(ctx context.Context) error {
-	err := db.cli.Disconnect(ctx)
+	err := db.client.Disconnect(ctx)
 	if err != nil {
 		return err
 	}
@@ -53,15 +60,40 @@ func (db *DatabaseMongoDb) Ping() {
 	defer cancel()
 
 	// Check connection -> if no error, connection is established
-	err := db.cli.Ping(ctx, readpref.Primary())
+	err := db.client.Ping(ctx, readpref.Primary())
 	if err != nil {
 		db.logger.Println(err)
 	}
 
 	// Print available databases
-	databases, err := db.cli.ListDatabaseNames(ctx, bson.M{})
+	databases, err := db.client.ListDatabaseNames(ctx, bson.M{})
 	if err != nil {
 		db.logger.Println(err)
 	}
 	fmt.Println(databases)
+}
+
+func OpenCollection(db *DatabaseMongoDb, collectionName string) *DatabaseCollection {
+	dbName := os.Getenv("DB_NAME")
+	if len(dbName) == 0 {
+		dbName = "TicketingDB"
+	}
+
+	collection := db.client.Database(dbName).Collection(collectionName)
+
+	return &DatabaseCollection{
+		Collection: collection,
+		Logger:     db.logger,
+	}
+}
+
+func SetupDb(timeoutContext context.Context, storeLogger *log.Logger, logger *log.Logger) *DatabaseMongoDb {
+	db, err := NewDb(timeoutContext, storeLogger)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	db.Ping()
+
+	return db
 }

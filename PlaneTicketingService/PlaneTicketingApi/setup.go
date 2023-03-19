@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"planeTicketing/controllers"
-	"planeTicketing/repositories"
 	"time"
 
 	gorillaHandlers "github.com/gorilla/handlers"
@@ -25,17 +24,6 @@ func SetupLoggers() (*log.Logger, *log.Logger) {
 	logger := log.New(os.Stdout, "[planeTicketing-api] ", log.LstdFlags)
 	storeLogger := log.New(os.Stdout, "[planeTicketing-store] ", log.LstdFlags)
 	return logger, storeLogger
-}
-
-func SetupDb(timeoutContext context.Context, storeLogger *log.Logger, logger *log.Logger) *repositories.DatabaseMongoDb {
-	db, err := repositories.NewDb(timeoutContext, storeLogger)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	db.Ping()
-
-	return db
 }
 
 func SetupServer(port string, logger *log.Logger) http.Server {
