@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"planeTicketing/constants"
 	"planeTicketing/contracts"
@@ -33,6 +32,11 @@ func SetupUserControllerRoutes(router *mux.Router) {
 	loginRouter := router.Methods(http.MethodPost).Subrouter()
 	loginRouter.HandleFunc("/users/login", Login)
 	loginRouter.Use(MiddlewareLoginDeserialization)
+
+	getRouter := router.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("test"))
+	})
 }
 
 func SignUpCustomer(rw http.ResponseWriter, h *http.Request) {
@@ -98,6 +102,7 @@ func SignUpAdmin(rw http.ResponseWriter, h *http.Request) {
 
 	if err != nil {
 		http.Error(rw, "Something failed while adding admin", http.StatusInternalServerError)
+		UserController.UserCollection.Logger.Panic(err)
 		return
 	}
 
@@ -127,13 +132,20 @@ func Login(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	rw.WriteHeader(http.StatusOK)
+	token, err := services.GenerateToken(foundIdentity.Identity.Username, foundIdentity.Firstname, foundIdentity.Lastname, foundIdentity.Identity.Role, foundIdentity.Identity.Id.String())
 
+	if err != nil {
+		http.Error(rw, "Something failed when generating token", http.StatusInternalServerError)
+		UserController.UserCollection.Logger.Panic(err)
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	rw.Write([]byte(token))
 }
 
 func MiddlewareSignUpDeserialization(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		log.Println("Works")
 		signUpContract := &contracts.SignUpContract{}
 		err := signUpContract.FromJSON(h.Body)
 
@@ -152,7 +164,6 @@ func MiddlewareSignUpDeserialization(next http.Handler) http.Handler {
 
 func MiddlewareLoginDeserialization(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		log.Println("Works")
 		loginContract := &contracts.LoginContract{}
 		err := loginContract.FromJSON(h.Body)
 
