@@ -119,14 +119,16 @@ func Login(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	passwordIsValid, _ := services.VerifyPassword(loginContract.Password, foundIdentity.Identity.Password)
+	passwordIsValid := services.VerifyPassword(loginContract.Password, foundIdentity.Identity.Password)
 	defer cancel()
 
 	if !passwordIsValid {
 		http.Error(rw, "Login credentials are incorrect", http.StatusBadRequest)
 		return
 	}
+
 	rw.WriteHeader(http.StatusOK)
+
 }
 
 func MiddlewareSignUpDeserialization(next http.Handler) http.Handler {
