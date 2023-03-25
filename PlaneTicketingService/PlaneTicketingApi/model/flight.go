@@ -7,11 +7,11 @@ import (
 )
 
 type Flight struct {
-	Id                  primitive.ObjectID
-	StartDateTimeUTC    time.Time
-	EndDateTimeUTC      time.Time
-	DepartureLocation   string
-	DestinationLocation string
-	Price               float64
-	AvailableTickets    []Ticket
+	Id                  primitive.ObjectID `bson:"_id" json:"id"`
+	StartDateTimeUTC    time.Time          `bson:"_id" json:"id"`
+	EndDateTimeUTC      time.Time          `bson:"_id" json:"id"`
+	DepartureLocation   string             `bson:"_id" json:"id"`
+	DestinationLocation string             `bson:"_id" json:"id"`
+	Price               float64            `bson:"_id" json:"id"`
+	AvailableTickets    []Ticket           `bson:"_id" json:"id"`
 }

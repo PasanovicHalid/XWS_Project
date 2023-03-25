@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+
+	SetupSecretKey()
+
 	port := SetupPort()
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -17,7 +20,7 @@ func main() {
 	database.MongoInstance = database.SetupDb(timeoutContext, storeLogger, logger)
 	defer database.MongoInstance.Disconnect(timeoutContext)
 
-	database.OpenCollection(database.MongoInstance, "user")
+	SetupControllers()
 	//Distribute all the connections to goroutines
 	server := SetupServer(port, logger)
 

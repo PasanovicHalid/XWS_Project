@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/signal"
 	"planeTicketing/controllers"
+	"planeTicketing/database"
+	"planeTicketing/services"
 	"time"
 
 	gorillaHandlers "github.com/gorilla/handlers"
@@ -34,8 +36,8 @@ func SetupServer(port string, logger *log.Logger) http.Server {
 		Addr:         ":" + port,
 		Handler:      cors(router),
 		IdleTimeout:  120 * time.Second,
-		ReadTimeout:  1 * time.Second,
-		WriteTimeout: 1 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	logger.Println("Server listening on port", port)
@@ -62,4 +64,17 @@ func SetupGracefullShutdown(logger *log.Logger, server http.Server, timeoutConte
 		logger.Fatal("Cannot gracefully shutdown...")
 	}
 	logger.Println("Server stopped")
+}
+
+func SetupSecretKey() {
+	services.SECRET_KEY = os.Getenv("SECRET_KEY")
+	if len(services.SECRET_KEY) == 0 {
+		services.SECRET_KEY = "K6YEcMCkMzTORUaD0q2_lKDhTbvTLS7b9fxObQuj0OhR9QwPVYSBNtSZqnk7lRyrQ_fGNg_O811NCteixKxbJQ"
+	}
+}
+
+func SetupControllers() {
+	controllers.UserController = &controllers.UserControllerDependecies{
+		UserCollection: database.OpenCollection(database.MongoInstance, "user"),
+	}
 }

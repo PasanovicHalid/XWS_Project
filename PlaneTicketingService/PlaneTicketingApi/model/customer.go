@@ -1,6 +1,6 @@
 package model
 
 type Customer struct {
-	User          User
-	BoughtTickets []Ticket
+	User          User     `bson:"user,inline" json:"user"`
+	BoughtTickets []Ticket `bson:"boughtTickets,omitempty" json:"boughtTickets"`
 }
