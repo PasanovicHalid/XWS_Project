@@ -13,6 +13,7 @@ func SetupRouter() *mux.Router {
 	router.Use(middleware.MiddlewareContentTypeSet)
 
 	SetupUserControllerRoutes(router)
+	SetupFlightControllerRoutes(router)
 
 	return router
 }
