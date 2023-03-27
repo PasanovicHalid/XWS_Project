@@ -77,4 +77,8 @@ func SetupControllers() {
 	controllers.UserController = &controllers.UserControllerDependecies{
 		UserCollection: database.OpenCollection(database.MongoInstance, "user"),
 	}
+	controllers.FlightController = &controllers.FlightControllerDependecies{
+		FlightCollection: database.OpenCollection(database.MongoInstance, "flight"),
+		TicketCollection: database.OpenCollection(database.MongoInstance, "tickets"),
+	}
 }

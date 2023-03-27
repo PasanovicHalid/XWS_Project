@@ -13,5 +13,6 @@ type Flight struct {
 	DepartureLocation   string             `bson:"departureLocation " json:"departureLocation"`
 	DestinationLocation string             `bson:"destinationLocation" json:"destinationLocation"`
 	Price               float64            `bson:"price" json:"price"`
-	AvailableTickets    []Ticket           `bson:"availableTickets" json:"availableTickets"`
+	AvailableTickets    int                `bson:"availableTickets" json:"availableTickets"`
+	MaxNumberOfTickets  int                `bson:"maxNumberOfTickets" json:"maxNumberOfTickets"`
 }
