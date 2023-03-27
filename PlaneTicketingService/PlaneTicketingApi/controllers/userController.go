@@ -95,7 +95,7 @@ func SignUpAdmin(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	services.HashPassword(admin.Identity.Password)
+	admin.Identity.Password = services.HashPassword(admin.Identity.Password)
 
 	result, err := UserController.UserCollection.Collection.InsertOne(ctx, admin)
 	defer cancel()
