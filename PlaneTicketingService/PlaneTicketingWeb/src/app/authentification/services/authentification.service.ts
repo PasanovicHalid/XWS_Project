@@ -65,6 +65,13 @@ export class AuthentificationService {
     return localStorage.getItem("userRole") == "customer"
   }
 
+  public IsLoggedIn() : boolean {
+    let jwt = localStorage.getItem("jwt")
+    if(!(typeof jwt != 'undefined' && jwt))
+      return false;
+    return true;
+  }
+
   public DecodeToken(token: string) {
     try {
       return this.jwtHelper.decodeToken(token)
