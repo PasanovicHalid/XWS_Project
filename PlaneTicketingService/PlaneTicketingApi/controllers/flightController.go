@@ -130,10 +130,30 @@ func GetAllFlights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var flights []model.Flight
-	if err = cursor.All(ctx, &flights); err != nil {
-		http.Error(w, "Failed to decode flights", http.StatusInternalServerError)
-		return
+	// var flights []model.Flight
+	// if err = cursor.All(ctx, &flights); err != nil {
+	// 	http.Error(w, "Failed to decode flights", http.StatusInternalServerError)
+	// 	return
+	// }
+
+	var flights []contracts.FlightContract
+	for cursor.Next(ctx) {
+		var flight model.Flight
+		if err := cursor.Decode(&flight); err != nil {
+			http.Error(w, "Failed to decode flight", http.StatusInternalServerError)
+			return
+		}
+
+		fc := contracts.FlightContract{
+			Start:               flight.StartDateTimeUTC,
+			End:                 flight.EndDateTimeUTC,
+			DepartureLocation:   flight.DepartureLocation,
+			DestinationLocation: flight.DestinationLocation,
+			PriceOfTicket:       flight.Price,
+			NumberOfTickets:     flight.AvailableTickets,
+		}
+
+		flights = append(flights, fc)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

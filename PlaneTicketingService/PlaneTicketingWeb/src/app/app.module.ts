@@ -9,15 +9,15 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthentificationModule } from './authentification/authentification.module';
+import { FlightModule } from './flight/flight.module';
 import { HomePagesModule } from './home-pages/home-pages.module';
-
 export function tokenGetter() {
   return localStorage.getItem("jwt")
 }
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,6 +26,7 @@ export function tokenGetter() {
     HomePagesModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FlightModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

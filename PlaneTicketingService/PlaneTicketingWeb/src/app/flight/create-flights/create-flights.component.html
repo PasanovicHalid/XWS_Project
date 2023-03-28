@@ -1,0 +1,55 @@
+<p>create-flights works!</p>
+<div>        
+    <div style="text-align: center;">
+        <h2 >Create flight</h2>
+    </div>
+    <mat-grid-list cols="1" rowHeight="10px" style="text-align: center;">
+      <div class="container mt-5">
+          <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+            <mat-label>Departure location</mat-label>
+            <input matInput placeholder="Departure location" [(ngModel)]="flight.DepartureLocation" required>
+          </mat-form-field>
+        </div>
+  
+        <div class="container mt-5">
+          <mat-form-field appearance="fill">
+            <mat-label>Destination location</mat-label>
+            <input matInput placeholder="Destination location" [(ngModel)]="flight.DestinationLocation" required>
+          </mat-form-field>
+        </div>
+        <div class="container mt-5">
+          <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+            <mat-label>Flight start</mat-label>
+            <input matInput placeholder="Flight start" [(ngModel)]="flight.Start" required>
+          </mat-form-field>
+        </div>
+        <div class="container mt-5">
+          <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+            <mat-label>Flight end</mat-label>
+            <input matInput placeholder="Flight end" [(ngModel)]="flight.End" required>
+          </mat-form-field>
+        </div>
+       
+        <div class="container mt-5">
+            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+              <mat-label>Ticket price</mat-label>
+              <input matInput type="number" placeholder="Flight end" [(ngModel)]="flight.PriceOfTicket" required>
+              <span matSuffix>$</span>
+            </mat-form-field>
+          </div>
+        
+          <div class="container mt-5">
+            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+              <mat-label>Number of tickets</mat-label>
+              <input matInput type="number" placeholder="Flight end" [(ngModel)]="flight.NumberOfTickets" required>
+            </mat-form-field>
+          </div>
+        <div >
+          <button class="registerButton"  mat-raised-button matTooltip="Register" color="primary" id ="button" (click)="create()" >Create</button>
+      
+      </div>
+  
+    </mat-grid-list>
+
+    
+</div>
