@@ -4,15 +4,19 @@ import (
 	"encoding/json"
 	"io"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type FlightContract struct {
-	Start               time.Time
-	End                 time.Time
-	DepartureLocation   string
-	DestinationLocation string
-	PriceOfTicket       float64
-	NumberOfTickets     int
+	Id                       primitive.ObjectID
+	Start                    time.Time
+	End                      time.Time
+	DepartureLocation        string
+	DestinationLocation      string
+	PriceOfTicket            float64
+	MaxNumberOfTickets       int
+	AvailableNumberOfTickets int
 }
 
 func (f *FlightContract) FromJSON(r io.Reader) error {

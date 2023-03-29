@@ -15,7 +15,7 @@ const routes: Routes = [
   declarations: [
     AdminHomepageComponent,
     CustomerHomepageComponent,
-    DefaultHomepageComponent
+    DefaultHomepageComponent,
   ],
   imports: [
     CommonModule,

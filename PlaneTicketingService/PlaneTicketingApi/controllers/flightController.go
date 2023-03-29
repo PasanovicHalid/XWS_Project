@@ -19,6 +19,10 @@ type FlightControllerDependecies struct {
 	TicketCollection *database.DatabaseCollection
 }
 
+type Response struct {
+	Message string `json:"message"`
+}
+
 var FlightController *FlightControllerDependecies
 
 func SetupFlightControllerRoutes(router *mux.Router) {
@@ -53,9 +57,10 @@ func CreateFlight(rw http.ResponseWriter, h *http.Request) {
 
 	FlightController.FlightCollection.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 
-	rw.Write([]byte("funkcija"))
 	rw.WriteHeader(http.StatusOK)
 	rw.WriteHeader(http.StatusCreated)
+	response := Response{Message: "Flight created"}
+	json.NewEncoder(rw).Encode(response)
 }
 
 func DeleteFlight(rw http.ResponseWriter, h *http.Request) {
@@ -92,7 +97,8 @@ func DeleteFlight(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 	rw.WriteHeader(http.StatusOK)
-	rw.Write([]byte("Flight deleted"))
+	response := Response{Message: "Flight deleted"}
+	json.NewEncoder(rw).Encode(response)
 }
 
 func GetFlight(w http.ResponseWriter, r *http.Request) {
@@ -130,10 +136,32 @@ func GetAllFlights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var flights []model.Flight
-	if err = cursor.All(ctx, &flights); err != nil {
-		http.Error(w, "Failed to decode flights", http.StatusInternalServerError)
-		return
+	// var flights []model.Flight
+	// if err = cursor.All(ctx, &flights); err != nil {
+	// 	http.Error(w, "Failed to decode flights", http.StatusInternalServerError)
+	// 	return
+	// }
+
+	var flights []contracts.FlightContract
+	for cursor.Next(ctx) {
+		var flight model.Flight
+		if err := cursor.Decode(&flight); err != nil {
+			http.Error(w, "Failed to decode flight", http.StatusInternalServerError)
+			return
+		}
+
+		fc := contracts.FlightContract{
+			Id:                       flight.Id,
+			Start:                    flight.StartDateTimeUTC,
+			End:                      flight.EndDateTimeUTC,
+			DepartureLocation:        flight.DepartureLocation,
+			DestinationLocation:      flight.DestinationLocation,
+			PriceOfTicket:            flight.Price,
+			MaxNumberOfTickets:       flight.MaxNumberOfTickets,
+			AvailableNumberOfTickets: flight.AvailableTickets,
+		}
+
+		flights = append(flights, fc)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -165,8 +193,8 @@ func setupFlight(flightContract *contracts.FlightContract) *model.Flight {
 		EndDateTimeUTC:      flightContract.End,
 		DepartureLocation:   flightContract.DepartureLocation,
 		DestinationLocation: flightContract.DestinationLocation,
-		AvailableTickets:    flightContract.NumberOfTickets,
-		MaxNumberOfTickets:  flightContract.NumberOfTickets,
+		AvailableTickets:    flightContract.AvailableNumberOfTickets,
+		MaxNumberOfTickets:  flightContract.MaxNumberOfTickets,
 		Price:               flightContract.PriceOfTicket,
 	}
 	return flight

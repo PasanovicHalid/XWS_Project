@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Fifth navbar example">
+  <div class="container-fluid">
+      <img class="me-2" src="../../../assets/plane-image.png" alt="" width="40">
+      <a class="navbar-brand" href="">Ticketing Service</a>
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="navbar-collapse collapse" id="navbarsExample05">
+          <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+              <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/flights">Flights</a>
+              </li>
+              
+          </ul>
+      </div>
+  </div>
+</nav>
+<div class="container">
+    <div class="row">
+      <div class="col-md-4" *ngFor="let flight of flights" >
+        <mat-card>
+            <mat-card-header>
+              <mat-card-title>Flight from {{flight.DepartureLocation}} to {{flight.DestinationLocation}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p><b>Departure location</b>: {{flight.DepartureLocation}}</p>
+              <p><b>Destination location</b>: {{flight.DestinationLocation}}</p>
+              <p><b>Start time</b>: {{flight.Start}}</p>
+              <p><b>End time</b>: {{flight.End}} </p>
+              <p><b>Price</b>: {{flight.PriceOfTicket}}</p>
+              <p><b>Available tickets</b>: {{flight.AvailableNumberOfTickets}}</p>
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-card-actions>
+                <button mat-raised-button color="warn" (click)="delete(flight.Id)">Delete flight</button>
+              </mat-card-actions>
+            </mat-card-footer>
+            
+          </mat-card>
+      </div>
+    </div>
+  </div>
