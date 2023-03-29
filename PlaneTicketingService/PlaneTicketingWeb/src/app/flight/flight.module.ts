@@ -16,7 +16,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker'; // import MatDatepickerModule
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 const routes: Routes = [
   { path: 'flights', component: FlightsComponent },
   { path: 'create-flight', component: CreateFlightsComponent },
@@ -41,7 +40,6 @@ const routes: Routes = [
     MatListModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    NgxMatDatetimePickerModule,
   ]
 })
 export class FlightModule { }

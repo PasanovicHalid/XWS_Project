@@ -20,7 +20,7 @@
 </nav>
 <div class="container">
     <div class="row">
-      <div class="col-md-4" *ngFor="let flight of flights">
+      <div class="col-md-4" *ngFor="let flight of flights" >
         <mat-card>
             <mat-card-header>
               <mat-card-title>Flight from {{flight.DepartureLocation}} to {{flight.DestinationLocation}}</mat-card-title>
@@ -31,7 +31,14 @@
               <p><b>Start time</b>: {{flight.Start}}</p>
               <p><b>End time</b>: {{flight.End}} </p>
               <p><b>Price</b>: {{flight.PriceOfTicket}}</p>
+              <p><b>Available tickets</b>: {{flight.AvailableNumberOfTickets}}</p>
             </mat-card-content>
+            <mat-card-footer>
+              <mat-card-actions>
+                <button mat-raised-button color="warn" (click)="delete(flight.Id)">Delete flight</button>
+              </mat-card-actions>
+            </mat-card-footer>
+            
           </mat-card>
       </div>
     </div>

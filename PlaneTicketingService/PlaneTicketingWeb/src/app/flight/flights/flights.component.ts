@@ -23,4 +23,12 @@ export class FlightsComponent  implements OnInit{
       console.log(this.flights)
     })
   }
+  delete(id: any){
+    this.flightService.deleteFlight(id).subscribe(res=>{
+      console.log("Flight deleted")
+      setTimeout(()=>{
+        window.location.reload();
+      }, 100);
+    })
+  }
 }

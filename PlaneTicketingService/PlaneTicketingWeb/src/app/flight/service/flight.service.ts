@@ -20,4 +20,8 @@ export class FlightService {
   createFlight(flight: Flight): Observable<any>{
     return this.http.post<any>('/ticketing-api/flight/create', flight, {headers: this.headers});
   }
+
+  deleteFlight(id: any): Observable<any> {
+    return this.http.delete<any>('/ticketing-api/flight/delete/' + id, {headers: this.headers});
+  }
 }

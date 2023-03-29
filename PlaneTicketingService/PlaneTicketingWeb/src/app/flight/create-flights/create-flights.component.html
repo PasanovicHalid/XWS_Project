@@ -1,4 +1,3 @@
-<p>create-flights works!</p>
 <div>        
     <div style="text-align: center;">
         <h2 >Create flight</h2>
@@ -17,19 +16,44 @@
             <input matInput placeholder="Destination location" [(ngModel)]="flight.DestinationLocation" required>
           </mat-form-field>
         </div>
-        <div class="container mt-5">
-          <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
-            <mat-label>Flight start</mat-label>
-            <input matInput placeholder="Flight start" [(ngModel)]="flight.Start" required>
-          </mat-form-field>
-        </div>
-        <div class="container mt-5">
-          <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
-            <mat-label>Flight end</mat-label>
-            <input matInput placeholder="Flight end" [(ngModel)]="flight.End" required>
-          </mat-form-field>
-        </div>
+        
        
+      <div class="container mt-5">
+          <mat-form-field appearance="fill"  [floatLabel]="getFloatLabelValue()">
+            <mat-label>Flight start</mat-label>
+            <input matInput [matDatepicker]="picker1" [(ngModel)]="dateStart">
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="container mt-5">
+          <mat-form-field appearance="fill" style="width: 125px;">
+            <input matInput placeholder="HH" [(ngModel)]="hourStart" required>
+            
+          </mat-form-field>
+          :
+          <mat-form-field appearance="fill" style="width: 125px;">
+            <input matInput placeholder="MM" [(ngModel)]="minuteStart" required>
+          </mat-form-field>
+        </div>
+        <div class="container mt-5">
+          <mat-form-field appearance="fill"  [floatLabel]="getFloatLabelValue()">
+            <mat-label>Flight end</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="dateEnd">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="container mt-5">
+          <mat-form-field appearance="fill" style="width: 125px;">
+            <input matInput placeholder="HH" [(ngModel)]="hourEnd" required>
+            
+          </mat-form-field>
+          :
+          <mat-form-field appearance="fill" style="width: 125px;">
+            <input matInput placeholder="MM" [(ngModel)]="minuteEnd" required>
+          </mat-form-field>
+        </div>
         <div class="container mt-5">
             <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
               <mat-label>Ticket price</mat-label>
@@ -41,7 +65,7 @@
           <div class="container mt-5">
             <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
               <mat-label>Number of tickets</mat-label>
-              <input matInput type="number" placeholder="Flight end" [(ngModel)]="flight.NumberOfTickets" required>
+              <input matInput type="number" placeholder="Flight end" [(ngModel)]="flight.MaxNumberOfTickets" required>
             </mat-form-field>
           </div>
         <div >

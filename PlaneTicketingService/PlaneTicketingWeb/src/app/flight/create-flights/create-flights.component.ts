@@ -4,7 +4,7 @@ import { FloatLabelType } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { Flight } from '../model/flight.model';
 import { FlightService } from '../service/flight.service';
-
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-create-flights',
@@ -17,10 +17,17 @@ export class CreateFlightsComponent {
 
   floatLabelControl = new FormControl('auto' as FloatLabelType);
 
+  dateStart:string = "";
+  hourStart:string = "";
+  minuteStart:string = "";
+  dateEnd:string = "";
+  hourEnd:string = "";
+  minuteEnd:string = "";
   formattedDate :String ='';
   constructor(private router: Router,
-    private flightService: FlightService) {
-      
+    private flightService: FlightService,
+    private dateAdapter: DateAdapter<Date>) {
+      this.dateAdapter.setLocale('en-GB');
   }
   getFloatLabelValue(): FloatLabelType {
     return this.floatLabelControl.value || 'auto';
@@ -28,12 +35,14 @@ export class CreateFlightsComponent {
 
   create(){
     //this.formattedDate = this.dateAsYYYYMMDDHHNNSS(this.flight.Start);
-    
+    console.log(this.dateStart);
     console.log(this.flight)
-    this.flight.Start = this.convertDate(new Date());
-    this.flight.End = this.convertDate(new Date());
+    this.flight.Start = this.convertDate(this.dateStart);
+    this.flight.End = this.convertDate(this.dateEnd);
+    this.flight.AvailableNumberOfTickets = this.flight.MaxNumberOfTickets;
     this.flightService.createFlight(this.flight).subscribe(res=>{
       console.log("ok ok")
+      this.router.navigate(["/flights"])
     })
   }
 
@@ -51,6 +60,7 @@ export class CreateFlightsComponent {
   }
 
   convertDate(date: any):string{
+    
     const year = "2023";
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const day = ("0" + date.getDate()).slice(-2);
