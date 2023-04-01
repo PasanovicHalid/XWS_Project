@@ -38,6 +38,12 @@ func SetupFlightControllerRoutes(router *mux.Router) {
 
 	getAllFlightsRouter := router.Methods(http.MethodGet).Subrouter()
 	getAllFlightsRouter.HandleFunc("/flights/all", GetAllFlights)
+
+	getFilteredFlightsRouter := router.Methods(http.MethodPost).Subrouter()
+	getFilteredFlightsRouter.HandleFunc("/flights/filter", getFilteredFlights)
+
+	getFlightCities := router.Methods(http.MethodGet).Subrouter()
+	getFlightCities.HandleFunc("/flights/cities", getAllCities)
 }
 
 func CreateFlight(rw http.ResponseWriter, h *http.Request) {
@@ -167,6 +173,149 @@ func GetAllFlights(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(flights)
+}
+
+func getAllCities(w http.ResponseWriter, r *http.Request) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	cursor, err := FlightController.FlightCollection.Collection.Find(ctx, bson.M{})
+	if err != nil {
+		http.Error(w, "Failed to retrieve flights", http.StatusInternalServerError)
+		return
+	}
+
+	var flights []contracts.FlightContract
+	var cities []contracts.City
+	for cursor.Next(ctx) {
+		var flight model.Flight
+		if err := cursor.Decode(&flight); err != nil {
+			http.Error(w, "Failed to decode flight", http.StatusInternalServerError)
+			return
+		}
+
+		fc := contracts.FlightContract{
+			Id:                       flight.Id,
+			Start:                    flight.StartDateTimeUTC,
+			End:                      flight.EndDateTimeUTC,
+			DepartureLocation:        flight.DepartureLocation,
+			DestinationLocation:      flight.DestinationLocation,
+			PriceOfTicket:            flight.Price,
+			MaxNumberOfTickets:       flight.MaxNumberOfTickets,
+			AvailableNumberOfTickets: flight.AvailableTickets,
+		}
+
+		flights = append(flights, fc)
+	}
+
+	for _, f := range flights {
+		if !contains(cities, f.DepartureLocation) {
+			tempCity := contracts.City{
+				Name: f.DepartureLocation,
+			}
+			cities = append(cities, tempCity)
+		}
+		if !contains(cities, f.DestinationLocation) {
+			tempCity := contracts.City{
+				Name: f.DestinationLocation,
+			}
+			cities = append(cities, tempCity)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(cities)
+}
+
+func contains(s []contracts.City, str string) bool {
+	for _, v := range s {
+		if v.Name == str {
+			return true
+		}
+	}
+	return false
+}
+
+func getFilteredFlights(w http.ResponseWriter, r *http.Request) {
+
+	flightFilter := &contracts.FlightFilter{}
+	err := flightFilter.FromJSON(r.Body)
+
+	if err != nil {
+		http.Error(w, "Unable to decode json", http.StatusBadRequest)
+		FlightController.FlightCollection.Logger.Panic(err)
+		return
+	}
+
+	if !validate(flightFilter) {
+		http.Error(w, "Flight filter is not valid", http.StatusBadRequest)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	cursor, err := FlightController.FlightCollection.Collection.Find(ctx, bson.M{})
+	if err != nil {
+		http.Error(w, "Failed to retrieve flights", http.StatusInternalServerError)
+		return
+	}
+
+	var flights []contracts.FlightContract
+	for cursor.Next(ctx) {
+		var flight model.Flight
+		if err := cursor.Decode(&flight); err != nil {
+			http.Error(w, "Failed to decode flight", http.StatusInternalServerError)
+			return
+		}
+
+		fc := contracts.FlightContract{
+			Id:                       flight.Id,
+			Start:                    flight.StartDateTimeUTC,
+			End:                      flight.EndDateTimeUTC,
+			DepartureLocation:        flight.DepartureLocation,
+			DestinationLocation:      flight.DestinationLocation,
+			PriceOfTicket:            flight.Price,
+			MaxNumberOfTickets:       flight.MaxNumberOfTickets,
+			AvailableNumberOfTickets: flight.AvailableTickets,
+		}
+
+		flights = append(flights, fc)
+	}
+
+	var filteredFlights []contracts.FlightContract
+
+	yourDate, _ := time.Parse("2006-01-02", flightFilter.Date)
+
+	for _, f := range flights {
+		if f.DepartureLocation == flightFilter.DepartureLocation && f.DestinationLocation == flightFilter.DestinationLocation && DateEqual(f.Start, yourDate) && f.AvailableNumberOfTickets >= flightFilter.NumberOfTickets {
+			filteredFlights = append(filteredFlights, f)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(filteredFlights)
+}
+
+func DateEqual(date1, date2 time.Time) bool {
+	y1, m1, d1 := date1.Date()
+	y2, m2, d2 := date2.Date()
+	return y1 == y2 && m1 == m2 && d1 == d2
+}
+
+func validate(filterFlight *contracts.FlightFilter) bool {
+	valid := true
+	date, _ := time.Parse("2006-01-02", filterFlight.Date)
+	if filterFlight.NumberOfTickets > 5 || filterFlight.NumberOfTickets < 1 {
+		valid = false
+	}
+	if date.Before(time.Now()) {
+		valid = false
+	}
+	return valid
 }
 
 func MiddlewareFlightDeserialization(next http.Handler) http.Handler {

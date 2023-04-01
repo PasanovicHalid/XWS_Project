@@ -6,10 +6,12 @@ import { SignUpComponent } from './authentification/sign-up/sign-up.component';
 import { AdminHomepageComponent } from './home-pages/admin-homepage/admin-homepage.component';
 import { CustomerHomepageComponent } from './home-pages/customer-homepage/customer-homepage.component';
 import { DefaultHomepageComponent } from './home-pages/default-homepage/default-homepage.component';
+import { SearchFlightsComponent } from './flight/search-flights/search-flights.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
+  { path: 'search-flights', component: SearchFlightsComponent},
   { path: 'admin-homepage', component: AdminHomepageComponent, canActivate: [AdminGuard] },
   { path: 'customer-homepage', component: CustomerHomepageComponent, canActivate: [CustomerGuard] },
   { path: '', component: DefaultHomepageComponent },

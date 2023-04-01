@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Fifth navbar example">
+    <div class="container-fluid">
+        <img class="me-2" src="../../../assets/plane-image.png" alt="" width="40">
+        <a class="navbar-brand" href="">Ticketing Service</a>
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarsExample05">
+            <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/search-flights">Search Flights</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="filter first" style="border-top: solid 1px black; border-top-right-radius: 30px; border-top-left-radius: 30px">
+    <div class="select">
+        <select (change)='onSelectDeparture(departure.value)' #departure>
+            <option selected="selected" disabled value="null">Departure Location</option>
+            <option *ngFor="let citie of cities" [value]="citie.Name">
+                {{ citie.Name }}
+            </option>       
+        </select>
+    </div>
+    <div class="select">
+        <select (change)='onSelectDestination(destination.value)' #destination>
+            <option selected="selected" disabled value="null">Destination Location</option>
+            <option *ngFor="let citie of cities" [value]="citie.Name">
+               {{ citie.Name }}
+            </option>
+        </select>
+    </div>
+    <div class="select">
+        <select (change)='onSelectPassengers(passengers.value)' #passengers>
+            <option selected="selected" disabled value="null">Passengers Number</option>
+                <option *ngFor="let number of [1,2,3,4,5]" [value]="number">
+                    {{ number }}
+                 </option>
+        </select>   
+    </div>
+    <div class="select">
+        <input type="date" id="birthday" name="birthday" [(ngModel)]="this.temp">
+    </div>
+</div>
+<div class="filter" style="border-bottom: solid 1px black;  border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-bottom: 20px;">
+        <button class="button" (click)="filterFlights()">Filter Flights</button>
+</div>
+    
+<br>
+<div *ngIf="this.visible">
+    <table>
+        <thead>
+            <th>Departure</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Price of Tickets</th>
+            <th>Price of Individual Tickets</th>
+            <th>Available Tickets</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let f of flights">
+                <td>{{f.DepartureLocation}}</td>
+                <td>{{f.DestinationLocation}}</td>
+                <td>{{f.Start}}</td>
+                <td>{{f.PriceOfTicket * flightFilter.NumberOfTickets}}</td>
+                <td>{{f.PriceOfTicket}} </td>
+                <td>{{f.AvailableNumberOfTickets}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
