@@ -15,7 +15,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker'; // import MatDatepickerModule
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { SearchFlightsComponent } from './search-flights/search-flights.component';
+
 const routes: Routes = [
   { path: 'flights', component: FlightsComponent },
   { path: 'create-flight', component: CreateFlightsComponent },
@@ -24,12 +26,14 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FlightsComponent,
-    CreateFlightsComponent
+    CreateFlightsComponent,
+    SearchFlightsComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     BrowserAnimationsModule,
+    MatOptionModule,
     MatCardModule,
     MatIconModule,
     FormsModule,
