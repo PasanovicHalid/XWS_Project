@@ -17,10 +17,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker'; // import MatDatepickerModule
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { SearchFlightsComponent } from './search-flights/search-flights.component';
+import { AdminGuard } from '../authentification/services/auth.guard';
 
 const routes: Routes = [
-  { path: 'flights', component: FlightsComponent },
-  { path: 'create-flight', component: CreateFlightsComponent },
+  { path: 'flights', component: FlightsComponent, canActivate: [AdminGuard] },
+  { path: 'create-flight', component: CreateFlightsComponent,  canActivate: [AdminGuard] },
 ];
 
 @NgModule({
