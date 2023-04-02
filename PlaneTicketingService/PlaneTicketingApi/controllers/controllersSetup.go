@@ -14,6 +14,7 @@ func SetupRouter() *mux.Router {
 
 	SetupUserControllerRoutes(router)
 	SetupFlightControllerRoutes(router)
+	SetupTicketControllerRoutes(router)
 
 	return router
 }
