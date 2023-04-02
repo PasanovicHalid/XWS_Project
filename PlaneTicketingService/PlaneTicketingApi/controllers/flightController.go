@@ -152,9 +152,20 @@ func GetFlight(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	flightContract := contracts.FlightContract{
+		Id:                       flight.Id,
+		Start:                    flight.StartDateTimeUTC,
+		End:                      flight.EndDateTimeUTC,
+		DepartureLocation:        flight.DepartureLocation,
+		DestinationLocation:      flight.DestinationLocation,
+		PriceOfTicket:            flight.Price,
+		MaxNumberOfTickets:       flight.MaxNumberOfTickets,
+		AvailableNumberOfTickets: flight.AvailableTickets,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(flight)
+	json.NewEncoder(w).Encode(flightContract)
 }
 
 func GetAllFlights(w http.ResponseWriter, r *http.Request) {

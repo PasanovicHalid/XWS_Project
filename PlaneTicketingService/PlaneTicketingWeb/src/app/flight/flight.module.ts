@@ -17,18 +17,24 @@ import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker'; // import MatDatepickerModule
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { SearchFlightsComponent } from './search-flights/search-flights.component';
-import { AdminGuard } from '../authentification/services/auth.guard';
+import { AdminGuard, CustomerGuard } from '../authentification/services/auth.guard';
+import { TicketPurchaseComponent } from './ticket-purchase/ticket-purchase.component';
+import { TicketsComponent } from './tickets/tickets.component';
 
 const routes: Routes = [
   { path: 'flights', component: FlightsComponent, canActivate: [AdminGuard] },
   { path: 'create-flight', component: CreateFlightsComponent,  canActivate: [AdminGuard] },
+  { path: 'ticket-purchase', component: TicketPurchaseComponent,  canActivate: [CustomerGuard] },
+  { path: 'tickets', component: TicketsComponent,  canActivate: [CustomerGuard] },
 ];
 
 @NgModule({
   declarations: [
     FlightsComponent,
     CreateFlightsComponent,
-    SearchFlightsComponent
+    SearchFlightsComponent,
+    TicketPurchaseComponent,
+    TicketsComponent
   ],
   imports: [
     CommonModule,

@@ -60,6 +60,7 @@
             <th>Price of Tickets</th>
             <th>Price of Individual Tickets</th>
             <th>Available Tickets</th>
+            <th *ngIf="this.visiblePurchase">Purchase ticket</th>
         </thead>
         <tbody>
             <tr *ngFor="let f of flights">
@@ -69,6 +70,7 @@
                 <td>{{f.PriceOfTicket * flightFilter.NumberOfTickets}}</td>
                 <td>{{f.PriceOfTicket}} </td>
                 <td>{{f.AvailableNumberOfTickets}}</td>
+                <td *ngIf="this.visiblePurchase"><button mat-raised-button color="primary" (click)="purchase(f.Id)">Purchase tickets</button></td>
             </tr>
         </tbody>
     </table>

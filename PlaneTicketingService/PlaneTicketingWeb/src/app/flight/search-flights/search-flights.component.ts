@@ -3,6 +3,7 @@ import { FlightService } from '../service/flight.service';
 import { City } from '../model/cityResponse.model';
 import { FlightFilter } from '../model/flightFilterRequest.model';
 import { Flight } from '../model/flight.model';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-flights',
@@ -16,13 +17,24 @@ export class SearchFlightsComponent implements OnInit{
   flightFilter : FlightFilter = new FlightFilter();
   flights : Flight[] = [];
   visible : boolean = false;
-
-  constructor(private service : FlightService ){}
+  visiblePurchase : boolean = false;
+  userId:any;
+  constructor(private service : FlightService,
+    private router: Router ){}
   ngOnInit() : void{
+    this.userId = localStorage.getItem("userId");
      this.service.getCities().subscribe(res => {
       this.cities = res;
     });
+    console.log(localStorage.getItem("userId"))
+    if(this.userId == null){
+      this.visiblePurchase=false;
+    }else{
+      this.visiblePurchase= true;
+    }
+
     document.getElementById("date")?.setAttribute("min",new Date().toISOString().split('T')[0]);
+
   }
 
   onSelectDeparture(departure : String) : void{
@@ -47,5 +59,9 @@ export class SearchFlightsComponent implements OnInit{
     }
     })
   }
-  
+
+  purchase(id:any){
+    this.service.setFlightId(id);
+    this.router.navigate(["/ticket-purchase"])
+  }
 }

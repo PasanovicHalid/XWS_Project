@@ -12,7 +12,7 @@ func main() {
 
 	port := SetupPort()
 
-	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	timeoutContext, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
 	logger, storeLogger := SetupLoggers()
