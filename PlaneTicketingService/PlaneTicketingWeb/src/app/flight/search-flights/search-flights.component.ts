@@ -32,6 +32,9 @@ export class SearchFlightsComponent implements OnInit{
     }else{
       this.visiblePurchase= true;
     }
+
+    document.getElementById("date")?.setAttribute("min",new Date().toISOString().split('T')[0]);
+
   }
 
   onSelectDeparture(departure : String) : void{
@@ -46,15 +49,17 @@ export class SearchFlightsComponent implements OnInit{
   }
 
   filterFlights() : void{
-    this.flightFilter.Date = this.temp.toString();
     this.service.filterFlights(this.flightFilter).subscribe(res => {
+      if(res == null)
+        this.visible = false;
+      else{
       this.flights = res;
-      if(this.flights.length > 0){
+      if(this.flights.length > 0)
         this.visible = true;
-      }
+    }
     })
-
   }
+
   purchase(id:any){
     this.service.setFlightId(id);
     this.router.navigate(["/ticket-purchase"])

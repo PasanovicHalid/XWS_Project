@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, empty } from 'rxjs';
 import { Flight } from '../model/flight.model';
 import { City } from '../model/cityResponse.model';
 import { FlightFilter } from '../model/flightFilterRequest.model';
@@ -35,7 +35,13 @@ export class FlightService {
   }
 
   filterFlights(flightFilter : FlightFilter) : Observable<any>{
-    return this.http.post<any>('/ticketing-api/flights/filter' , flightFilter, {headers: this.headers});
+    if(flightFilter.NumberOfTickets == 0 || flightFilter.Date == '' || flightFilter.DepartureLocation == '' || flightFilter.Destinationlocation == ''){
+      alert("Please enter all informations")
+      return new Observable<any>;
+    }
+    else{
+      return this.http.post<any>('/ticketing-api/flights/filter' , flightFilter, {headers: this.headers});
+    }
   }
 
   setFlightId(id: any){

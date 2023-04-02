@@ -174,7 +174,7 @@ tr {
 }
 
 tr:nth-child(odd) td {
-	background: #f1f1f1 url(https://jackrugile.com/images/misc/noise-diagonal.png);	
+	background: #f1f1f1;	
 }
 
 tr:last-of-type td {

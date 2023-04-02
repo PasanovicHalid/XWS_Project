@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"planeTicketing/model"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -87,13 +88,35 @@ func OpenCollection(db *DatabaseMongoDb, collectionName string) *DatabaseCollect
 	}
 }
 
+func insertData(db *DatabaseMongoDb, collectionName string) {
+	collection := db.client.Database("TicketingDB").Collection(collectionName)
+	timeStart, _ := time.Parse(time.RFC3339Nano, "2023-04-15T15:45:00Z")
+	timeEnd, _ := time.Parse(time.RFC3339Nano, "2023-04-15T17:00:00Z")
+	flight := model.Flight{
+		DepartureLocation:   "Belgrade",
+		AvailableTickets:    180,
+		DestinationLocation: "Istanbul",
+		MaxNumberOfTickets:  189,
+		Price:               59999,
+		StartDateTimeUTC:    timeStart,
+		EndDateTimeUTC:      timeEnd,
+	}
+
+	result, err := collection.InsertOne(context.TODO(), flight)
+
+	if err != nil {
+		fmt.Printf("Error inserting to collection")
+	}
+
+	fmt.Printf("Inserted document with _id: %v\n", result.InsertedID)
+}
+
 func SetupDb(timeoutContext context.Context, storeLogger *log.Logger, logger *log.Logger) *DatabaseMongoDb {
 	db, err := NewDb(timeoutContext, storeLogger)
 	if err != nil {
 		logger.Fatal(err)
 	}
-
+	// insert(db, "flight")
 	db.Ping()
-
 	return db
 }
