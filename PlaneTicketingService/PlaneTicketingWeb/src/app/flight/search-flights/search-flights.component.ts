@@ -16,6 +16,7 @@ export class SearchFlightsComponent implements OnInit{
   flightFilter : FlightFilter = new FlightFilter();
   flights : Flight[] = [];
   visible : boolean = false;
+  today : Date = new Date();
 
   constructor(private service : FlightService ){}
   ngOnInit() : void{
@@ -36,12 +37,15 @@ export class SearchFlightsComponent implements OnInit{
   }
 
   filterFlights() : void{
-    this.flightFilter.Date = this.temp.toString();
     this.service.filterFlights(this.flightFilter).subscribe(res => {
+      if(res == null){
+        this.visible = false;
+      }else{
       this.flights = res;
       if(this.flights.length > 0){
         this.visible = true;
       }
+    }
     })
 
   }
