@@ -1,4 +1,4 @@
-package configurations
+package startup
 
 import (
 	"fmt"

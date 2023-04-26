@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "APIGateway"
+		},
+		{
+			"path": "AuthentificationService"
+		},
+		{
+			"path": "UserService"
+		},
+		{
+			"path": "SharedLibraries"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

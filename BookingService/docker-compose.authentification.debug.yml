@@ -14,6 +14,7 @@ services:
       - ${AUTHENTIFICATION_SERVICE_PORT}:${AUTHENTIFICATION_SERVICE_PORT}
       - 11001:11001
     environment:
+      AUTHENTIFICATION_SERVICE_PORT: ${AUTHENTIFICATION_SERVICE_PORT}
       AUTHENTIFICATION_DB_HOST: ${AUTHENTIFICATION_DB_HOST}
       AUTHENTIFICATION_DB_PORT: ${AUTHENTIFICATION_DB_PORT}
     depends_on:
@@ -31,9 +32,8 @@ services:
     restart: on-failure
     ports:
       - ${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
-      - 11002:11002
     environment:
-      USER_DB_HOST: ${USER_DB_HOST}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
       USER_DB_PORT: ${USER_DB_PORT}
     depends_on:
       user_db:
@@ -50,7 +50,6 @@ services:
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
-      - 11000:11000
     environment:
       GATEWAY_PORT: ${GATEWAY_PORT}
       AUTHENTIFICATION_SERVICE_HOST: ${AUTHENTIFICATION_SERVICE_HOST}
@@ -66,8 +65,6 @@ services:
     image: mongo
     container_name: authentification_db
     restart: on-failure
-    environment:
-      MONGO_INITDB_DATABASE: ${AUTHENTIFICATION_DB_NAME}
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
       interval: 10s
@@ -86,8 +83,6 @@ services:
     restart: on-failure
     ports:
       - "${USER_DB_EXTERNAL_PORT}:27017"
-    environment:
-      MONGO_INITDB_DATABASE: ${USER_DB_NAME}
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
       interval: 10s
