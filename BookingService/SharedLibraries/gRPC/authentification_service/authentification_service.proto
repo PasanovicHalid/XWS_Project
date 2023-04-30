@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authenticate";
+
+package authenticate;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service AuthenticateService {
+    rpc Login(LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+            post: "/login"
+            body: "*"
+        };
+    }
+
+    rpc Register(RegisterRequest) returns (RegisterResponse) {
+        option (google.api.http) = {
+            post: "/register"
+            body: "*"
+        };
+    }
+
+    rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {
+        option (google.api.http) = {
+            put: "/changePassword"
+            body: "*"
+        };
+    }
+
+    rpc ChangeUsername(ChangeUsernameRequest) returns (ChangeUsernameResponse) {
+        option (google.api.http) = {
+            put: "/changeUsername"
+            body: "*"
+        };
+    }
+
+    rpc GetIdentityByUsername (GetIdentityByUsernameRequest) returns (GetIdentityByUsernameResponse) {
+        option (google.api.http) = {
+            get: "/user/getIdentityByUsername/{username}"
+        };
+    }
+
+    rpc GetPublicKey(GetPublicKeyRequest) returns (GetPublicKeyResponse) {
+        option (google.api.http) = {
+            get: "/getPublicKey"
+        };
+    }
+}
+
+message RequestResult {
+    int32 code = 1;
+    string message = 2;
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    common.RequestResult requestResult = 1;
+    string token = 2;
+}
+
+message ChangePasswordRequest {
+    string username = 1;
+    string oldPassword = 2;
+    string newPassword = 3;
+}
+
+message ChangePasswordResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message ChangeUsernameRequest {
+    string username = 1;
+    string password = 2;
+    string newUsername = 3;
+}
+
+message ChangeUsernameResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message GetPublicKeyRequest {
+}
+
+message GetPublicKeyResponse {
+    common.RequestResult requestResult = 1;
+    string publicKey = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message GetIdentityByUsernameRequest {
+    string username = 1;
+}
+
+message GetIdentityByUsernameResponse {
+    common.RequestResult requestResult = 1;
+    string identityId = 2;
+}

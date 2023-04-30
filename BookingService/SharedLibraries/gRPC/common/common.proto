@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common";
+
+package common;
+
+message RequestResult {
+    int32 code = 1;
+    string message = 2;
+}

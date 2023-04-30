@@ -3,9 +3,9 @@ package authentification
 import jwt "github.com/dgrijalva/jwt-go"
 
 type SignedDetails struct {
-	Id    string
-	Email string
-	Role  string
+	Id       string
+	Username string
+	Role     string
 	jwt.StandardClaims
 }
 
@@ -17,6 +17,6 @@ const (
 )
 
 type IJwtService interface {
-	GenerateToken(id string, email string, role string) (string, error)
+	GenerateToken(id string, username string, role string) (string, error)
 	ValidateToken(token string) (*SignedDetails, int)
 }

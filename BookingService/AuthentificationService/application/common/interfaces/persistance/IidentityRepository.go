@@ -7,16 +7,16 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/domain"
 )
 
-var ErrorEmailInUse = errors.New("Email is already in use")
+var ErrorUsernameInUse = errors.New("Username is already in use")
 var ErrorIdentityNotFound = errors.New("Identity not found")
-var ErrorIdentityWithEmailDoesntExist = errors.New("User doesn't exist")
+var ErrorIdentityWithUsernameDoesntExist = errors.New("User doesn't exist")
 var ErrorInvalidPassword = errors.New("Password is invalid")
 
 type IIdentityRepository interface {
-	FindIdentityByEmail(ctx *context.Context, email string) (*domain.Identity, error)
+	FindIdentityByUsername(ctx *context.Context, username string) (*domain.Identity, error)
 	FindIdentityById(ctx *context.Context, id string) (*domain.Identity, error)
 	InsertIdentity(ctx *context.Context, identity *domain.Identity) error
 	UpdateIdentity(ctx *context.Context, identity *domain.Identity) error
 	DeleteIdentity(ctx *context.Context, id string) error
-	CheckIfEmailExists(ctx *context.Context, email string) (bool, error)
+	CheckIfUsernameExists(ctx *context.Context, username string) (bool, error)
 }

@@ -24,8 +24,8 @@ func NewIdentityRepository(client *mongo.Client) *IdentityRepository {
 	}
 }
 
-func (repository *IdentityRepository) FindIdentityByEmail(ctx *context.Context, email string) (*domain.Identity, error) {
-	filter := bson.D{{"email", email}}
+func (repository *IdentityRepository) FindIdentityByUsername(ctx *context.Context, username string) (*domain.Identity, error) {
+	filter := bson.D{{"username", username}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -84,8 +84,8 @@ func (repository *IdentityRepository) DeleteIdentity(ctx *context.Context, id st
 	return nil
 }
 
-func (repository *IdentityRepository) CheckIfEmailExists(ctx *context.Context, email string) (bool, error) {
-	filter := bson.D{{"email", email}}
+func (repository *IdentityRepository) CheckIfUsernameExists(ctx *context.Context, username string) (bool, error) {
+	filter := bson.D{{"username", username}}
 	_, err := repository.filterOne(ctx, filter)
 
 	if err == mongo.ErrNoDocuments {

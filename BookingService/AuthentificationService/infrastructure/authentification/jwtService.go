@@ -21,14 +21,14 @@ func NewJwtService(keyRepository persistance.IKeyRepository) *JwtService {
 	}
 }
 
-func (jwtService *JwtService) GenerateToken(id string, email string, role string) (string, error) {
+func (jwtService *JwtService) GenerateToken(id string, username string, role string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
 	claims := &authentification_interface.SignedDetails{
-		Id:    id,
-		Email: email,
-		Role:  role,
+		Id:       id,
+		Username: username,
+		Role:     role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().UTC().Add(time.Hour * time.Duration(24)).Unix(),
 			Issuer:    "test",

@@ -25,10 +25,10 @@ func NewIdentityService(identityRepository persistance.IIdentityRepository, keyR
 	}
 }
 
-func (service *IdentityService) FindIdentityByEmail(email string) (*domain.Identity, error) {
+func (service *IdentityService) FindIdentityByUsername(username string) (*domain.Identity, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	return service.identityRepository.FindIdentityByEmail(&ctx, email)
+	return service.identityRepository.FindIdentityByUsername(&ctx, username)
 }
 
 func (service *IdentityService) FindIdentityById(id string) (*domain.Identity, error) {
@@ -52,14 +52,14 @@ func (service *IdentityService) DeleteIdentity(id string) error {
 func (service *IdentityService) RegisterIdentity(identity *domain.Identity) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	exists, err := service.identityRepository.CheckIfEmailExists(&ctx, identity.Email)
+	exists, err := service.identityRepository.CheckIfUsernameExists(&ctx, identity.Username)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		return persistance.ErrorEmailInUse
+		return persistance.ErrorUsernameInUse
 	}
 
 	identity.Password, err = service.passwordService.HashPassword(identity.Password)
@@ -71,24 +71,24 @@ func (service *IdentityService) RegisterIdentity(identity *domain.Identity) erro
 	return service.identityRepository.InsertIdentity(&ctx, identity)
 }
 
-func (service *IdentityService) Login(email string, password string) (jwtToken string, err error) {
+func (service *IdentityService) Login(username string, password string) (jwtToken string, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	identity, err := service.identityRepository.FindIdentityByEmail(&ctx, email)
+	identity, err := service.identityRepository.FindIdentityByUsername(&ctx, username)
 
 	if err != nil {
 		return jwtToken, err
 	}
 
 	if identity == nil {
-		return jwtToken, persistance.ErrorIdentityWithEmailDoesntExist
+		return jwtToken, persistance.ErrorIdentityWithUsernameDoesntExist
 	}
 
 	if !service.passwordService.ComparePasswords(identity.Password, password) {
 		return jwtToken, persistance.ErrorInvalidPassword
 	}
 
-	jwtToken, err = service.jwtService.GenerateToken(identity.Id.Hex(), identity.Email, identity.Role)
+	jwtToken, err = service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role)
 
 	return jwtToken, nil
 }

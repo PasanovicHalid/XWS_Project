@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user";
+
+package user;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service UserService {
+    rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse) {
+        option (google.api.http) = {
+            get: "/user/getUserById/{id}"
+        };
+    }
+    rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse) {
+        option (google.api.http) = {
+            get: "/user/getUserByEmail/{email}"
+        };
+    }
+    rpc GetUserByPhoneNumber (GetUserByPhoneNumberRequest) returns (GetUserByPhoneNumberResponse) {
+        option (google.api.http) = {
+            get: "/user/getUserByPhoneNumber/{phoneNumber}"
+        };
+    }
+    rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse) {
+        option (google.api.http) = {
+            get: "/user/getAllUsers"
+        };
+    }
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+        option (google.api.http) = {
+            put: "/user/updateUser"
+            body: "*"
+        };
+    }
+}
+
+message User {
+    string identityId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string phoneNumber = 5;
+    string address = 6;
+}
+
+message GetUserByIdRequest {
+    int32 id = 1;
+}
+
+message GetUserByIdResponse {
+    common.RequestResult requestResult = 1;
+    User user = 2;
+}
+
+message GetUserByEmailRequest {
+    string email = 1;
+}
+
+message GetUserByEmailResponse {
+    common.RequestResult requestResult = 1;
+    User user = 2;
+}
+
+message GetUserByPhoneNumberRequest {
+    string phoneNumber = 1;
+}
+
+message GetUserByPhoneNumberResponse {
+    common.RequestResult requestResult = 1;
+    User user = 2;
+}
+
+message GetAllUsersRequest {
+    int32 page = 1;
+    int32 size = 2;
+}
+
+message GetAllUsersResponse {
+    common.RequestResult requestResult = 1;
+    repeated User users = 2;
+}
+
+message UpdateUserRequest {
+    User user = 1;
+}
+
+message UpdateUserResponse {
+    common.RequestResult requestResult = 1;
+}
+
