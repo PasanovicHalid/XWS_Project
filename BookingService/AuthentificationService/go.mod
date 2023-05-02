@@ -2,15 +2,21 @@ module github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationServ
 
 go 1.20
 
+replace github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC => ../SharedLibraries/gRPC
+
+replace github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga => ../SharedLibraries/Saga
+
 require (
+	github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC v0.0.0-00010101000000-000000000000
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	go.mongodb.org/mongo-driver v1.11.4
 	golang.org/x/crypto v0.8.0
+	google.golang.org/grpc v1.54.0
 )
 
 require (
-	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
@@ -23,7 +29,6 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	google.golang.org/genproto v0.0.0-20230223222841-637eb2293923 // indirect
-	google.golang.org/grpc v1.53.0 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
+	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
+	google.golang.org/protobuf v1.30.0 // indirect
 )

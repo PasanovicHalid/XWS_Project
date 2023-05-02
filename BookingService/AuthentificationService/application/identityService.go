@@ -11,15 +11,15 @@ import (
 
 type IdentityService struct {
 	identityRepository persistance.IIdentityRepository
-	keyRepository      persistance.IKeyRepository
+	keyService         authentification.IKeyService
 	passwordService    authentification.IPasswordService
 	jwtService         authentification.IJwtService
 }
 
-func NewIdentityService(identityRepository persistance.IIdentityRepository, keyRepository persistance.IKeyRepository, passwordService authentification.IPasswordService, jwtService authentification.IJwtService) *IdentityService {
+func NewIdentityService(identityRepository persistance.IIdentityRepository, keyService authentification.IKeyService, passwordService authentification.IPasswordService, jwtService authentification.IJwtService) *IdentityService {
 	return &IdentityService{
 		identityRepository: identityRepository,
-		keyRepository:      keyRepository,
+		keyService:         keyService,
 		passwordService:    passwordService,
 		jwtService:         jwtService,
 	}
@@ -80,15 +80,71 @@ func (service *IdentityService) Login(username string, password string) (jwtToke
 		return jwtToken, err
 	}
 
-	if identity == nil {
-		return jwtToken, persistance.ErrorIdentityWithUsernameDoesntExist
-	}
-
 	if !service.passwordService.ComparePasswords(identity.Password, password) {
 		return jwtToken, persistance.ErrorInvalidPassword
 	}
 
 	jwtToken, err = service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role)
 
+	if err != nil {
+		return jwtToken, err
+	}
+
 	return jwtToken, nil
+}
+
+func (service *IdentityService) GetPublicKey() (*domain.KeyPair, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.keyService.RetrieveKeyPair(&ctx)
+}
+
+func (service *IdentityService) ChangePassword(username string, oldPassword string, newPassword string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	identity, err := service.identityRepository.FindIdentityByUsername(&ctx, username)
+
+	if err != nil {
+		return err
+	}
+
+	if !service.passwordService.ComparePasswords(identity.Password, oldPassword) {
+		return persistance.ErrorInvalidPassword
+	}
+
+	identity.Password, err = service.passwordService.HashPassword(newPassword)
+
+	if err != nil {
+		return err
+	}
+
+	return service.identityRepository.UpdateIdentity(&ctx, identity)
+}
+
+func (service *IdentityService) ChangeUsername(oldUsername string, password string, newUsername string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	identity, err := service.identityRepository.FindIdentityByUsername(&ctx, oldUsername)
+
+	if err != nil {
+		return err
+	}
+
+	if !service.passwordService.ComparePasswords(identity.Password, password) {
+		return persistance.ErrorInvalidPassword
+	}
+
+	exists, err := service.identityRepository.CheckIfUsernameExists(&ctx, newUsername)
+
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return persistance.ErrorUsernameInUse
+	}
+
+	identity.Username = newUsername
+
+	return service.identityRepository.UpdateIdentity(&ctx, identity)
 }

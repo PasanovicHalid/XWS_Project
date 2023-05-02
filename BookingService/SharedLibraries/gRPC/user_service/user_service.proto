@@ -34,6 +34,12 @@ service UserService {
             body: "*"
         };
     }
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/user/createUser"
+            body: "*"
+        };
+    }
 }
 
 message User {
@@ -90,3 +96,10 @@ message UpdateUserResponse {
     common.RequestResult requestResult = 1;
 }
 
+message CreateUserRequest {
+    User user = 1;
+}
+
+message CreateUserResponse {
+    common.RequestResult requestResult = 1;
+}

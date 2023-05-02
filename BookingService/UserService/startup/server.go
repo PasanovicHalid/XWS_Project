@@ -23,6 +23,6 @@ func NewServer(config *Configurations) *Server {
 }
 
 func (server *Server) Start() {
-	log.Printf("Starting server on port %s", server.config.Port)
+	log.Printf("Starting server on port %s", server.config.Port
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.mux))
 }

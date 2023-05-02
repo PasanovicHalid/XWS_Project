@@ -3,12 +3,16 @@ package configurations
 import "os"
 
 type Configurations struct {
-	Port string
+	Port       string
+	UserDBHost string
+	UserDBPort string
 }
 
 func NewConfigurations() *Configurations {
 	configurations := &Configurations{
-		Port: os.Getenv("USER_SERVICE_PORT"),
+		Port:       os.Getenv("USER_SERVICE_PORT"),
+		UserDBHost: os.Getenv("USER_DB_HOST"),
+		UserDBPort: os.Getenv("USER_DB_PORT"),
 	}
 
 	configurations.initializeEnvironmentVariables()
@@ -19,5 +23,11 @@ func NewConfigurations() *Configurations {
 func (configurations *Configurations) initializeEnvironmentVariables() {
 	if configurations.Port == "" {
 		configurations.Port = "9101"
+	}
+	if configurations.UserDBHost == "" {
+		configurations.UserDBHost = "localhost"
+	}
+	if configurations.UserDBPort == "" {
+		configurations.UserDBPort = "27017"
 	}
 }

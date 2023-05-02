@@ -89,10 +89,10 @@ func (repository *IdentityRepository) CheckIfUsernameExists(ctx *context.Context
 	_, err := repository.filterOne(ctx, filter)
 
 	if err == mongo.ErrNoDocuments {
-		return true, nil
+		return false, nil
 	}
 
-	return false, err
+	return true, err
 }
 
 func (repository *IdentityRepository) filter(ctx *context.Context, filter interface{}) ([]*domain.Identity, error) {
