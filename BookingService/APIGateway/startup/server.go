@@ -28,12 +28,12 @@ func NewServer(config *Configurations) *Server {
 
 	server.initHandlers()
 
-	auth_mux := http.NewServeMux()
-	auth_mux.Handle("/", MiddlewareAdminAuthorization1(server.mux))
-	auth_mux.Handle("/api/authenticate/login", MiddlewareAdminAuthorization(server.mux))
-	auth_mux.Handle("/api/authenticate/register", MiddlewareAdminAuthorization(server.mux))
+	final_mux := http.NewServeMux()
+	final_mux.Handle("/", MiddlewareAdminAuthorization1(server.mux))
+	final_mux.Handle("/api/authenticate/login", MiddlewareAdminAuthorization(server.mux))
+	final_mux.Handle("/api/authenticate/register", MiddlewareAdminAuthorization(server.mux))
 
-	server.final_mux = auth_mux
+	server.final_mux = final_mux
 
 	return server
 }
