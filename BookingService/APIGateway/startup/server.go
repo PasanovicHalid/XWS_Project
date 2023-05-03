@@ -6,9 +6,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/domain"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
-	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -26,39 +30,29 @@ func NewServer(config *Configurations) *Server {
 		mux:    runtime.NewServeMux(),
 	}
 
+	mongo, err := persistance.NewMongoClient(config.ApiGatewayDbHost, config.ApiGatewayDbPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	server.initHandlers()
 
+	keyRepository := persistance.NewKeyRepository(mongo)
+	keyService := application.NewKeyService(keyRepository)
+	jwtService := authentification.NewJwtService()
+
+	keyService.SaveKey(&domain.Key{
+		PublicKey: "-----BEGIN PUBLIC KEY-----\n",
+	})
+
 	final_mux := http.NewServeMux()
-	final_mux.Handle("/", MiddlewareAdminAuthorization1(server.mux))
-	final_mux.Handle("/api/authenticate/login", MiddlewareAdminAuthorization(server.mux))
-	final_mux.Handle("/api/authenticate/register", MiddlewareAdminAuthorization(server.mux))
+	final_mux.Handle("/", middlewares.MiddlewareContentTypeSet(middlewares.MiddlewareAuthentification(server.mux, jwtService, keyService)))
+	final_mux.Handle("/api/authenticate/login", middlewares.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/authenticate/register", middlewares.MiddlewareContentTypeSet(server.mux))
 
 	server.final_mux = final_mux
 
 	return server
-}
-
-func Test() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		log.Println("Test middleware")
-		c.Next()
-	}
-}
-
-func MiddlewareAdminAuthorization(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		log.Println("Test middleware")
-
-		next.ServeHTTP(rw, h)
-	})
-}
-
-func MiddlewareAdminAuthorization1(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		log.Println("Test middleware1")
-
-		next.ServeHTTP(rw, h)
-	})
 }
 
 func (server *Server) initHandlers() {
