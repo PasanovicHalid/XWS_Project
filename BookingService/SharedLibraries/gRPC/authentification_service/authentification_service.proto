@@ -10,41 +10,41 @@ import "common/common.proto";
 service AuthenticateService {
     rpc Login(LoginRequest) returns (LoginResponse) {
         option (google.api.http) = {
-            post: "/login"
+            post: "/api/authenticate/login"
             body: "*"
         };
     }
 
     rpc Register(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {
-            post: "/register"
+            post: "/api/authenticate/register"
             body: "*"
         };
     }
 
     rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {
         option (google.api.http) = {
-            put: "/changePassword"
+            put: "/api/authenticate/changePassword"
             body: "*"
         };
     }
 
     rpc ChangeUsername(ChangeUsernameRequest) returns (ChangeUsernameResponse) {
         option (google.api.http) = {
-            put: "/changeUsername"
+            put: "/api/authenticate/changeUsername"
             body: "*"
         };
     }
 
     rpc GetIdentityByUsername (GetIdentityByUsernameRequest) returns (GetIdentityByUsernameResponse) {
         option (google.api.http) = {
-            get: "/user/getIdentityByUsername/{username}"
+            get: "/api/authenticate/user/getIdentityByUsername/{username}"
         };
     }
 
     rpc GetPublicKey(GetPublicKeyRequest) returns (GetPublicKeyResponse) {
         option (google.api.http) = {
-            get: "/getPublicKey"
+            get: "/api/authenticate/getPublicKey"
         };
     }
 }

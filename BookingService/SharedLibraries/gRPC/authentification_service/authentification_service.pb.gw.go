@@ -251,7 +251,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/Login", runtime.WithHTTPPathPattern("/login"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/Login", runtime.WithHTTPPathPattern("/api/authenticate/login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -276,7 +276,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/Register", runtime.WithHTTPPathPattern("/register"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/Register", runtime.WithHTTPPathPattern("/api/authenticate/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -301,7 +301,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangePassword", runtime.WithHTTPPathPattern("/changePassword"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangePassword", runtime.WithHTTPPathPattern("/api/authenticate/changePassword"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -326,7 +326,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangeUsername", runtime.WithHTTPPathPattern("/changeUsername"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangeUsername", runtime.WithHTTPPathPattern("/api/authenticate/changeUsername"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -351,7 +351,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/GetIdentityByUsername", runtime.WithHTTPPathPattern("/user/getIdentityByUsername/{username}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/GetIdentityByUsername", runtime.WithHTTPPathPattern("/api/authenticate/user/getIdentityByUsername/{username}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -376,7 +376,7 @@ func RegisterAuthenticateServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/GetPublicKey", runtime.WithHTTPPathPattern("/getPublicKey"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/authenticate.AuthenticateService/GetPublicKey", runtime.WithHTTPPathPattern("/api/authenticate/getPublicKey"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -440,7 +440,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/Login", runtime.WithHTTPPathPattern("/login"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/Login", runtime.WithHTTPPathPattern("/api/authenticate/login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -462,7 +462,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/Register", runtime.WithHTTPPathPattern("/register"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/Register", runtime.WithHTTPPathPattern("/api/authenticate/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -484,7 +484,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangePassword", runtime.WithHTTPPathPattern("/changePassword"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangePassword", runtime.WithHTTPPathPattern("/api/authenticate/changePassword"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -506,7 +506,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangeUsername", runtime.WithHTTPPathPattern("/changeUsername"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/ChangeUsername", runtime.WithHTTPPathPattern("/api/authenticate/changeUsername"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -528,7 +528,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/GetIdentityByUsername", runtime.WithHTTPPathPattern("/user/getIdentityByUsername/{username}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/GetIdentityByUsername", runtime.WithHTTPPathPattern("/api/authenticate/user/getIdentityByUsername/{username}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -550,7 +550,7 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/GetPublicKey", runtime.WithHTTPPathPattern("/getPublicKey"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/authenticate.AuthenticateService/GetPublicKey", runtime.WithHTTPPathPattern("/api/authenticate/getPublicKey"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -570,17 +570,17 @@ func RegisterAuthenticateServiceHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_AuthenticateService_Login_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"login"}, ""))
+	pattern_AuthenticateService_Login_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "authenticate", "login"}, ""))
 
-	pattern_AuthenticateService_Register_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"register"}, ""))
+	pattern_AuthenticateService_Register_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "authenticate", "register"}, ""))
 
-	pattern_AuthenticateService_ChangePassword_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"changePassword"}, ""))
+	pattern_AuthenticateService_ChangePassword_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "authenticate", "changePassword"}, ""))
 
-	pattern_AuthenticateService_ChangeUsername_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"changeUsername"}, ""))
+	pattern_AuthenticateService_ChangeUsername_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "authenticate", "changeUsername"}, ""))
 
-	pattern_AuthenticateService_GetIdentityByUsername_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"user", "getIdentityByUsername", "username"}, ""))
+	pattern_AuthenticateService_GetIdentityByUsername_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "authenticate", "user", "getIdentityByUsername", "username"}, ""))
 
-	pattern_AuthenticateService_GetPublicKey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"getPublicKey"}, ""))
+	pattern_AuthenticateService_GetPublicKey_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "authenticate", "getPublicKey"}, ""))
 )
 
 var (

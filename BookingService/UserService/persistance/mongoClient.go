@@ -8,6 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	DATABASE        = "UserDB"
+	USER_COLLECTION = "Users"
+)
+
 func NewMongoClient(host string, port string) (*mongo.Client, error) {
 	uri := fmt.Sprintf("mongodb://%s:%s", host, port)
 	options := options.Client().ApplyURI(uri)

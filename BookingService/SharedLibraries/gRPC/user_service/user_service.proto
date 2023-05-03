@@ -10,33 +10,33 @@ import "common/common.proto";
 service UserService {
     rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse) {
         option (google.api.http) = {
-            get: "/user/getUserById/{id}"
+            get: "/api/user/getUserById/{id}"
         };
     }
     rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse) {
         option (google.api.http) = {
-            get: "/user/getUserByEmail/{email}"
+            get: "/api/user/getUserByEmail/{email}"
         };
     }
     rpc GetUserByPhoneNumber (GetUserByPhoneNumberRequest) returns (GetUserByPhoneNumberResponse) {
         option (google.api.http) = {
-            get: "/user/getUserByPhoneNumber/{phoneNumber}"
+            get: "/api/user/getUserByPhoneNumber/{phoneNumber}"
         };
     }
     rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse) {
         option (google.api.http) = {
-            get: "/user/getAllUsers"
+            get: "/api/user/getAllUsers"
         };
     }
     rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
         option (google.api.http) = {
-            put: "/user/updateUser"
+            put: "/api/user/updateUser"
             body: "*"
         };
     }
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
         option (google.api.http) = {
-            post: "/user/createUser"
+            post: "/api/user/createUser"
             body: "*"
         };
     }
@@ -52,7 +52,7 @@ message User {
 }
 
 message GetUserByIdRequest {
-    int32 id = 1;
+    string id = 1;
 }
 
 message GetUserByIdResponse {
