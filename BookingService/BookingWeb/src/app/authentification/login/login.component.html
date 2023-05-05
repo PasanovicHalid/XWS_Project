@@ -1,0 +1,27 @@
+<div class="content">
+    <div class="image-container">
+        <div class="image">
+            <img src="../../../assets/logo.png" alt="Company Image">
+        </div>
+    </div>
+    <div class="login-container">
+        <h5>Please enter your credentials</h5>
+        <div class="inputs">
+            <mat-form-field appearance="outline">
+                <mat-label>Enter your username</mat-label>
+                <input matInput [(ngModel)]="this.signUpRequest.username" placeholder="Username">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [(ngModel)]="this.signUpRequest.password" [type]="hide ? 'password' : 'text'" placeholder="Password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="buttons">
+            <button mat-raised-button color="primary" (click)="Login()" >Login</button>
+        </div>
+    </div>
+</div>

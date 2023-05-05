@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"context"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -76,6 +78,30 @@ func MiddlewareAuthorization(next http.Handler, roles []string) http.Handler {
 			return
 		}
 
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(next http.Handler, fieldName string) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		jwt_claims := h.Context().Value(JwtContent{}).(*authentification.SignedDetails)
+
+		fields := make(map[string]interface{})
+
+		bodyBytes, _ := ioutil.ReadAll(h.Body)
+		err := json.Unmarshal(bodyBytes, &fields)
+		h.Body = ioutil.NopCloser(strings.NewReader(string(bodyBytes)))
+		h.Body.Close()
+
+		if err != nil {
+			http.Error(rw, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+
+		if jwt_claims.Id != fields[fieldName] {
+			http.Error(rw, "Use id of your profile", http.StatusBadRequest)
+			return
+		}
 		next.ServeHTTP(rw, h)
 	})
 }

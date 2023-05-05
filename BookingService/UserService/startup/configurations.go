@@ -22,7 +22,7 @@ func NewConfigurations() *Configurations {
 
 func (configurations *Configurations) initializeEnvironmentVariables() {
 	if configurations.Port == "" {
-		configurations.Port = "9101"
+		configurations.Port = "9102"
 	}
 	if configurations.UserDBHost == "" {
 		configurations.UserDBHost = "localhost"

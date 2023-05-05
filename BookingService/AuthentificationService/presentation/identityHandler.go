@@ -27,7 +27,13 @@ func (handler *IdentityHandler) Register(ctx context.Context, request *auth_pb.R
 		Password: request.Password,
 	}
 
-	err := handler.identityService.RegisterIdentity(identity)
+	if request.IsHost {
+		identity.Role = "Host"
+	} else {
+		identity.Role = "Guest"
+	}
+
+	jwtToken, err := handler.identityService.RegisterIdentity(identity)
 
 	if err != nil {
 
@@ -47,6 +53,7 @@ func (handler *IdentityHandler) Register(ctx context.Context, request *auth_pb.R
 		RequestResult: &common_pb.RequestResult{
 			Code: 200,
 		},
+		Token: jwtToken,
 	}, nil
 }
 

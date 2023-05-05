@@ -6,6 +6,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/domain"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -53,10 +54,11 @@ func (repository *IdentityRepository) FindIdentityById(ctx *context.Context, id 
 }
 
 func (repository *IdentityRepository) InsertIdentity(ctx *context.Context, identity *domain.Identity) error {
-	_, err := repository.identities.InsertOne(*ctx, identity)
+	result, err := repository.identities.InsertOne(*ctx, identity)
 	if err != nil {
 		return err
 	}
+	identity.Id = result.InsertedID.(primitive.ObjectID)
 	return nil
 }
 

@@ -23,12 +23,12 @@ func NewUserHandler(userService *application.UserService) *UserHandler {
 
 func (handler *UserHandler) CreateUser(ctx context.Context, request *user_pb.CreateUserRequest) (response *user_pb.CreateUserResponse, err error) {
 	user := &domain.User{
-		IdentityId:  request.User.IdentityId,
-		FirstName:   request.User.FirstName,
-		LastName:    request.User.LastName,
-		Email:       request.User.Email,
-		PhoneNumber: request.User.PhoneNumber,
-		Address:     request.User.Address,
+		IdentityId:  request.IdentityId,
+		FirstName:   request.FirstName,
+		LastName:    request.LastName,
+		Email:       request.Email,
+		PhoneNumber: request.PhoneNumber,
+		Address:     request.Address,
 	}
 
 	err = handler.userService.CreateUser(user)
@@ -46,12 +46,12 @@ func (handler *UserHandler) CreateUser(ctx context.Context, request *user_pb.Cre
 
 func (handler *UserHandler) UpdateUser(ctx context.Context, request *user_pb.UpdateUserRequest) (response *user_pb.UpdateUserResponse, err error) {
 	user := &domain.User{
-		IdentityId:  request.User.IdentityId,
-		FirstName:   request.User.FirstName,
-		LastName:    request.User.LastName,
-		Email:       request.User.Email,
-		PhoneNumber: request.User.PhoneNumber,
-		Address:     request.User.Address,
+		IdentityId:  request.IdentityId,
+		FirstName:   request.FirstName,
+		LastName:    request.LastName,
+		Email:       request.Email,
+		PhoneNumber: request.PhoneNumber,
+		Address:     request.Address,
 	}
 
 	err = handler.userService.UpdateUser(user)

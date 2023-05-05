@@ -1,0 +1,10 @@
+{
+    "/booking/*": {
+      "target": "http://localhost:9100",
+      "secure": false,
+      "logLevel": "debug",
+      "pathRewrite": {
+        "^/booking": ""
+      }
+    }
+}

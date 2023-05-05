@@ -10,7 +10,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/domain"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
-	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
+	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -45,10 +45,13 @@ func NewServer(config *Configurations) *Server {
 		PublicKey: "-----BEGIN PUBLIC KEY-----\n",
 	})
 
+	//For scecific routes you have to build all your middlewares from scratch
 	final_mux := http.NewServeMux()
-	final_mux.Handle("/", middlewares.MiddlewareContentTypeSet(middlewares.MiddlewareAuthentification(server.mux, jwtService, keyService)))
-	final_mux.Handle("/api/authenticate/login", middlewares.MiddlewareContentTypeSet(server.mux))
-	final_mux.Handle("/api/authenticate/register", middlewares.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, keyService)))
+	final_mux.Handle("/api/authenticate/login", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/authenticate/register", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/user/updateUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, keyService)))
+	final_mux.Handle("/api/user/createUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, keyService)))
 
 	server.final_mux = final_mux
 

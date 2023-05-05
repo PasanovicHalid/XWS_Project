@@ -49,26 +49,33 @@ func (service *IdentityService) DeleteIdentity(id string) error {
 	return service.identityRepository.DeleteIdentity(&ctx, id)
 }
 
-func (service *IdentityService) RegisterIdentity(identity *domain.Identity) error {
+func (service *IdentityService) RegisterIdentity(identity *domain.Identity) (jwtToken string, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	exists, err := service.identityRepository.CheckIfUsernameExists(&ctx, identity.Username)
 
 	if err != nil {
-		return err
+		return
 	}
 
 	if exists {
-		return persistance.ErrorUsernameInUse
+		err = persistance.ErrorUsernameInUse
+		return
 	}
 
 	identity.Password, err = service.passwordService.HashPassword(identity.Password)
 
 	if err != nil {
-		return err
+		return
 	}
 
-	return service.identityRepository.InsertIdentity(&ctx, identity)
+	err = service.identityRepository.InsertIdentity(&ctx, identity)
+
+	if err != nil {
+		return
+	}
+
+	return service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role)
 }
 
 func (service *IdentityService) Login(username string, password string) (jwtToken string, err error) {

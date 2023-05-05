@@ -89,7 +89,12 @@ message GetAllUsersResponse {
 }
 
 message UpdateUserRequest {
-    User user = 1;
+    string identityId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string phoneNumber = 5;
+    string address = 6;
 }
 
 message UpdateUserResponse {
@@ -97,7 +102,12 @@ message UpdateUserResponse {
 }
 
 message CreateUserRequest {
-    User user = 1;
+    string identityId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string phoneNumber = 5;
+    string address = 6;
 }
 
 message CreateUserResponse {

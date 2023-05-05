@@ -8,7 +8,7 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile
+      dockerfile: ./AuthentificationService/Dockerfile.debug
     restart: on-failure
     ports:
       - ${AUTHENTIFICATION_SERVICE_PORT}:${AUTHENTIFICATION_SERVICE_PORT}
@@ -35,6 +35,7 @@ services:
       - 11002:11002
     environment:
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+      USER_DB_HOST: ${USER_DB_HOST}
       USER_DB_PORT: ${USER_DB_PORT}
     depends_on:
       user_db:
@@ -47,7 +48,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile.debug
+      dockerfile: ./APIGateway/Dockerfile
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
