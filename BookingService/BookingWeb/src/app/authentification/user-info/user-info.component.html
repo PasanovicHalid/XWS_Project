@@ -1,0 +1,34 @@
+<div class="content">
+    <div>
+        <div class="inputs">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="this.userInfo.email" matInput placeholder="Email">
+            </mat-form-field>
+            <div class="inline-items">
+                <mat-form-field appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input [(ngModel)]="this.userInfo.firstName" matInput placeholder="First Name">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input [(ngModel)]="this.userInfo.lastName" matInput placeholder="Last Name">
+                </mat-form-field>
+            </div>
+            <div class="inline-items">
+                <mat-form-field appearance="outline">
+                    <mat-label>Phone number</mat-label>
+                    <input [(ngModel)]="this.userInfo.phoneNumber" matInput placeholder="Phone number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input [(ngModel)]="this.userInfo.address" matInput placeholder="Address">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="buttons">
+            <button mat-raised-button color="primary" (click)="Save()" >Save</button>
+            <button class="delete-button" mat-raised-button color="primary">Delete your Account</button>
+        </div>
+    </div>
+</div>

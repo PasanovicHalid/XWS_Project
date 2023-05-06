@@ -40,6 +40,12 @@ service UserService {
             body: "*"
         };
     }
+
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+        option (google.api.http) = {
+            delete: "/api/user/deleteUser/{id}"
+        };
+    }
 }
 
 message User {
@@ -111,5 +117,13 @@ message CreateUserRequest {
 }
 
 message CreateUserResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message DeleteUserRequest {
+    string identityId = 1;
+}
+
+message DeleteUserResponse {
     common.RequestResult requestResult = 1;
 }
