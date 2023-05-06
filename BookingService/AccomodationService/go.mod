@@ -1,4 +1,4 @@
-module github.com/PasanovicHalid/XWS_Project/BookingService/UserService
+module github.com/PasanovicHalid/XWS_Project/BookingService/AccomodationService
 
 go 1.20
 
@@ -7,7 +7,6 @@ replace github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRP
 replace github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga => ../SharedLibraries/Saga
 
 require (
-	github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC v0.0.0-00010101000000-000000000000
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	go.mongodb.org/mongo-driver v1.11.4
 	google.golang.org/grpc v1.54.0
@@ -16,7 +15,6 @@ require (
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/pkg/errors v0.9.1 // indirect

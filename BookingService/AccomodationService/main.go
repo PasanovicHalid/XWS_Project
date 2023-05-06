@@ -1,6 +1,6 @@
 package main
 
-import configurations "startup"
+import configurations "github.com/PasanovicHalid/XWS_Project/BookingService/AccomodationService/startup"
 
 func main() {
 	configuration := configurations.NewConfigurations()
