@@ -31,6 +31,7 @@ export class RegisterComponent {
           return
         }
         this.authService.AddTokenWithInfoToLocalStorage(response.token)
+        this.toastr.success("Successfully registered")
         this.router.navigate(['/initial-user-info-entry']);
       },
       error: (err) => {

@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: booking-app-debug
+name: booking_app_debug
 
 services:
   authentification_service:
@@ -8,10 +8,9 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile.debug
+      dockerfile: ./AuthentificationService/Dockerfile
     restart: on-failure
     ports:
-      - ${AUTHENTIFICATION_SERVICE_PORT}:${AUTHENTIFICATION_SERVICE_PORT}
       - 11001:11001
     environment:
       AUTHENTIFICATION_SERVICE_PORT: ${AUTHENTIFICATION_SERVICE_PORT}
@@ -31,7 +30,6 @@ services:
       dockerfile: ./UserService/Dockerfile
     restart: on-failure
     ports:
-      - ${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
       - 11002:11002
     environment:
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
@@ -48,7 +46,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile
+      dockerfile: ./APIGateway/Dockerfile.debug
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}

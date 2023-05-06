@@ -1,4 +1,5 @@
-export class InitialUserInfoRequest {
+export class CreateUserRequest {
+    identityId : string = "";
     email : string = "";
     firstName : string = "";
     lastName : string = "";

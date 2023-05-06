@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: booking-app
+name: booking_app
 
 services:
   authentification_service:
@@ -29,6 +29,7 @@ services:
     restart: on-failure
     environment:
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+      USER_DB_HOST: ${USER_DB_HOST}
       USER_DB_PORT: ${USER_DB_PORT}
     depends_on:
       user_db:

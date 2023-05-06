@@ -9,31 +9,31 @@
         <div class="inputs">
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email">
+                <input [(ngModel)]="this.initialUserInfoRequest.email" matInput placeholder="Email">
             </mat-form-field>
             <div class="inline-items">
                 <mat-form-field appearance="outline">
                     <mat-label>First Name</mat-label>
-                    <input matInput placeholder="First Name">
+                    <input [(ngModel)]="this.initialUserInfoRequest.firstName" matInput placeholder="First Name">
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Last Name</mat-label>
-                    <input matInput placeholder="Last Name">
+                    <input [(ngModel)]="this.initialUserInfoRequest.lastName" matInput placeholder="Last Name">
                 </mat-form-field>
             </div>
             <div class="inline-items">
                 <mat-form-field appearance="outline">
                     <mat-label>Phone number</mat-label>
-                    <input matInput placeholder="Phone number">
+                    <input [(ngModel)]="this.initialUserInfoRequest.phoneNumber" matInput placeholder="Phone number">
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Address</mat-label>
-                    <input matInput placeholder="Address">
+                    <input [(ngModel)]="this.initialUserInfoRequest.address" matInput placeholder="Address">
                 </mat-form-field>
             </div>
         </div>
         <div class="buttons">
-            <button mat-raised-button color="primary">Save</button>
+            <button mat-raised-button color="primary" (click)="Submit()">Save</button>
         </div>
     </div>
 </div>

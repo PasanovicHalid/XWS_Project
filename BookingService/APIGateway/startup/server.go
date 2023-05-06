@@ -2,9 +2,11 @@ package configurations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/domain"
@@ -19,9 +21,10 @@ import (
 )
 
 type Server struct {
-	config    *Configurations
-	mux       *runtime.ServeMux
-	final_mux *http.ServeMux
+	config     *Configurations
+	mux        *runtime.ServeMux
+	final_mux  *http.ServeMux
+	keyService *application.KeyService
 }
 
 func NewServer(config *Configurations) *Server {
@@ -38,20 +41,18 @@ func NewServer(config *Configurations) *Server {
 	server.initHandlers()
 
 	keyRepository := persistance.NewKeyRepository(mongo)
-	keyService := application.NewKeyService(keyRepository)
+	server.keyService = application.NewKeyService(keyRepository)
 	jwtService := authentification.NewJwtService()
-
-	keyService.SaveKey(&domain.Key{
-		PublicKey: "-----BEGIN PUBLIC KEY-----\n",
-	})
 
 	//For scecific routes you have to build all your middlewares from scratch
 	final_mux := http.NewServeMux()
-	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, keyService)))
+	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
 	final_mux.Handle("/api/authenticate/login", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/register", mw.MiddlewareContentTypeSet(server.mux))
-	final_mux.Handle("/api/user/updateUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, keyService)))
-	final_mux.Handle("/api/user/createUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, keyService)))
+	final_mux.Handle("/api/authenticate/getPublicKey", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/user/updateUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
+	final_mux.Handle("/api/user/createUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
+	final_mux.Handle("/getPublicKey", mw.MiddlewareContentTypeSet(server.GetPublicKeyHttp()))
 
 	server.final_mux = final_mux
 
@@ -75,6 +76,44 @@ func (server *Server) initHandlers() {
 }
 
 func (server *Server) Start() {
+	go func() {
+		server.GetPublicKeyForJwt()
+	}()
+
 	log.Printf("Starting server on port %s", server.config.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.final_mux))
+}
+
+func (server *Server) GetPublicKeyForJwt() {
+	time.Sleep(5 * time.Second)
+
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/api/authenticate/getPublicKey", server.config.Port))
+
+	if err != nil {
+		log.Panic(err)
+		return
+	}
+
+	if resp.StatusCode != 200 {
+		log.Panic("Failed to get public key from authentification service")
+		return
+	}
+
+	fields := make(map[string]string)
+
+	decoder := json.NewDecoder(resp.Body)
+	decoder.Decode(&fields)
+	resp.Body.Close()
+
+	server.keyService.SaveKey(&domain.Key{
+		PublicKey: fields["publicKey"],
+	})
+}
+
+func (server *Server) GetPublicKeyHttp() http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		server.GetPublicKeyForJwt()
+
+		rw.WriteHeader(http.StatusOK)
+	})
 }
