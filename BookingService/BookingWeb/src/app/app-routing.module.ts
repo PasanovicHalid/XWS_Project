@@ -8,6 +8,7 @@ import { DashboardComponent } from './landing-pages/dashboard/dashboard.componen
 import { RegisterComponent } from './authentification/register/register.component';
 import { InitialUserInfoEntryComponent } from './authentification/initial-user-info-entry/initial-user-info-entry.component';
 import { UserPanelComponent } from './authentification/user-panel/user-panel.component';
+import { AuthGuard } from './guards/auth.gard';
 
 const routes: Routes = [
   {
@@ -24,9 +25,8 @@ const routes: Routes = [
     path: '',
     component: PrivateLayoutComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'test', component: LoginComponent },
-      { path: 'user-panel', component: UserPanelComponent },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+      { path: 'user-panel', component: UserPanelComponent, canActivate: [AuthGuard] },
     ]
   },
 ];
