@@ -2,5 +2,19 @@
     <a routerLink="/dashboard" class="logo">
         <img src="../../../assets/logo-small.png" alt="Company Logo">
     </a>
-    <a class="login" mat-button routerLink="/test">Login</a>
+    <div class="end-elements" >
+        <a class="user-profile" [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>account_circle</mat-icon>
+        </a>
+        <mat-menu #menu="matMenu" >
+            <button routerLink="/user-panel" mat-menu-item>
+                <mat-icon>account_circle</mat-icon>
+                Profile
+            </button>
+            <button mat-menu-item (click)="Logout()">
+                <mat-icon>logout</mat-icon>
+                Logout
+            </button>
+        </mat-menu>
+    </div>
 </nav>

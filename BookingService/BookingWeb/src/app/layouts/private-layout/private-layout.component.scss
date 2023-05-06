@@ -9,6 +9,7 @@
     grid-template-columns: 17% auto;
     grid-template-rows: 50px auto;
     min-height: 100%;
+    animation: 2s ease-out 0s 1 fadeIn;
 
     .side-nav {
         grid-row: 2;
@@ -25,5 +26,18 @@
         grid-column: 2;
         padding-left: 10px;
         padding-top: 10px;
+
+        .router{
+            animation: 2s ease-out 0s 1 fadeIn;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }

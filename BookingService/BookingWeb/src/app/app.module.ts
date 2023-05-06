@@ -13,6 +13,7 @@ import { NavsModule } from './navs/navs.module';
 import { SideNavComponent } from './navs/side-nav/side-nav.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
+import { fadeAnimation } from './animations/fade';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")

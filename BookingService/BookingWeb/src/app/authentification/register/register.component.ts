@@ -35,7 +35,7 @@ export class RegisterComponent {
         this.router.navigate(['/initial-user-info-entry']);
       },
       error: (err) => {
-        this.toastr.error(err.error)
+        this.toastr.error("Something went wrong.")
       }
     });
   }

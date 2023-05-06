@@ -30,7 +30,7 @@ export class InitialUserInfoEntryComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.toastr.error(err.error)
+        this.toastr.error("Something went wrong.")
       }
     });
   }
