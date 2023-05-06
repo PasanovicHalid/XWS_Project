@@ -36,6 +36,22 @@ services:
     networks:
       - network
 
+  accomodation_service:
+    image: accomodation_service
+    container_name: accomodation_service
+    build:
+      context: .
+      dockerfile: ./AccomodationService/Dockerfile
+    restart: on-failure
+    environment:
+      ACCOMODATION_SERVICE_PORT: ${ACCOMODATION_SERVICE_PORT}
+      ACCOMODATION_DB_PORT: ${ACCOMODATION_DB_PORT}
+    depends_on:
+      accomodation_db:
+        condition: service_healthy
+    networks:
+      - network
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -93,6 +109,22 @@ services:
     networks:
       - network
 
+  accomodation_db:
+    image: mongo
+    container_name: accomodation_db
+    restart: on-failure
+    ports:
+      - "${ACCOMODATION_DB_EXTERNAL_PORT}:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - accomodation_db:/data/db
+    networks:
+      - network
+
   api_gateway_db:
     image: mongo
     container_name: api_gateway_db
@@ -116,4 +148,5 @@ networks:
 volumes:
   authentification_db:
   user_db:
+  accomodation_db:
   api_gateway_db:
