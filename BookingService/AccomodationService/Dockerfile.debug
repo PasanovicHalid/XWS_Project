@@ -1,0 +1,28 @@
+# Start from the latest golang base image
+FROM golang:latest as builder
+
+# Expose port 9103 to the outside world
+EXPOSE 9103 11003
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY ./AccomodationService/go.mod .AccomodationService/go.sum ./
+
+# Copy the local dependency
+COPY /SharedLibraries ../SharedLibraries
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy everything from the current directory to the Working Directory inside the container
+COPY ./AccomodationService/ .
+
+# Build the Go app
+RUN CGO_ENABLED=0 go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
+
+RUN CGO_ENABLED=0 GOOS=linux go build -gcflags "all=-N -l" -a -installsuffix cgo -o main .
+
+# Command to run the executable
+CMD ["/go/bin/dlv", "--listen=:11002", "--headless=true", "--log=true", "--accept-multiclient", "--api-version=2", "exec", "/app/main"]

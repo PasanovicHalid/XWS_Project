@@ -9,11 +9,15 @@
 		{
 			"path": "UserService"
 		},
+		
 		{
 			"path": "SharedLibraries"
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "AccomodationService"
 		}
 	],
 	"settings": {}
