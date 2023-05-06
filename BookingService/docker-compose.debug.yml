@@ -158,4 +158,5 @@ networks:
 volumes:
   authentification_db:
   user_db:
+  accomodation_db:
   api_gateway_db:
