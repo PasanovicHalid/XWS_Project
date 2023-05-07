@@ -43,7 +43,7 @@ service UserService {
 
     rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
         option (google.api.http) = {
-            delete: "/api/user/deleteUser/{id}"
+            delete: "/api/user/deleteUser/{identityId}"
         };
     }
 }

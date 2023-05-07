@@ -11,7 +11,7 @@ import { DashboardComponent } from './landing-pages/dashboard/dashboard.componen
 import { LandingPageComponent } from './landing-pages/landing-page/landing-page.component';
 import { NavsModule } from './navs/navs.module';
 import { SideNavComponent } from './navs/side-nav/side-nav.component';
-import { JwtModule } from '@auth0/angular-jwt';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { fadeAnimation } from './animations/fade';
 
@@ -42,7 +42,7 @@ export function tokenGetter() {
     ToastrModule.forRoot(),
 
   ],
-  providers: [],
+  providers: [JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
