@@ -173,3 +173,25 @@ func (handler *IdentityHandler) GetIdentityByUsername(ctx context.Context, reque
 		},
 	}, nil
 }
+
+func (handler *IdentityHandler) Remove(ctx context.Context, request *auth_pb.RemoveRequest) (*auth_pb.RemoveResponse, error) {
+	err := handler.identityService.DeleteIdentity(request.IdentityId)
+
+	if err != nil {
+		if err == persistance.ErrorIdentityNotFound {
+			return &auth_pb.RemoveResponse{
+				RequestResult: &common_pb.RequestResult{
+					Code:    400,
+					Message: "Invalid identity id",
+				},
+			}, nil
+		}
+		return nil, err
+	}
+
+	return &auth_pb.RemoveResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}

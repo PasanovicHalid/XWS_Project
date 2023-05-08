@@ -12,6 +12,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/domain"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
@@ -39,6 +40,7 @@ func NewServer(config *Configurations) *Server {
 	}
 
 	server.initHandlers()
+	server.initCustomHandlers()
 
 	keyRepository := persistance.NewKeyRepository(mongo)
 	server.keyService = application.NewKeyService(keyRepository)
@@ -73,6 +75,13 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (server *Server) initCustomHandlers() {
+	authentificationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthentificationHost, server.config.AuthentificationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint)
+	userHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

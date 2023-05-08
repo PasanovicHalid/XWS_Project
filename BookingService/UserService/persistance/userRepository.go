@@ -53,6 +53,16 @@ func (repository *UserRepository) UpdateUser(ctx *context.Context, user *domain.
 	return nil
 }
 
+func (repository *UserRepository) DeleteUser(ctx *context.Context, id string) error {
+	_, err := repository.users.DeleteOne(*ctx, bson.M{"_id": id})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (repository *UserRepository) filterOne(ctx *context.Context, filter interface{}) (user *domain.User, err error) {
 	result := repository.users.FindOne(*ctx, filter)
 	err = result.Decode(&user)

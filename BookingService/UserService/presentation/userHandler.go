@@ -106,3 +106,26 @@ func (handler *UserHandler) GetUserById(ctx context.Context, request *user_pb.Ge
 		},
 	}, nil
 }
+
+func (handler *UserHandler) DeleteUser(ctx context.Context, request *user_pb.DeleteUserRequest) (response *user_pb.DeleteUserResponse, err error) {
+	err = handler.userService.DeleteUser(request.IdentityId)
+
+	if err != nil {
+		if err == persistance.ErrorUserNotFound {
+			return &user_pb.DeleteUserResponse{
+				RequestResult: &common_pb.RequestResult{
+					Code:    400,
+					Message: err.Error(),
+				},
+			}, nil
+		}
+
+		return nil, err
+	}
+
+	return &user_pb.DeleteUserResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}

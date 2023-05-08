@@ -13,4 +13,5 @@ type IUserRepository interface {
 	FindUserById(ctx *context.Context, id string) (*domain.User, error)
 	CreateUser(ctx *context.Context, user *domain.User) error
 	UpdateUser(ctx *context.Context, user *domain.User) error
+	DeleteUser(ctx *context.Context, id string) error
 }

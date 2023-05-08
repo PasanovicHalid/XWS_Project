@@ -47,6 +47,14 @@ export class UserService {
     ).pipe(catchError(this.handleError))
   }
 
+  public DeleteUser(identityId: string): Observable<any> {
+    return this.http.delete(
+      this.basePath + 'deregister/' + identityId,
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
 
   private handleError(error: HttpErrorResponse) {
     return throwError(() => new Error(error.status + '\n' + error.error));

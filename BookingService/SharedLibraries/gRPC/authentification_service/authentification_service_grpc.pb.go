@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	AuthenticateService_Login_FullMethodName                 = "/authenticate.AuthenticateService/Login"
 	AuthenticateService_Register_FullMethodName              = "/authenticate.AuthenticateService/Register"
+	AuthenticateService_Remove_FullMethodName                = "/authenticate.AuthenticateService/Remove"
 	AuthenticateService_ChangePassword_FullMethodName        = "/authenticate.AuthenticateService/ChangePassword"
 	AuthenticateService_ChangeUsername_FullMethodName        = "/authenticate.AuthenticateService/ChangeUsername"
 	AuthenticateService_GetIdentityByUsername_FullMethodName = "/authenticate.AuthenticateService/GetIdentityByUsername"
@@ -33,6 +34,7 @@ const (
 type AuthenticateServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Remove(ctx context.Context, in *RemoveRequest, opts ...grpc.CallOption) (*RemoveResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	ChangeUsername(ctx context.Context, in *ChangeUsernameRequest, opts ...grpc.CallOption) (*ChangeUsernameResponse, error)
 	GetIdentityByUsername(ctx context.Context, in *GetIdentityByUsernameRequest, opts ...grpc.CallOption) (*GetIdentityByUsernameResponse, error)
@@ -59,6 +61,15 @@ func (c *authenticateServiceClient) Login(ctx context.Context, in *LoginRequest,
 func (c *authenticateServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, AuthenticateService_Register_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticateServiceClient) Remove(ctx context.Context, in *RemoveRequest, opts ...grpc.CallOption) (*RemoveResponse, error) {
+	out := new(RemoveResponse)
+	err := c.cc.Invoke(ctx, AuthenticateService_Remove_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +118,7 @@ func (c *authenticateServiceClient) GetPublicKey(ctx context.Context, in *GetPub
 type AuthenticateServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Remove(context.Context, *RemoveRequest) (*RemoveResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	ChangeUsername(context.Context, *ChangeUsernameRequest) (*ChangeUsernameResponse, error)
 	GetIdentityByUsername(context.Context, *GetIdentityByUsernameRequest) (*GetIdentityByUsernameResponse, error)
@@ -123,6 +135,9 @@ func (UnimplementedAuthenticateServiceServer) Login(context.Context, *LoginReque
 }
 func (UnimplementedAuthenticateServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedAuthenticateServiceServer) Remove(context.Context, *RemoveRequest) (*RemoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
 }
 func (UnimplementedAuthenticateServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -181,6 +196,24 @@ func _AuthenticateService_Register_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthenticateServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticateService_Remove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticateServiceServer).Remove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticateService_Remove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticateServiceServer).Remove(ctx, req.(*RemoveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -271,6 +304,10 @@ var AuthenticateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _AuthenticateService_Register_Handler,
+		},
+		{
+			MethodName: "Remove",
+			Handler:    _AuthenticateService_Remove_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

@@ -8,7 +8,7 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile
+      dockerfile: ./AuthentificationService/Dockerfile.debug
     restart: on-failure
     ports:
       - 11001:11001
@@ -56,7 +56,7 @@ services:
       ACCOMODATION_DB_HOST: ${ACCOMODATION_DB_HOST}
       ACCOMODATION_DB_PORT: ${ACCOMODATION_DB_PORT}
     depends_on:
-      accomodatio_db:
+      accomodation_db:
         condition: service_healthy
     networks:
       - network
@@ -66,7 +66,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile.debug
+      dockerfile: ./APIGateway/Dockerfile
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}

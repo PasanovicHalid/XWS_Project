@@ -35,3 +35,9 @@ func (service *UserService) UpdateUser(user *domain.User) error {
 	defer cancel()
 	return service.userRepository.UpdateUser(&ctx, user)
 }
+
+func (service *UserService) DeleteUser(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.userRepository.DeleteUser(&ctx, id)
+}

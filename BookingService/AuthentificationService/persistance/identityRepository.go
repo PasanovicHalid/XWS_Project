@@ -40,7 +40,13 @@ func (repository *IdentityRepository) FindIdentityByUsername(ctx *context.Contex
 }
 
 func (repository *IdentityRepository) FindIdentityById(ctx *context.Context, id string) (*domain.Identity, error) {
-	filter := bson.D{{"_id", id}}
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.D{{"_id", objectId}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -73,7 +79,13 @@ func (repository *IdentityRepository) UpdateIdentity(ctx *context.Context, ident
 }
 
 func (repository *IdentityRepository) DeleteIdentity(ctx *context.Context, id string) error {
-	result, err := repository.identities.DeleteOne(*ctx, bson.D{{"_id", id}})
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return err
+	}
+
+	result, err := repository.identities.DeleteOne(*ctx, bson.D{{"_id", objectId}})
 
 	if err != nil {
 		return err

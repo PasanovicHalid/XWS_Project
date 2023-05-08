@@ -22,6 +22,12 @@ service AuthenticateService {
         };
     }
 
+    rpc Remove(RemoveRequest) returns (RemoveResponse) {
+        option (google.api.http) = {
+            delete: "/api/authenticate/remove/{identityId}"
+        };
+    }
+
     rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {
         option (google.api.http) = {
             put: "/api/authenticate/changePassword"
@@ -110,4 +116,12 @@ message GetIdentityByUsernameRequest {
 message GetIdentityByUsernameResponse {
     common.RequestResult requestResult = 1;
     string identityId = 2;
+}
+
+message RemoveRequest {
+    string identityId = 1;
+}
+
+message RemoveResponse {
+    common.RequestResult requestResult = 1;
 }

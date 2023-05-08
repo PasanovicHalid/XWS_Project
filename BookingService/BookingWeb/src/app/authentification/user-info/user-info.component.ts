@@ -3,6 +3,7 @@ import { UpdateUserRequest } from '../contracts/requests/update-user-request';
 import { UserService } from '../services/user.service';
 import { AuthentificationService } from '../services/authentification.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-info',
@@ -16,7 +17,8 @@ export class UserInfoComponent implements OnInit {
 
   constructor(private userService : UserService,
               private authService : AuthentificationService,
-              private toastr: ToastrService) {}
+              private toastr: ToastrService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.identityId = this.authService.GetIdentityId()
@@ -42,6 +44,19 @@ export class UserInfoComponent implements OnInit {
           return
         }
         this.toastr.success("Successfully updated user")
+      },
+      error: (err) => {
+        this.toastr.error("Something went wrong.")
+      }
+    });
+  }
+
+  public Delete() {
+    this.userService.DeleteUser(this.identityId).subscribe({
+      next: (response) => {
+        this.toastr.success("Successfully deleted user")
+        this.authService.Logout()
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.toastr.error("Something went wrong.")
