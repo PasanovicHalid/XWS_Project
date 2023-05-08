@@ -1,7 +1,7 @@
 package domain
 
 type Accommodation struct {
-	IdentityId       string `bson:"_id,omitempty"`
+	Id               string `bson:"_id,omitempty"`
 	Name             string `bson:"name,omitempty"`
 	Location         string `bson:"location,omitempty"`
 	Wifi             bool   `bson:"wifi,omitempty"`

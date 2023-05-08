@@ -61,6 +61,26 @@ services:
     networks:
       - network
 
+  reservation_service:
+    image: reservation_service
+    container_name: reservation_service
+    build:
+      context: .
+      dockerfile: ./ReservationService/Dockerfile
+    restart: on-failure
+    ports:
+      - ${RESERVATION_SERVICE_PORT}:${RESERVATION_SERVICE_PORT}
+      - 11003:11003
+    environment:
+      RESERVATION_SERVICE_PORT: ${RESERVATION_SERVICE_PORT}
+      RESERVATION_DB_HOST: ${RESERVATION_DB_HOST}
+      RESERVATION_DB_PORT: ${RESERVATION_DB_PORT}
+    depends_on:
+      reservation_db:
+        condition: service_healthy
+    networks:
+      - network
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -135,6 +155,21 @@ services:
     networks:
       - network
 
+  reservation_db:
+    image: mongo
+    container_name: reservation_db
+    restart: on-failure
+    ports:
+      - "${RESERVATION_DB_EXTERNAL_PORT}:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - reservation_db:/data/db
+    networks:
+      - network
   api_gateway_db:
     image: mongo
     container_name: api_gateway_db
@@ -159,4 +194,5 @@ volumes:
   authentification_db:
   user_db:
   accommodation_db:
+  reservation_db:
   api_gateway_db:
