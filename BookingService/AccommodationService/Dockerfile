@@ -1,14 +1,11 @@
 # Start from the latest golang base image
 FROM golang:latest as builder
 
-# Expose port 9103 to the outside world
-EXPOSE 9103 11003
-
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY ./AccomodationService/go.mod .AccomodationService/go.sum ./
+COPY ./AccommodationService/go.mod ./AccommodationService/go.sum ./
 
 # Copy the local dependency
 COPY /SharedLibraries ../SharedLibraries
@@ -17,12 +14,23 @@ COPY /SharedLibraries ../SharedLibraries
 RUN go mod download
 
 # Copy everything from the current directory to the Working Directory inside the container
-COPY ./AccomodationService/ .
+COPY ./AccommodationService/ .
 
 # Build the Go app
-RUN CGO_ENABLED=0 go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -gcflags "all=-N -l" -a -installsuffix cgo -o main .
+
+
+######## Start a new stage from scratch #######
+FROM alpine:latest
+
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+
+# Expose port 9103 to the outside world
+EXPOSE 9103
 
 # Command to run the executable
-CMD ["/go/bin/dlv", "--listen=:11003", "--headless=true", "--log=true", "--accept-multiclient", "--api-version=2", "exec", "/app/main"]
+CMD ["./main"]

@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	DATABASE                = "AccomodationDB"
-	ACCOMODATION_COLLECTION = "Accomodations"
+	DATABASE                 = "AccommodationDB"
+	ACCOMMODATION_COLLECTION = "Accommodations"
 )
 
 func NewMongoClient(host string, port string) (*mongo.Client, error) {

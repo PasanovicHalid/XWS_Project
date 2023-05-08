@@ -1,4 +1,4 @@
-module github.com/PasanovicHalid/XWS_Project/BookingService/AccomodationService
+module github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService
 
 go 1.20
 
