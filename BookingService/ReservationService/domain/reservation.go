@@ -5,12 +5,14 @@ type Reservation struct {
 	AccommodationOfferId string            `bson:"offerId,omitempty"`
 	CustomerId           string            `bson:"customerId,omitempty"`
 	Status               ReservationStatus `bson:"status,omitempty"`
+	NumberOfGuests       int               `bson:"numOfGuests,omitempty"`
+	DateRange            DateRange         `bson:"dateRange,omitempty"`
 }
 
-type ReservationStatus string
+type ReservationStatus int
 
 const (
-	Pennding ReservationStatus = "PENNDING"
-	Accepted ReservationStatus = "ACCEPTED"
-	Rejected ReservationStatus = "REJECTED"
+	Pending ReservationStatus = iota
+	Accepted
+	Rejected
 )

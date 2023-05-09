@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation";
+
+package reservation;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+enum ReservationStatus{
+            PENDING = 0;
+            ACCEPTED = 1;
+            REJECTED = 2;
+}
+
+message Reservation {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    ReservationStatus status = 4;
+    int32 numberOfGuests = 5;
+    DateRange dateRange = 6;
+
+}
+
+message DateRange {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+}
+
+
+service ReservationService {
+    rpc GetReservationById (GetReservationByIdRequest) returns (GetReservationByIdResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getReservationById/{id}"
+        };
+    }
+   
+    rpc GetAllReservations (GetAllReservationsRequest) returns (GetAllReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getAllReservation"
+        };
+    }
+    
+    rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse) {
+        option (google.api.http) = {
+            post: "/api/reservation/createReservation"
+            body: "*"
+        };
+    }
+
+    rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationResponse) {
+        option (google.api.http) = {
+            delete: "/api/reservation/deleteReservation/{id}"
+        };
+    }
+
+    rpc UpdateReservation (UpdateReservationRequest) returns (UpdateReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/updateReservation"
+            body: "*"
+        };
+    }
+   
+}
+
+message CreateReservationRequest {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    ReservationStatus status = 4;
+    int32 numberOfGuests = 5;
+    DateRange dateRange = 6;
+}
+
+message CreateReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message GetReservationByIdRequest {
+    string id = 1;
+}
+
+message GetReservationByIdResponse {
+    common.RequestResult requestResult = 1;
+    Reservation reservation = 2;
+}
+
+message GetAllReservationsRequest {
+    int32 page = 1;
+    int32 size = 2;
+}
+
+message GetAllReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message DeleteReservationRequest {
+    string id = 1;
+}
+
+message DeleteReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message UpdateReservationRequest {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    ReservationStatus status = 4;
+    int32 numberOfGuests = 5;
+    DateRange dateRange = 6;
+}
+
+message UpdateReservationResponse {
+    common.RequestResult requestResult = 1;
+}
