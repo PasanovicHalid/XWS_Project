@@ -25,7 +25,7 @@ func (configurations *Configurations) initializeEnvironmentVariables() {
 		configurations.Port = "9104"
 	}
 	if configurations.ReservationDBHost == "" {
-		configurations.ReservationDBHost = "34000"
+		configurations.ReservationDBHost = "localhost"
 	}
 	if configurations.ReservationDBPort == "" {
 		configurations.ReservationDBPort = "27017"

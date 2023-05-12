@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application"
@@ -22,26 +23,35 @@ func NewReservationHandler(reservationService *application.ReservationService) *
 }
 
 func (handler *ReservationHandler) CreateReservation(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
-	// startTime, err := ptypes.Timestamp(request.StartDateTimeUtc)
-	// log.Print("PPPPPPPPPPPPPPPPPPPPPPPPPPPP")
-	// log.Print(request.Id)
-	// if err != nil {
-	// 	//return nil, err
-	// }
+	layout := "2006-01-02T15:04:05Z"
 
-	// endTime, err := ptypes.Timestamp(request.EndDateTimeUtc)
-	// if err != nil {
-	// 	//return nil, err
-	// }
+	startTimeStr := request.StartDateTimeUtc
+	if startTimeStr == "" {
+		return nil, errors.New("StartDateTimeUtc is empty")
+	}
 
+	endTimeStr := request.EndDateTimeUtc
+	if endTimeStr == "" {
+		return nil, errors.New("EndDateTimeUtc is empty")
+	}
+
+	startTime, err := time.Parse(layout, startTimeStr)
+	if err != nil {
+		return nil, err
+	}
+
+	endTime, err := time.Parse(layout, endTimeStr)
+	if err != nil {
+		return nil, err
+	}
 	reservation := &domain.Reservation{
-		Id:                   "1",
-		AccommodationOfferId: "request.AccommodationOfferId",
-		CustomerId:           "request.CustomerId",
+		Id:                   request.Id,
+		AccommodationOfferId: request.AccommodationOfferId,
+		CustomerId:           request.CustomerId,
 		Status:               0,
-		NumberOfGuests:       2,
-		StartDateTimeUTC:     time.Now(),
-		EndDateTimeUTC:       time.Now(),
+		NumberOfGuests:       int(request.NumberOfGuests),
+		StartDateTimeUTC:     startTime,
+		EndDateTimeUTC:       endTime,
 	}
 
 	err = handler.reservationService.CreateReservation(reservation)

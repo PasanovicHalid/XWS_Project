@@ -6,7 +6,6 @@ package reservation;
 
 import "google/api/annotations.proto";
 import "common/common.proto";
-import "google/protobuf/timestamp.proto";
 
 service ReservationService {
     rpc GetReservationById (GetReservationByIdRequest) returns (GetReservationByIdResponse) {
@@ -56,8 +55,8 @@ message Reservation {
     string customerId = 3;
     ReservationStatus status = 4;
     int32 numberOfGuests = 5;
-    google.protobuf.Timestamp startDateTimeUtc = 6;
-    google.protobuf.Timestamp endDateTimeUtc = 7;
+    string startDateTimeUtc = 6;
+    string endDateTimeUtc = 7;
 }
 
 
@@ -67,8 +66,8 @@ message CreateReservationRequest {
     string customerId = 3;
     ReservationStatus status = 4;
     int32 numberOfGuests = 5;
-    google.protobuf.Timestamp startDateTimeUtc = 6;
-    google.protobuf.Timestamp endDateTimeUtc = 7;
+    string startDateTimeUtc = 6;
+    string endDateTimeUtc = 7;
 }
 
 message CreateReservationResponse {
@@ -108,8 +107,8 @@ message UpdateReservationRequest {
     string customerId = 3;
     ReservationStatus status = 4;
     int32 numberOfGuests = 5;
-    google.protobuf.Timestamp startDateTimeUtc = 6;
-    google.protobuf.Timestamp endDateTimeUtc = 7;
+    string startDateTimeUtc = 6;
+    string endDateTimeUtc = 7;
 }
 
 message UpdateReservationResponse {
