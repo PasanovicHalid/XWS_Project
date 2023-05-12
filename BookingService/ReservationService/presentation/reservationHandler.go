@@ -2,6 +2,8 @@ package presentation
 
 import (
 	"context"
+	"errors"
+	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
@@ -21,13 +23,35 @@ func NewReservationHandler(reservationService *application.ReservationService) *
 }
 
 func (handler *ReservationHandler) CreateReservation(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
+	layout := "2006-01-02T15:04:05Z"
+
+	startTimeStr := request.StartDateTimeUtc
+	if startTimeStr == "" {
+		return nil, errors.New("StartDateTimeUtc is empty")
+	}
+
+	endTimeStr := request.EndDateTimeUtc
+	if endTimeStr == "" {
+		return nil, errors.New("EndDateTimeUtc is empty")
+	}
+
+	startTime, err := time.Parse(layout, startTimeStr)
+	if err != nil {
+		return nil, err
+	}
+
+	endTime, err := time.Parse(layout, endTimeStr)
+	if err != nil {
+		return nil, err
+	}
 	reservation := &domain.Reservation{
 		Id:                   request.Id,
 		AccommodationOfferId: request.AccommodationOfferId,
 		CustomerId:           request.CustomerId,
 		Status:               0,
-		NumberOfGuests:       request.NumberOfGuests,
-		DateRange:            request.DateRange,
+		NumberOfGuests:       int(request.NumberOfGuests),
+		StartDateTimeUTC:     startTime,
+		EndDateTimeUTC:       endTime,
 	}
 
 	err = handler.reservationService.CreateReservation(reservation)

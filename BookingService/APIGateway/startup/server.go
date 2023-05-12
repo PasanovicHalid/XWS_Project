@@ -56,6 +56,9 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/user/updateUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
 	final_mux.Handle("/api/user/createUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
 	final_mux.Handle("/getPublicKey", mw.MiddlewareContentTypeSet(server.GetPublicKeyHttp()))
+	final_mux.Handle("/api/reservation/getAllReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/reservation/createReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/reservation/getReservationById/{id}", mw.MiddlewareContentTypeSet(server.mux))
 
 	server.final_mux = final_mux
 
@@ -70,15 +73,19 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		panic(err)
 	}
-
+	fmt.Println("\n\n\nccAAAbbAAA\n\n\n")
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	fmt.Println(userEndpoint)
 	err = userPB.RegisterUserServiceHandlerFromEndpoint(context.TODO(), server.mux, userEndpoint, opts)
 	if err != nil {
 		panic(err)
 	}
 
+	fmt.Println("\n\n\nAAAAbbAAA\n\n\n")
 	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
+	fmt.Println(reservationEndpoint)
 	err = reservationPB.RegisterReservationServiceHandlerFromEndpoint(context.TODO(), server.mux, reservationEndpoint, opts)
+
 	if err != nil {
 		panic(err)
 	}
