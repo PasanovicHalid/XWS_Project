@@ -8,28 +8,6 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 import "google/protobuf/timestamp.proto";
 
-enum ReservationStatus{
-            PENDING = 0;
-            ACCEPTED = 1;
-            REJECTED = 2;
-}
-
-message Reservation {
-    string id = 1;
-    string accommodationOfferId = 2;
-    string customerId = 3;
-    ReservationStatus status = 4;
-    int32 numberOfGuests = 5;
-    DateRange dateRange = 6;
-
-}
-
-message DateRange {
-  google.protobuf.Timestamp start_time = 1;
-  google.protobuf.Timestamp end_time = 2;
-}
-
-
 service ReservationService {
     rpc GetReservationById (GetReservationByIdRequest) returns (GetReservationByIdResponse) {
         option (google.api.http) = {
@@ -65,13 +43,32 @@ service ReservationService {
    
 }
 
+enum ReservationStatus{
+            PENDING = 0;
+            ACCEPTED = 1;
+            REJECTED = 2;
+}
+
+
+message Reservation {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    ReservationStatus status = 4;
+    int32 numberOfGuests = 5;
+    google.protobuf.Timestamp startDateTimeUtc = 6;
+    google.protobuf.Timestamp endDateTimeUtc = 7;
+}
+
+
 message CreateReservationRequest {
     string id = 1;
     string accommodationOfferId = 2;
     string customerId = 3;
     ReservationStatus status = 4;
     int32 numberOfGuests = 5;
-    DateRange dateRange = 6;
+    google.protobuf.Timestamp startDateTimeUtc = 6;
+    google.protobuf.Timestamp endDateTimeUtc = 7;
 }
 
 message CreateReservationResponse {
@@ -111,7 +108,8 @@ message UpdateReservationRequest {
     string customerId = 3;
     ReservationStatus status = 4;
     int32 numberOfGuests = 5;
-    DateRange dateRange = 6;
+    google.protobuf.Timestamp startDateTimeUtc = 6;
+    google.protobuf.Timestamp endDateTimeUtc = 7;
 }
 
 message UpdateReservationResponse {

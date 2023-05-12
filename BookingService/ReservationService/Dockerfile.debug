@@ -1,7 +1,7 @@
 # Start from the latest golang base image
 FROM golang:latest as builder
 
-# Expose port 9103 to the outside world
+# Expose port 9104 to the outside world
 EXPOSE 9104 11004
 
 # Set the Current Working Directory inside the container

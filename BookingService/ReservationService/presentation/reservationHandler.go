@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"context"
+	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
@@ -21,13 +22,26 @@ func NewReservationHandler(reservationService *application.ReservationService) *
 }
 
 func (handler *ReservationHandler) CreateReservation(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
+	// startTime, err := ptypes.Timestamp(request.StartDateTimeUtc)
+	// log.Print("PPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+	// log.Print(request.Id)
+	// if err != nil {
+	// 	//return nil, err
+	// }
+
+	// endTime, err := ptypes.Timestamp(request.EndDateTimeUtc)
+	// if err != nil {
+	// 	//return nil, err
+	// }
+
 	reservation := &domain.Reservation{
-		Id:                   request.Id,
-		AccommodationOfferId: request.AccommodationOfferId,
-		CustomerId:           request.CustomerId,
+		Id:                   "1",
+		AccommodationOfferId: "request.AccommodationOfferId",
+		CustomerId:           "request.CustomerId",
 		Status:               0,
-		NumberOfGuests:       request.NumberOfGuests,
-		DateRange:            request.DateRange,
+		NumberOfGuests:       2,
+		StartDateTimeUTC:     time.Now(),
+		EndDateTimeUTC:       time.Now(),
 	}
 
 	err = handler.reservationService.CreateReservation(reservation)

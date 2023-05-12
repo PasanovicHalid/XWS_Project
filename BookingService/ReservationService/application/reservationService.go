@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application/common/interfaces/persistance"
@@ -25,8 +26,9 @@ func (service *ReservationService) GetReservationById(id string) (*domain.Reserv
 }
 
 func (service *ReservationService) CreateReservation(reservation *domain.Reservation) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
 	defer cancel()
+	fmt.Print("\nNEKI ISPIS\n")
 	return service.reservationRepository.CreateReservation(&ctx, reservation)
 }
 

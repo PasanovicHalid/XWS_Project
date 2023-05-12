@@ -3,6 +3,7 @@ package persistance
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -36,12 +37,14 @@ func (repository *ReservationRepository) FindReservationById(ctx *context.Contex
 }
 
 func (repository *ReservationRepository) CreateReservation(ctx *context.Context, reservation *domain.Reservation) error {
+	fmt.Print("\nNeki ispis 1")
 	_, err := repository.reservations.InsertOne(*ctx, reservation)
-
+	fmt.Print("\nNeki ispis 2")
+	fmt.Print(err)
 	if err != nil {
 		return err
 	}
-
+	fmt.Print("\nNeki ispis 3")
 	return nil
 }
 
