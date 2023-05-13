@@ -12,7 +12,10 @@ require (
 	google.golang.org/grpc v1.54.0
 )
 
+require github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2 // indirect
+
 require (
+	github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC v0.0.0-20230512223728-3bd7451f1839
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

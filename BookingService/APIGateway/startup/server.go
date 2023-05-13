@@ -14,6 +14,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
+	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
@@ -58,6 +59,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/getPublicKey", mw.MiddlewareContentTypeSet(server.GetPublicKeyHttp()))
 	final_mux.Handle("/api/reservation/getAllReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/createReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/accommodation/create", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getReservationById/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getHostPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getGuestPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
@@ -84,6 +86,13 @@ func (server *Server) initHandlers() {
 
 	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
 	err = reservationPB.RegisterReservationServiceHandlerFromEndpoint(context.TODO(), server.mux, reservationEndpoint, opts)
+
+	if err != nil {
+		panic(err)
+	}
+	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
+	fmt.Println(acommodanceEndpoint)
+	err = accomodancePB.RegisterAccommodationServiceHandlerFromEndpoint(context.TODO(), server.mux, acommodanceEndpoint, opts)
 
 	if err != nil {
 		panic(err)
