@@ -35,6 +35,23 @@ func request_AccommodationService_TempServiceMethod_0(ctx context.Context, marsh
 	var protoReq TempMessage
 	var metadata runtime.ServerMetadata
 
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["poruka"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "poruka")
+	}
+
+	protoReq.Poruka, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "poruka", err)
+	}
+
 	msg, err := client.TempServiceMethod(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -43,6 +60,23 @@ func request_AccommodationService_TempServiceMethod_0(ctx context.Context, marsh
 func local_request_AccommodationService_TempServiceMethod_0(ctx context.Context, marshaler runtime.Marshaler, server AccommodationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq TempMessage
 	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["poruka"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "poruka")
+	}
+
+	protoReq.Poruka, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "poruka", err)
+	}
 
 	msg, err := server.TempServiceMethod(ctx, &protoReq)
 	return msg, metadata, err
@@ -63,7 +97,7 @@ func RegisterAccommodationServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/accommodation.AccommodationService/TempServiceMethod", runtime.WithHTTPPathPattern("/api/accommodation/temp"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/accommodation.AccommodationService/TempServiceMethod", runtime.WithHTTPPathPattern("/api/accommodation/temp/{poruka}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -127,7 +161,7 @@ func RegisterAccommodationServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/accommodation.AccommodationService/TempServiceMethod", runtime.WithHTTPPathPattern("/api/accommodation/temp"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/accommodation.AccommodationService/TempServiceMethod", runtime.WithHTTPPathPattern("/api/accommodation/temp/{poruka}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -147,7 +181,7 @@ func RegisterAccommodationServiceHandlerClient(ctx context.Context, mux *runtime
 }
 
 var (
-	pattern_AccommodationService_TempServiceMethod_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "accommodation", "temp"}, ""))
+	pattern_AccommodationService_TempServiceMethod_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "accommodation", "temp", "poruka"}, ""))
 )
 
 var (

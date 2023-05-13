@@ -50,8 +50,7 @@ func NewServer(config *Configurations) *Server {
 
 	//For scecific routes you have to build all your middlewares from scratch
 	final_mux := http.NewServeMux()
-	// final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
-	final_mux.Handle("/", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
 	final_mux.Handle("/api/authenticate/login", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/register", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/getPublicKey", mw.MiddlewareContentTypeSet(server.mux))

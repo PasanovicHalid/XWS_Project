@@ -20,7 +20,7 @@ func NewAccomodationHandler(accomodationService *application.AccommodationServic
 }
 
 func (handler *AccommodationHandler) TempServiceMethod(ctx context.Context, message *accomodancePB.TempMessage) (*common_pb.RequestResult, error) {
-	handler.accomodationService.PrintSuccess("USPEH")
+	handler.accomodationService.PrintSuccess(message.String())
 	return &common_pb.RequestResult{
 		Code:    200,
 		Message: "USPESNO",

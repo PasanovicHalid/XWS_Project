@@ -11,7 +11,7 @@ const (
 	ACCOMMODATION_COLLECTION = "Accommodations"
 )
 
-func NewIdentityRepository(client *mongo.Client) *AccommodationRepository {
+func NewAccommodationRepository(client *mongo.Client) *AccommodationRepository {
 	return &AccommodationRepository{
 		identities: client.Database(DATABASE).Collection(ACCOMMODATION_COLLECTION),
 	}
