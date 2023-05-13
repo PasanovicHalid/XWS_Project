@@ -39,6 +39,10 @@ service ReservationService {
             body: "*"
         };
     }
+
+    rpc CheckGuestActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
+
+    rpc CheckHostActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
    
 }
 
@@ -53,10 +57,11 @@ message Reservation {
     string id = 1;
     string accommodationOfferId = 2;
     string customerId = 3;
-    ReservationStatus status = 4;
-    int32 numberOfGuests = 5;
-    string startDateTimeUtc = 6;
-    string endDateTimeUtc = 7;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
 }
 
 
@@ -64,10 +69,11 @@ message CreateReservationRequest {
     string id = 1;
     string accommodationOfferId = 2;
     string customerId = 3;
-    ReservationStatus status = 4;
-    int32 numberOfGuests = 5;
-    string startDateTimeUtc = 6;
-    string endDateTimeUtc = 7;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
 }
 
 message CreateReservationResponse {
@@ -105,12 +111,23 @@ message UpdateReservationRequest {
     string id = 1;
     string accommodationOfferId = 2;
     string customerId = 3;
-    ReservationStatus status = 4;
-    int32 numberOfGuests = 5;
-    string startDateTimeUtc = 6;
-    string endDateTimeUtc = 7;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
 }
 
 message UpdateReservationResponse {
     common.RequestResult requestResult = 1;
 }
+
+message CheckUserActiveReservationsRequest {
+    string id = 1;
+}
+
+message CheckUserActiveReservationsResponse {
+    common.RequestResult requestResult = 1;
+    bool hasActiveReservations = 2;
+}
+

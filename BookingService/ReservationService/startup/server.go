@@ -37,7 +37,6 @@ func NewServer(config *Configurations) *Server {
 
 	server.reservationHandler = presentation.NewReservationHandler(reservationService)
 
-	fmt.Print("\nAAAAA\n")
 	return server
 }
 
