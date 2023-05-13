@@ -14,6 +14,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
+	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
@@ -49,7 +50,8 @@ func NewServer(config *Configurations) *Server {
 
 	//For scecific routes you have to build all your middlewares from scratch
 	final_mux := http.NewServeMux()
-	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
+	// final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
+	final_mux.Handle("/", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/login", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/register", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/getPublicKey", mw.MiddlewareContentTypeSet(server.mux))
@@ -58,6 +60,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/getPublicKey", mw.MiddlewareContentTypeSet(server.GetPublicKeyHttp()))
 	final_mux.Handle("/api/reservation/getAllReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/createReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/accommodation/temp", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getReservationById/{id}", mw.MiddlewareContentTypeSet(server.mux))
 
 	server.final_mux = final_mux
@@ -73,7 +76,6 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("\n\n\nccAAAbbAAA\n\n\n")
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	fmt.Println(userEndpoint)
 	err = userPB.RegisterUserServiceHandlerFromEndpoint(context.TODO(), server.mux, userEndpoint, opts)
@@ -81,10 +83,16 @@ func (server *Server) initHandlers() {
 		panic(err)
 	}
 
-	fmt.Println("\n\n\nAAAAbbAAA\n\n\n")
 	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
 	fmt.Println(reservationEndpoint)
 	err = reservationPB.RegisterReservationServiceHandlerFromEndpoint(context.TODO(), server.mux, reservationEndpoint, opts)
+
+	if err != nil {
+		panic(err)
+	}
+	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
+	fmt.Println(acommodanceEndpoint)
+	err = accomodancePB.RegisterAccommodationServiceHandlerFromEndpoint(context.TODO(), server.mux, acommodanceEndpoint, opts)
 
 	if err != nil {
 		panic(err)
