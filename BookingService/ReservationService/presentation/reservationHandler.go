@@ -213,6 +213,50 @@ func (handler *ReservationHandler) RejectReservation(ctx context.Context, reques
 	return response, nil
 }
 
+func (handler *ReservationHandler) CancelAccommodationOffer(ctx context.Context, request *reservation_pb.DeleteReservationRequest) (*reservation_pb.DeleteReservationResponse, error) {
+	// Get the reservation associated with the given reservation ID
+	reservation, err := handler.reservationService.GetReservationByID(request.Id)
+	if err != nil {
+		return err
+	}
+
+
+	// Set the reservation's status to "Rejected"
+	reservation.ReservationStatus = domain.Rejected
+
+	// Update the reservation
+	err = handler.reservationService.UpdateReservation(reservation)
+	if err != nil {
+		return err
+	}
+
+	// Get all other reservations with the same accommodationOfferID
+	otherReservations, err := handler.reservationService.GetReservationsByAccommodationOfferID(accommodationOfferID)
+	if err != nil {
+		return err
+	}
+
+	// Set the status of other reservations to "Pending"
+	for _, otherReservation := range otherReservations {
+		if otherReservation.Id != reservationID {
+			otherReservation.ReservationStatus = domain.Pending
+			err = handler.reservationService.UpdateReservation(otherReservation)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	// Prepare the response
+	response := &reservation_pb.RejectReservationResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}
+
+	return response, nil
+}
+
 func (handler *ReservationHandler) DeleteReservation(ctx context.Context, request *reservation_pb.DeleteReservationRequest) (*reservation_pb.DeleteReservationResponse, error) {
 	// Retrieve the reservation ID from the request
 	reservationID := request.Id
