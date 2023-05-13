@@ -44,7 +44,7 @@ service ReservationService {
 
     rpc CheckHostActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
    
-   rpc GetHostPendingReservations(GetHostPendingReservationsRequest) returns (GetHostPendingReservationsResponse) {
+    rpc GetHostPendingReservations(GetHostPendingReservationsRequest) returns (GetHostPendingReservationsResponse) {
         option (google.api.http) = {
             get: "/api/reservation/getHostPendingReservations/{id}"
         };
@@ -53,6 +53,12 @@ service ReservationService {
     rpc GetGuestPendingReservations(GetGuestPendingReservationsRequest) returns (GetGuestPendingReservationsResponse) {
         option (google.api.http) = {
             get: "/api/reservation/getGuestPendingReservations/{id}"
+        };
+    }
+
+    rpc GetGuestAcceptedReservations(GetGuestAcceptedReservationsRequest) returns (GetGuestAcceptedReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getGuestAcceptedReservations/{id}"
         };
     }
 
@@ -170,6 +176,15 @@ message GetGuestPendingReservationsRequest {
 }
 
 message GetGuestPendingReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message GetGuestAcceptedReservationsRequest {
+    string id = 1;
+}
+
+message GetAcceptedPendingReservationsResponse {
     common.RequestResult requestResult = 1;
     repeated Reservation reservations = 2;
 }
