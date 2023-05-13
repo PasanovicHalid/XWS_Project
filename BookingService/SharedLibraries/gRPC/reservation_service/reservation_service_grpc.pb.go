@@ -27,6 +27,12 @@ type ReservationServiceClient interface {
 	CreateReservation(ctx context.Context, in *CreateReservationRequest, opts ...grpc.CallOption) (*CreateReservationResponse, error)
 	DeleteReservation(ctx context.Context, in *DeleteReservationRequest, opts ...grpc.CallOption) (*DeleteReservationResponse, error)
 	UpdateReservation(ctx context.Context, in *UpdateReservationRequest, opts ...grpc.CallOption) (*UpdateReservationResponse, error)
+	CheckGuestActiveReservations(ctx context.Context, in *CheckUserActiveReservationsRequest, opts ...grpc.CallOption) (*CheckUserActiveReservationsResponse, error)
+	CheckHostActiveReservations(ctx context.Context, in *CheckUserActiveReservationsRequest, opts ...grpc.CallOption) (*CheckUserActiveReservationsResponse, error)
+	GetHostPendingReservations(ctx context.Context, in *GetHostPendingReservationsRequest, opts ...grpc.CallOption) (*GetHostPendingReservationsResponse, error)
+	GetGuestPendingReservations(ctx context.Context, in *GetGuestPendingReservationsRequest, opts ...grpc.CallOption) (*GetGuestPendingReservationsResponse, error)
+	AcceptReservation(ctx context.Context, in *AcceptReservationRequest, opts ...grpc.CallOption) (*AcceptReservationResponse, error)
+	RejectReservation(ctx context.Context, in *RejectReservationRequest, opts ...grpc.CallOption) (*RejectReservationResponse, error)
 }
 
 type reservationServiceClient struct {
@@ -82,6 +88,60 @@ func (c *reservationServiceClient) UpdateReservation(ctx context.Context, in *Up
 	return out, nil
 }
 
+func (c *reservationServiceClient) CheckGuestActiveReservations(ctx context.Context, in *CheckUserActiveReservationsRequest, opts ...grpc.CallOption) (*CheckUserActiveReservationsResponse, error) {
+	out := new(CheckUserActiveReservationsResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/CheckGuestActiveReservations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) CheckHostActiveReservations(ctx context.Context, in *CheckUserActiveReservationsRequest, opts ...grpc.CallOption) (*CheckUserActiveReservationsResponse, error) {
+	out := new(CheckUserActiveReservationsResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/CheckHostActiveReservations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) GetHostPendingReservations(ctx context.Context, in *GetHostPendingReservationsRequest, opts ...grpc.CallOption) (*GetHostPendingReservationsResponse, error) {
+	out := new(GetHostPendingReservationsResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/GetHostPendingReservations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) GetGuestPendingReservations(ctx context.Context, in *GetGuestPendingReservationsRequest, opts ...grpc.CallOption) (*GetGuestPendingReservationsResponse, error) {
+	out := new(GetGuestPendingReservationsResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/GetGuestPendingReservations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) AcceptReservation(ctx context.Context, in *AcceptReservationRequest, opts ...grpc.CallOption) (*AcceptReservationResponse, error) {
+	out := new(AcceptReservationResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/AcceptReservation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) RejectReservation(ctx context.Context, in *RejectReservationRequest, opts ...grpc.CallOption) (*RejectReservationResponse, error) {
+	out := new(RejectReservationResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/RejectReservation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReservationServiceServer is the server API for ReservationService service.
 // All implementations must embed UnimplementedReservationServiceServer
 // for forward compatibility
@@ -91,6 +151,12 @@ type ReservationServiceServer interface {
 	CreateReservation(context.Context, *CreateReservationRequest) (*CreateReservationResponse, error)
 	DeleteReservation(context.Context, *DeleteReservationRequest) (*DeleteReservationResponse, error)
 	UpdateReservation(context.Context, *UpdateReservationRequest) (*UpdateReservationResponse, error)
+	CheckGuestActiveReservations(context.Context, *CheckUserActiveReservationsRequest) (*CheckUserActiveReservationsResponse, error)
+	CheckHostActiveReservations(context.Context, *CheckUserActiveReservationsRequest) (*CheckUserActiveReservationsResponse, error)
+	GetHostPendingReservations(context.Context, *GetHostPendingReservationsRequest) (*GetHostPendingReservationsResponse, error)
+	GetGuestPendingReservations(context.Context, *GetGuestPendingReservationsRequest) (*GetGuestPendingReservationsResponse, error)
+	AcceptReservation(context.Context, *AcceptReservationRequest) (*AcceptReservationResponse, error)
+	RejectReservation(context.Context, *RejectReservationRequest) (*RejectReservationResponse, error)
 	mustEmbedUnimplementedReservationServiceServer()
 }
 
@@ -112,6 +178,24 @@ func (UnimplementedReservationServiceServer) DeleteReservation(context.Context, 
 }
 func (UnimplementedReservationServiceServer) UpdateReservation(context.Context, *UpdateReservationRequest) (*UpdateReservationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateReservation not implemented")
+}
+func (UnimplementedReservationServiceServer) CheckGuestActiveReservations(context.Context, *CheckUserActiveReservationsRequest) (*CheckUserActiveReservationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckGuestActiveReservations not implemented")
+}
+func (UnimplementedReservationServiceServer) CheckHostActiveReservations(context.Context, *CheckUserActiveReservationsRequest) (*CheckUserActiveReservationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckHostActiveReservations not implemented")
+}
+func (UnimplementedReservationServiceServer) GetHostPendingReservations(context.Context, *GetHostPendingReservationsRequest) (*GetHostPendingReservationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHostPendingReservations not implemented")
+}
+func (UnimplementedReservationServiceServer) GetGuestPendingReservations(context.Context, *GetGuestPendingReservationsRequest) (*GetGuestPendingReservationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGuestPendingReservations not implemented")
+}
+func (UnimplementedReservationServiceServer) AcceptReservation(context.Context, *AcceptReservationRequest) (*AcceptReservationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcceptReservation not implemented")
+}
+func (UnimplementedReservationServiceServer) RejectReservation(context.Context, *RejectReservationRequest) (*RejectReservationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectReservation not implemented")
 }
 func (UnimplementedReservationServiceServer) mustEmbedUnimplementedReservationServiceServer() {}
 
@@ -216,6 +300,114 @@ func _ReservationService_UpdateReservation_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_CheckGuestActiveReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckUserActiveReservationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).CheckGuestActiveReservations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/CheckGuestActiveReservations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).CheckGuestActiveReservations(ctx, req.(*CheckUserActiveReservationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReservationService_CheckHostActiveReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckUserActiveReservationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).CheckHostActiveReservations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/CheckHostActiveReservations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).CheckHostActiveReservations(ctx, req.(*CheckUserActiveReservationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReservationService_GetHostPendingReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHostPendingReservationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).GetHostPendingReservations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/GetHostPendingReservations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).GetHostPendingReservations(ctx, req.(*GetHostPendingReservationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReservationService_GetGuestPendingReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGuestPendingReservationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).GetGuestPendingReservations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/GetGuestPendingReservations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).GetGuestPendingReservations(ctx, req.(*GetGuestPendingReservationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReservationService_AcceptReservation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcceptReservationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).AcceptReservation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/AcceptReservation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).AcceptReservation(ctx, req.(*AcceptReservationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReservationService_RejectReservation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RejectReservationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).RejectReservation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/RejectReservation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).RejectReservation(ctx, req.(*RejectReservationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReservationService_ServiceDesc is the grpc.ServiceDesc for ReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +434,30 @@ var ReservationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateReservation",
 			Handler:    _ReservationService_UpdateReservation_Handler,
+		},
+		{
+			MethodName: "CheckGuestActiveReservations",
+			Handler:    _ReservationService_CheckGuestActiveReservations_Handler,
+		},
+		{
+			MethodName: "CheckHostActiveReservations",
+			Handler:    _ReservationService_CheckHostActiveReservations_Handler,
+		},
+		{
+			MethodName: "GetHostPendingReservations",
+			Handler:    _ReservationService_GetHostPendingReservations_Handler,
+		},
+		{
+			MethodName: "GetGuestPendingReservations",
+			Handler:    _ReservationService_GetGuestPendingReservations_Handler,
+		},
+		{
+			MethodName: "AcceptReservation",
+			Handler:    _ReservationService_AcceptReservation_Handler,
+		},
+		{
+			MethodName: "RejectReservation",
+			Handler:    _ReservationService_RejectReservation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
