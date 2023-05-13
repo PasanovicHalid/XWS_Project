@@ -10,7 +10,7 @@ import "common/common.proto";
 service AccommodationService {
     rpc TempServiceMethod(TempMessage) returns (common.RequestResult) {
         option (google.api.http) = {
-            get: "/api/accommodation/temp/{poruka}"
+            get: "/api/accommodation/create"
         };
     }
 }

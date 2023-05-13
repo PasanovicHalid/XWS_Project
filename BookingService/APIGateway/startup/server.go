@@ -59,7 +59,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/getPublicKey", mw.MiddlewareContentTypeSet(server.GetPublicKeyHttp()))
 	final_mux.Handle("/api/reservation/getAllReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/createReservation", mw.MiddlewareContentTypeSet(server.mux))
-	final_mux.Handle("/api/accommodation/temp", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/accommodation/create", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getReservationById/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getHostPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getGuestPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
