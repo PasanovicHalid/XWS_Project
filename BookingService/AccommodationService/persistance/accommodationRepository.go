@@ -69,7 +69,7 @@ func (repository *AccommodationRepository) UpdateAccommodationOffer(ctx *context
 	id, _ := primitive.ObjectIDFromHex(reservation.Id)
 	temp := &domain.AccommodationOffer{
 		AccommodationId:           reservation.AccommodationId,
-		AvailableStartDateTimeUTC: reservation.AvailableEndDateTimeUTC,
+		AvailableStartDateTimeUTC: reservation.AvailableStartDateTimeUTC,
 		AvailableEndDateTimeUTC:   reservation.AvailableEndDateTimeUTC,
 		Price:                     reservation.Price,
 		PerGuest:                  reservation.PerGuest,

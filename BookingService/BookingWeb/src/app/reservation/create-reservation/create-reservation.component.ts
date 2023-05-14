@@ -39,7 +39,7 @@ export class CreateReservationComponent implements OnInit{
     });
   }
   createReservation(){
-    this.reservation.accommodationOfferId = "12";
+    this.reservation.accommodationOfferId = this.accommodationService.getId();
     this.reservation.customerId = this.userInfo.identityId;
     this.accommodationService.GetOwnerIdByAccommodationId(this.reservation.accommodationOfferId).subscribe(res=>{
       this.reservation.hostId = res;
