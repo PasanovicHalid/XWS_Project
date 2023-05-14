@@ -8,7 +8,7 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile.debug
+      dockerfile: ./AuthentificationService/Dockerfile
     restart: on-failure
     ports:
       - 11001:11001
@@ -66,7 +66,7 @@ services:
     container_name: reservation_service
     build:
       context: .
-      dockerfile: ./ReservationService/Dockerfile
+      dockerfile: ./ReservationService/Dockerfile.debug
     restart: on-failure
     ports:
       - ${RESERVATION_SERVICE_PORT}:${RESERVATION_SERVICE_PORT}

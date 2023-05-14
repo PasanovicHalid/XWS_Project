@@ -108,7 +108,9 @@ func (server *Server) initHandlers() {
 func (server *Server) initCustomHandlers() {
 	authentificationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthentificationHost, server.config.AuthentificationPort)
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
-	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint)
+	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
+	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
+	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint, acommodanceEndpoint, reservationEndpoint)
 	userHandler.Init(server.mux)
 }
 

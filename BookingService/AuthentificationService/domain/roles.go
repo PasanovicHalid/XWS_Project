@@ -1,6 +1,6 @@
 package domain
 
 const (
-	Role_Host  = "host"
-	Role_Guest = "guest"
+	Role_Host  = "Host"
+	Role_Guest = "Guest"
 )
