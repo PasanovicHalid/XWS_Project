@@ -34,3 +34,7 @@ func (handler *AccommodationHandler) UpdateAccomodationOffer(ctx context.Context
 func (handler *AccommodationHandler) FilterAccommodations(ctx context.Context, message *accomodancePB.AccommodationSearch) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
 	return handler.accomodationService.FilterAccommodations(message)
 }
+
+func (handler *AccommodationHandler) GetOwnerIdByAccommodationId(ctx context.Context, message *accomodancePB.GetOwnerIdRequest) (*accomodancePB.GetOwnerIdResponse, error) {
+	return handler.accomodationService.GetOwnerIdByAccommodationId(message)
+}

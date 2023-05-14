@@ -118,3 +118,39 @@ func (repository *AccommodationRepository) DeleteAccommodation(ctx *context.Cont
 
 	return nil
 }
+
+func (repository *AccommodationRepository) GetAccommodationById(ctx *context.Context, id string) (*domain.Accommodation, error) {
+	objID := id
+
+	filter := bson.M{"_id": objID}
+	result := repository.accomodations.FindOne(*ctx, filter)
+	if result.Err() != nil {
+		return nil, result.Err()
+	}
+
+	accommodation := &domain.Accommodation{}
+	err := result.Decode(accommodation)
+	if err != nil {
+		return nil, err
+	}
+
+	return accommodation, nil
+}
+
+func (repository *AccommodationRepository) GetAccommodationOfferById(ctx *context.Context, id string) (*domain.AccommodationOffer, error) {
+	objID, _ := primitive.ObjectIDFromHex(id)
+
+	filter := bson.M{"_id": objID}
+	result := repository.accommodationsOffers.FindOne(*ctx, filter)
+	if result.Err() != nil {
+		return nil, result.Err()
+	}
+
+	accommodationOffer := &domain.AccommodationOffer{}
+	err := result.Decode(accommodationOffer)
+	if err != nil {
+		return nil, err
+	}
+
+	return accommodationOffer, nil
+}

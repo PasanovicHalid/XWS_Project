@@ -284,3 +284,21 @@ func convertToNewAccomodation(accommodation domain.Accommodation) *accomodancePB
 		OwnerId:           accommodation.OwnerId,
 	}
 }
+
+func (service *AccommodationService) GetOwnerIdByAccommodationId(message *accomodancePB.GetOwnerIdRequest) (*accomodancePB.GetOwnerIdResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+	accommodation, err := service.accomodationRepository.GetAccommodationById(&ctx, accommodationOffer.AccommodationId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &accomodancePB.GetOwnerIdResponse{
+		Id: accommodation.OwnerId,
+	}
+	return response, nil
+}

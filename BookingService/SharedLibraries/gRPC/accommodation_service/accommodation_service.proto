@@ -36,6 +36,12 @@ service AccommodationService {
             body: "*"
         };
     }
+
+    rpc GetOwnerIdByAccommodationId(GetOwnerIdRequest) returns (GetOwnerIdResponse) {
+        option (google.api.http) = {
+            get: "/api/accommodation/getOwnerId/{id}"
+        };
+    }
 }
 
 message newAccomodation {
@@ -82,4 +88,12 @@ message AccommodationSearch {
     google.protobuf.Timestamp start_date_time_utc = 2;
     google.protobuf.Timestamp end_date_time_utc = 3;
     int32 guest_number = 4;
+}
+
+message GetOwnerIdRequest{
+    string id = 1;
+}
+
+message GetOwnerIdResponse{
+    string id = 1;
 }
