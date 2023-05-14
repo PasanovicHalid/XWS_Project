@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService/domain"
 	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 )
@@ -45,4 +46,39 @@ func (handler *AccommodationHandler) SetAutomaticAcception(ctx context.Context, 
 
 func (handler *AccommodationHandler) GetAutomaticAcception(ctx context.Context, message *accomodancePB.GetAutomaticStatusRequest) (*accomodancePB.GetAutomaticStatusResponse, error) {
 	return handler.accomodationService.GetAutomaticAcception(message)
+}
+
+func (handler *AccommodationHandler) GetAllAccommodationsByOwner(ctx context.Context, id *accomodancePB.IdentityIdRequest) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
+	accommodations := handler.accomodationService.GetAllAccommodationsByOwner(id.GetId())
+	return ConvertToGetFilteredAccommodationsResponse(accommodations)
+}
+
+func (handler *AccommodationHandler) DeleteAllAccommodationsByOwner(ctx context.Context, id *accomodancePB.IdentityIdRequest) (*common_pb.RequestResult, error) {
+	return handler.accomodationService.DeleteAllAccommodationsByOwner(id.GetId())
+}
+
+func convertToNewAccommodation(accommodation domain.Accommodation) *accomodancePB.NewAccomodation {
+	return &accomodancePB.NewAccomodation{
+		Id:                accommodation.Id,
+		Name:              accommodation.Name,
+		Location:          accommodation.Location,
+		Wifi:              accommodation.Wifi,
+		Kitchen:           accommodation.Kitchen,
+		AirConditioner:    accommodation.AirConditioner,
+		Parking:           accommodation.Parking,
+		MinNumberOfGuests: int32(accommodation.MinNumberOfGuest),
+		MaxNumberOfGuests: int32(accommodation.MaxNumberOfGuest),
+		Images:            accommodation.Images,
+		OwnerId:           accommodation.OwnerId,
+	}
+}
+
+func ConvertToGetFilteredAccommodationsResponse(accommodations []domain.Accommodation) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
+	response := &accomodancePB.GetFilteredAccommodationsResponse{}
+	for _, accommodation := range accommodations {
+		newAccommodation := convertToNewAccommodation(accommodation)
+		response.FilteredAccommodations = append(response.FilteredAccommodations, newAccommodation)
+	}
+	return response, nil
+
 }

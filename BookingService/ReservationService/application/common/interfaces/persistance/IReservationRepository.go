@@ -12,4 +12,5 @@ type IReservationRepository interface {
 	UpdateReservation(ctx *context.Context, reservation *domain.Reservation) error
 	DeleteReservation(ctx *context.Context, id string) error
 	GetAllReservations(ctx *context.Context) ([]*domain.Reservation, error)
+	GetReservationsByAccommodationOfferID(ctx *context.Context, id string) ([]*domain.Reservation, error)
 }

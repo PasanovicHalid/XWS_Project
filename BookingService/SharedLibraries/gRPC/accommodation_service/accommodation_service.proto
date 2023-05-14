@@ -50,8 +50,15 @@ service AccommodationService {
         };
     }
 
-    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {
+    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {}
        
+
+    rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {
+
+    }
+
+    rpc DeleteAllAccommodationsByOwner(IdentityIdRequest) returns (common.RequestResult) {
+
     }
 }
 
@@ -124,4 +131,14 @@ message GetAutomaticStatusRequest{
 
 message GetAutomaticStatusResponse{
     bool status = 1;
+}
+
+message IdentityIdRequest {
+    string Id = 1;
+}
+
+message DeleteAllAccommodationsByOwnerResponse{
+    common.RequestResult requestResult = 1;
+    string error = 2;
+
 }
