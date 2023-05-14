@@ -15,6 +15,7 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { fadeAnimation } from './animations/fade';
 import { CreateAccommodationComponent } from './accommodation/create-accommodation/create-accommodation.component';
+import { ReservationModule } from './reservation/reservation.module';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")
@@ -36,6 +37,7 @@ export function tokenGetter() {
     AngularMaterialModule,
     AuthentificationModule,
     NavsModule,
+    ReservationModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
