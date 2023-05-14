@@ -42,7 +42,6 @@ const routes: Routes = [
       { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
       { path: 'filter-offers', component: FilterAccommodationOffersComponent, canActivate: [AuthGuard] },
       { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
-
       { path: 'pending-guest-reservation', component: PendingGuestReservationsComponent, canActivate: [AuthGuard] },
 
       { path: 'cancel-reservation', component: CancelReservationComponent, canActivate: [AuthGuard] },

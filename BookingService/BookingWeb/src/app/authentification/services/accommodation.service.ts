@@ -8,9 +8,9 @@ import { ChangePasswordRequest } from '../contracts/requests/change-password-req
 import { ChangeUsernameRequest } from '../contracts/requests/change-username-request';
 import { Accommodation } from 'src/app/accommodation/create-accommodation/model/accommodation.model';
 import { CreateOfferRequest } from 'src/app/accommodation/create-accommodation-offer/model/accommodationOffer.model';
-import { AccommodationFilterOffer } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/filterOffer.model';
 import { Accommodations } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/temp.model';
 import { SetAutomaticStatusRequest } from '../contracts/requests/set-automatic-status-request.model';
+import { AccommodationFilterOffer } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/filterOffer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,9 @@ export class AccomodationService {
     'Content-Type': 'application/json',
   });
 
+  id:string = "";
+  getId(){return this.id}
+  setId(id:string){this.id=id}
   basePath: string = "/booking/api/authenticate/"
 
   basePathTemp: string = "/booking/api/accommodation/"
@@ -157,9 +160,6 @@ export class AccomodationService {
     return throwError(() => new Error(error.status + '\n' + error.error));
   }
 
-  public SetAutomaticAcception(request: SetAutomaticStatusRequest) :any{
-    return this.http.post(this.basePath + 'setAutomaticAcception',request, {headers: this.headers,})
-  }
 
   public GetAutomaticAcception(id:string) :any{
     return this.http.get(this.basePath + 'getAutomaticAcception/'+ id, {headers: this.headers,})
