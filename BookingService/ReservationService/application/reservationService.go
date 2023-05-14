@@ -48,7 +48,7 @@ func (service *ReservationService) GetAllReservations() ([]*domain.Reservation, 
 	return service.reservationRepository.GetAllReservations(&ctx)
 }
 
-func (service *ReservationService) GetReservationByAccomodationId(id string) ([]*domain.Reservation, error) {
+func (service *ReservationService) GetReservationsByAccommodationOfferID(id string) ([]*domain.Reservation, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	return service.reservationRepository.GetReservationsByAccommodationOfferID(&ctx, id)

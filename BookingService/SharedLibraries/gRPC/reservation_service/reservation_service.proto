@@ -1,0 +1,230 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation";
+
+package reservation;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service ReservationService {
+    rpc GetReservationById (GetReservationByIdRequest) returns (GetReservationByIdResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getReservationById/{id}"
+        };
+    }
+   
+    rpc GetAllReservations (GetAllReservationsRequest) returns (GetAllReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getAllReservation"
+        };
+    }
+    
+    rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse) {
+        option (google.api.http) = {
+            post: "/api/reservation/createReservation"
+            body: "*"
+        };
+    }
+
+    rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationResponse) {
+        option (google.api.http) = {
+            delete: "/api/reservation/deleteReservation/{id}"
+        };
+    }
+
+    rpc UpdateReservation (UpdateReservationRequest) returns (UpdateReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/updateReservation"
+            body: "*"
+        };
+    }
+
+    rpc CheckGuestActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
+
+    rpc CheckHostActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
+   
+    rpc GetHostPendingReservations(GetHostPendingReservationsRequest) returns (GetHostPendingReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getHostPendingReservations/{id}"
+        };
+    }
+
+    rpc GetGuestPendingReservations(GetGuestPendingReservationsRequest) returns (GetGuestPendingReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getGuestPendingReservations/{id}"
+        };
+    }
+
+    rpc GetGuestAcceptedReservations(GetGuestAcceptedReservationsRequest) returns (GetGuestAcceptedReservationsResponse) {
+        option (google.api.http) = {
+            get: "/api/reservation/getGuestAcceptedReservations/{id}"
+        };
+    }
+
+    rpc AcceptReservation (AcceptReservationRequest) returns (AcceptReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/acceptReservation"
+            body: "*"
+        };
+    }
+
+    rpc RejectReservation (RejectReservationRequest) returns (RejectReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/rejectReservation"
+            body: "*"
+        };
+    }
+
+    rpc CancelReservation (CancelReservationRequest) returns (CancelReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/cancelReservation"
+            body: "*"
+        };
+    }
+}
+
+enum ReservationStatus{
+            PENDING = 0;
+            ACCEPTED = 1;
+            REJECTED = 2;
+}
+
+
+message Reservation {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
+}
+
+
+message CreateReservationRequest {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
+}
+
+message CreateReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message GetReservationByIdRequest {
+    string id = 1;
+}
+
+message GetReservationByIdResponse {
+    common.RequestResult requestResult = 1;
+    Reservation reservation = 2;
+}
+
+message GetAllReservationsRequest {
+    int32 page = 1;
+    int32 size = 2;
+}
+
+message GetAllReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message DeleteReservationRequest {
+    string id = 1;
+}
+
+message DeleteReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message UpdateReservationRequest {
+    string id = 1;
+    string accommodationOfferId = 2;
+    string customerId = 3;
+    string hostId = 4;
+    ReservationStatus reservationStatus = 5;
+    int32 numberOfGuests = 6;
+    string startDateTimeUtc = 7;
+    string endDateTimeUtc = 8;
+}
+
+message UpdateReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message CheckUserActiveReservationsRequest {
+    string id = 1;
+}
+
+message CheckUserActiveReservationsResponse {
+    common.RequestResult requestResult = 1;
+    bool hasActiveReservations = 2;
+}
+
+message GetHostPendingReservationsRequest {
+    string id = 1;
+}
+
+message GetHostPendingReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message GetGuestPendingReservationsRequest {
+    string id = 1;
+}
+
+message GetGuestPendingReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message GetGuestAcceptedReservationsRequest {
+    string id = 1;
+}
+
+message GetGuestAcceptedReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message GetAcceptedPendingReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+message AcceptReservationRequest {
+    string id = 1;
+}
+
+message AcceptReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message RejectReservationRequest {
+    string id = 1;
+}
+
+message RejectReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message CancelReservationRequest {
+    string id = 1;
+}
+
+message CancelReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+
+
+
