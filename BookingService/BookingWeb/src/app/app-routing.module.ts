@@ -28,6 +28,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'initial-user-info-entry', component: InitialUserInfoEntryComponent },
+      { path: 'filter-offers', component: FilterAccommodationOffersComponent},
     ]
   },
   {
@@ -40,7 +41,7 @@ const routes: Routes = [
       { path: 'create-accommodation-offer', component: CreateAccommodationOfferComponent, canActivate: [AuthGuard]},
       { path: 'update-accommodation-offer', component: UpdateAccommodationOfferComponent, canActivate: [AuthGuard]},
       { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
-      { path: 'filter-offers', component: FilterAccommodationOffersComponent, canActivate: [AuthGuard] },
+      { path: 'filter-accommodation-offers', component: FilterAccommodationOffersComponent, canActivate: [AuthGuard] },
       { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
 
       { path: 'pending-guest-reservation', component: PendingGuestReservationsComponent, canActivate: [AuthGuard] },
