@@ -1,0 +1,37 @@
+<div class="content">
+    <div class="tabs">
+      <mat-tab-group [selectedIndex]="0" class="remove-border-bottom">
+        <mat-tab>
+          <div class="content">
+            <div class="user-info-container" style="margin-bottom: 40px;">
+              <h5>Enter offer information</h5>
+              <div class="inputs">
+                <mat-form-field appearance="outline">
+                  <mat-label>Accommodation ID</mat-label>
+                  <input matInput [(ngModel)]="newOffer.accommodation_id" name="accommodationId" placeholder="Accommodation ID">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Start date/time (UTC)</mat-label>
+                    <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" placeholder="Start date/time (UTC)">
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>End date/time (UTC)</mat-label>
+                    <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" placeholder="End date/time (UTC)">
+                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                  </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input matInput [(ngModel)]="newOffer.price" name="price" placeholder="Price">
+                </mat-form-field>
+                <mat-checkbox [(ngModel)]="newOffer.per_guest" name="perGuest">Per guest</mat-checkbox>
+                <button mat-raised-button color="primary" (click)="CreateOffer()" style="margin-top: 65px; float: right; width: 70px; height: 40px;">Save</button>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        </mat-tab-group>
+    </div>
+    </div>

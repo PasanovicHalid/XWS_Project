@@ -69,6 +69,22 @@ func MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	})
 }
 
+func MiddlewareContentTypeSetWithCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		log.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
+
+		// Add CORS headers
+		rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+		rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		rw.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Add Content-Type header
+		rw.Header().Add("Content-Type", "application/json")
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
 func MiddlewareAuthorization(next http.Handler, roles []string) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		jwt_claims := h.Context().Value(JwtContent{}).(*authentification.SignedDetails)

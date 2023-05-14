@@ -10,6 +10,7 @@ import { InitialUserInfoEntryComponent } from './authentification/initial-user-i
 import { UserPanelComponent } from './authentification/user-panel/user-panel.component';
 import { AuthGuard } from './guards/auth.gard';
 import { CreateAccommodationComponent } from './accommodation/create-accommodation/create-accommodation.component';
+import { CreateAccommodationOfferComponent } from './accommodation/create-accommodation-offer/create-accommodation-offer.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
       { path: 'user-panel', component: UserPanelComponent, canActivate: [AuthGuard] },
       { path: 'create-accommodation', component: CreateAccommodationComponent, canActivate: [AuthGuard]},
+      { path: 'create-accommodation-offer', component: CreateAccommodationOfferComponent, canActivate: [AuthGuard]},
     ]
   },
 ];
