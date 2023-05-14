@@ -18,6 +18,7 @@ import { CreateAccommodationComponent } from './accommodation/create-accommodati
 import { FormsModule } from '@angular/forms';
 import { CreateAccommodationOfferComponent } from './accommodation/create-accommodation-offer/create-accommodation-offer.component';
 import { ReservationModule } from './reservation/reservation.module';
+import { FilterAccommodationOffersComponent } from './accommodation/filter-acommodation-offers/filter-accommodation-offers/filter-accommodation-offers.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")
@@ -32,6 +33,7 @@ export function tokenGetter() {
     LandingPageComponent,
     CreateAccommodationComponent,
     CreateAccommodationOfferComponent,
+    FilterAccommodationOffersComponent,
   ],
   imports: [
     BrowserModule,

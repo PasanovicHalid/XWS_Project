@@ -1,5 +1,3 @@
-import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
-
 export class CreateOfferRequest {
     id: string = "";
     accommodation_id: string = "";
