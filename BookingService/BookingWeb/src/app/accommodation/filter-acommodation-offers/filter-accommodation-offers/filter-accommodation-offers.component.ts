@@ -4,6 +4,7 @@ import { AccommodationFilterOffer } from './model/filterOffer.model';
 import { Accommodation } from '../../create-accommodation/model/accommodation.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { AccommodationTemp } from '../../create-accommodation/model/accommodation.temp.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filter-accommodation-offers',
@@ -14,11 +15,11 @@ export class FilterAccommodationOffersComponent {
 
   visible: boolean = false;
   filter: AccommodationFilterOffer = new AccommodationFilterOffer()
-  displayedColumns: string[] = ['name', 'wifi', 'kitchen', 'air_conditioner', 'parking', 'min_number_of_guests', 'max_number_of_guests'];
+  displayedColumns: string[] = ['name', 'wifi', 'kitchen', 'air_conditioner', 'parking', 'min_number_of_guests', 'max_number_of_guests', 'make'];
   dataSource: MatTableDataSource<AccommodationTemp> = new MatTableDataSource<AccommodationTemp>();
   startDate: Date = new Date();
   endDate: Date = new Date();
-  constructor(private accommodationService: AccomodationService) {}
+  constructor(private accommodationService: AccomodationService, private router:Router) {}
 
   CreateOffer() : void {
     const temps = this.startDate.toISOString().slice(0, 10);
@@ -39,5 +40,10 @@ export class FilterAccommodationOffersComponent {
         // Handle error if needed
       }
     });
+}
+
+makeReservation(accommodation :any){
+  this.accommodationService.setId(accommodation.accommodationOfferId)
+  this.router.navigate(['/create-reservation'])
 }
 }
