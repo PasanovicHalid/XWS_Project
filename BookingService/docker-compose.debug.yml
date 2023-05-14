@@ -8,7 +8,7 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile.debug
+      dockerfile: ./AuthentificationService/Dockerfile
     restart: on-failure
     ports:
       - 11001:11001
@@ -86,7 +86,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile
+      dockerfile: ./APIGateway/Dockerfile.debug
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
