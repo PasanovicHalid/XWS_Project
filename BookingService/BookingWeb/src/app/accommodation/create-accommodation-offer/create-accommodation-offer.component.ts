@@ -14,6 +14,7 @@ export class CreateAccommodationOfferComponent {
   newOffer : CreateOfferRequest = new CreateOfferRequest()
   startDate: Date = new Date();
   endDate: Date = new Date();
+  automatic:boolean = false;
   constructor(private accommodationService: AccomodationService) {}
 
   CreateOffer() : void {

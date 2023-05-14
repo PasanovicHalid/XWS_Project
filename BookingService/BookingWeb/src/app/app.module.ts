@@ -20,6 +20,7 @@ import { CreateAccommodationOfferComponent } from './accommodation/create-accomm
 import { ReservationModule } from './reservation/reservation.module';
 import { FilterAccommodationOffersComponent } from './accommodation/filter-acommodation-offers/filter-accommodation-offers/filter-accommodation-offers.component';
 import { UpdateAccommodationOfferComponent } from './accommodation/update-accommodation-offer/update-accommodation-offer/update-accommodation-offer.component';
+import { CancelReservationComponent } from './reservation/cancel-reservation/cancel-reservation.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")
@@ -36,6 +37,7 @@ export function tokenGetter() {
     CreateAccommodationOfferComponent,
     FilterAccommodationOffersComponent,
     UpdateAccommodationOfferComponent,
+
   ],
   imports: [
     BrowserModule,

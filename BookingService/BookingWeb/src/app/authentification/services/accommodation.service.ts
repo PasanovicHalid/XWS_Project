@@ -10,6 +10,7 @@ import { Accommodation } from 'src/app/accommodation/create-accommodation/model/
 import { CreateOfferRequest } from 'src/app/accommodation/create-accommodation-offer/model/accommodationOffer.model';
 import { AccommodationFilterOffer } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/filterOffer.model';
 import { Accommodations } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/temp.model';
+import { SetAutomaticStatusRequest } from '../contracts/requests/set-automatic-status-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -154,5 +155,17 @@ export class AccomodationService {
 
   private handleError(error: HttpErrorResponse) {
     return throwError(() => new Error(error.status + '\n' + error.error));
+  }
+
+  public SetAutomaticAcception(request: SetAutomaticStatusRequest) :any{
+    return this.http.post(this.basePath + 'setAutomaticAcception',request, {headers: this.headers,})
+  }
+
+  public GetAutomaticAcception(id:string) :any{
+    return this.http.get(this.basePath + 'getAutomaticAcception/'+ id, {headers: this.headers,})
+  }
+
+  public GetOwnerIdByAccommodationId(id:string) :Observable<any>{
+    return this.http.get<Observable<any>>(this.basePath + 'getOwnerId/'+ id, {headers: this.headers,})
   }
 }

@@ -6,6 +6,7 @@ import { UserService } from 'src/app/authentification/services/user.service';
 import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { UpdateUserRequest } from 'src/app/authentification/contracts/requests/update-user-request';
 import { ToastrService } from 'ngx-toastr';
+import { AccomodationService } from 'src/app/authentification/services/accommodation.service';
 
 @Component({
   selector: 'app-create-reservation',
@@ -21,7 +22,8 @@ export class CreateReservationComponent implements OnInit{
               private router: Router,
               private userService : UserService,
               private authService : AuthentificationService,
-              private toastr: ToastrService) {}
+              private toastr: ToastrService,
+              private accommodationService:AccomodationService) {}
 
   ngOnInit(): void {
     this.authService.GetIdentityId()
@@ -39,7 +41,9 @@ export class CreateReservationComponent implements OnInit{
   createReservation(){
     this.reservation.accommodationOfferId = "12";
     this.reservation.customerId = this.userInfo.identityId;
-    this.reservation.hostId = "24";
+    this.accommodationService.GetOwnerIdByAccommodationId(this.reservation.accommodationOfferId).subscribe(res=>{
+      this.reservation.hostId = res;
+    })
     console.log(this.reservation)
     this.reservationService.CreateReservation(this.reservation).subscribe({
       next: (response) => {

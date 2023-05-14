@@ -27,6 +27,7 @@
                   <input matInput [(ngModel)]="newOffer.price" name="price" placeholder="Price">
                 </mat-form-field>
                 <mat-checkbox [(ngModel)]="newOffer.per_guest" name="perGuest">Per guest</mat-checkbox>
+                <mat-checkbox [(ngModel)]="automatic" name="automatic">Automatic</mat-checkbox>
                 <button mat-raised-button color="primary" (click)="CreateOffer()" style="margin-top: 65px; float: right; width: 70px; height: 40px;">Save</button>
               </div>
             </div>
