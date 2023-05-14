@@ -69,6 +69,8 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/reservation/getGuestPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/acceptReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/rejectReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/reservation/cancelReservation", mw.MiddlewareContentTypeSet(server.mux))
+
 	server.final_mux = final_mux
 
 	return server
@@ -106,7 +108,9 @@ func (server *Server) initHandlers() {
 func (server *Server) initCustomHandlers() {
 	authentificationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthentificationHost, server.config.AuthentificationPort)
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
-	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint)
+	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
+	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
+	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint, acommodanceEndpoint, reservationEndpoint)
 	userHandler.Init(server.mux)
 }
 

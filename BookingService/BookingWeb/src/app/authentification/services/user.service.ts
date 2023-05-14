@@ -49,7 +49,7 @@ export class UserService {
 
   public DeleteUser(identityId: string): Observable<any> {
     return this.http.delete(
-      this.basePath + 'deregister/' + identityId,
+      this.basePath + 'deregister',
       {
         headers: this.headers,
       },

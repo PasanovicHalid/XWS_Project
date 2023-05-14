@@ -3,6 +3,7 @@ package grpcservices
 import (
 	"log"
 
+	accommodationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
@@ -34,6 +35,15 @@ func NewReservationClient(address string) reservationPB.ReservationServiceClient
 		log.Fatal("Failed to start gRPC connection to Reservation service: %v", err)
 	}
 	return reservationPB.NewReservationServiceClient(conn)
+
+}
+
+func NewAccomodationClient(address string) accommodationPB.AccommodationServiceClient {
+	conn, err := getConnection(address)
+	if err != nil {
+		log.Fatal("Failed to start gRPC connection to Reservation service: %v", err)
+	}
+	return accommodationPB.NewAccommodationServiceClient(conn)
 
 }
 

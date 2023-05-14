@@ -8,7 +8,7 @@ EXPOSE 9104 11004
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY ./ReservationService/go.mod .ReservationService/go.sum ./
+COPY ./ReservationService/go.mod ./ReservationService/go.sum ./
 
 # Copy the local dependency
 COPY /SharedLibraries ../SharedLibraries
