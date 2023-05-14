@@ -14,6 +14,7 @@ export class CreateAccommodationOfferComponent {
   newOffer : CreateOfferRequest = new CreateOfferRequest()
   startDate: Date = new Date();
   endDate: Date = new Date();
+  automatic:boolean = false;
   constructor(private accommodationService: AccomodationService) {}
 
   CreateOffer() : void {
@@ -21,7 +22,9 @@ export class CreateAccommodationOfferComponent {
     const tempe = this.endDate.toISOString().slice(0, 10);
     this.newOffer.start_date_time_utc = temps + "T00:00:00.000Z";
     this.newOffer.end_date_time_utc = tempe + "T00:00:00.000Z";
-    this.accommodationService.CreateOffer(this.newOffer).subscribe()
+    this.accommodationService.CreateOffer(this.newOffer).subscribe(
+      
+    )
   }
   
 }

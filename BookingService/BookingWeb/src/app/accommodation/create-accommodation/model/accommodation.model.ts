@@ -10,6 +10,7 @@ export class Accommodation {
     min_number_of_guests: number = 0;
     max_number_of_guests: number = 0;
     images : string[] = []
+    accommodationOfferId: string = "";
 
     public constructor(obj?: any) {
         if (obj) { 

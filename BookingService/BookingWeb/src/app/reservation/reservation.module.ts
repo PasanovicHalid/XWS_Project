@@ -5,6 +5,7 @@ import { AngularMaterialModule } from '../library-modules/angular-material.modul
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { PendingHostReservationsComponent } from './pending-host-reservations/pending-host-reservations.component';
+import { PendingGuestReservationsComponent } from './pending-guest-reservations/pending-guest-reservations.component';
 import { CancelReservationComponent } from './cancel-reservation/cancel-reservation.component';
 
 
@@ -12,6 +13,7 @@ import { CancelReservationComponent } from './cancel-reservation/cancel-reservat
   declarations: [
     CreateReservationComponent,
     PendingHostReservationsComponent,
+    PendingGuestReservationsComponent,
     CancelReservationComponent,
   ],
   imports: [
