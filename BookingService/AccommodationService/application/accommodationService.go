@@ -287,3 +287,57 @@ func convertToNewAccomodation(accommodation domain.Accommodation) *accomodancePB
 		OwnerId:           accommodation.OwnerId,
 	}
 }
+
+func (service *AccommodationService) GetOwnerIdByAccommodationId(message *accomodancePB.GetOwnerIdRequest) (*accomodancePB.GetOwnerIdResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+	accommodation, err := service.accomodationRepository.GetAccommodationById(&ctx, accommodationOffer.AccommodationId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &accomodancePB.GetOwnerIdResponse{
+		Id: accommodation.OwnerId,
+	}
+	return response, nil
+}
+
+func (service *AccommodationService) SetAutomaticAcception(message *accomodancePB.SetAutomaticStatusRequest) (*accomodancePB.SetAutomaticStatusResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	accommodationOffer.AutomaticAcceptation = message.Status
+
+	service.accomodationRepository.UpdateAccommodationOffer(&ctx, accommodationOffer)
+
+	response := &accomodancePB.SetAutomaticStatusResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}
+	return response, nil
+}
+
+func (service *AccommodationService) GetAutomaticAcception(message *accomodancePB.GetAutomaticStatusRequest) (*accomodancePB.GetAutomaticStatusResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	status := accommodationOffer.AutomaticAcceptation
+
+	response := &accomodancePB.GetAutomaticStatusResponse{
+		Status: status,
+	}
+	return response, nil
+}

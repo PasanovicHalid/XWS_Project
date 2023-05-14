@@ -37,6 +37,26 @@ service AccommodationService {
         };
     }
 
+    rpc GetOwnerIdByAccommodationId(GetOwnerIdRequest) returns (GetOwnerIdResponse) {
+        option (google.api.http) = {
+            get: "/api/accommodation/getOwnerId/{id}"
+        };
+    }
+
+    rpc SetAutomaticAcception(SetAutomaticStatusRequest) returns (SetAutomaticStatusResponse) {
+        option (google.api.http) = {
+            post: "/api/accommodation/setAutomaticAcception"
+            body: "*"
+        };
+    }
+
+    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {
+        option (google.api.http) = {
+            get: "/api/accommodation/getAutomaticAcception/{id}"
+        };
+    }
+       
+
     rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {
 
     }
@@ -92,6 +112,31 @@ message AccommodationSearch {
     int32 guest_number = 4;
 }
 
+message GetOwnerIdRequest{
+    string id = 1;
+}
+
+message GetOwnerIdResponse{
+    string id = 1;
+}
+
+message SetAutomaticStatusRequest{
+    bool status = 1;
+    string id = 2;
+}
+
+message SetAutomaticStatusResponse{
+    common.RequestResult requestResult = 1;
+}
+
+message GetAutomaticStatusRequest{
+    string id = 1;
+}
+
+message GetAutomaticStatusResponse{
+    bool status = 1;
+}
+
 message IdentityIdRequest {
     string Id = 1;
 }
@@ -99,4 +144,5 @@ message IdentityIdRequest {
 message DeleteAllAccommodationsByOwnerResponse{
     common.RequestResult requestResult = 1;
     string error = 2;
+
 }
