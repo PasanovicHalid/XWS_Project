@@ -28,6 +28,7 @@ type AccommodationServiceClient interface {
 	UpdateAccomodationOffer(ctx context.Context, in *AccommodationOffer, opts ...grpc.CallOption) (*common.RequestResult, error)
 	FilterAccommodations(ctx context.Context, in *AccommodationSearch, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error)
 	GetOwnerIdByAccommodationId(ctx context.Context, in *GetOwnerIdRequest, opts ...grpc.CallOption) (*GetOwnerIdResponse, error)
+	SetAutomaticAcception(ctx context.Context, in *SetAutomaticStatusRequest, opts ...grpc.CallOption) (*SetAutomaticStatusResponse, error)
 }
 
 type accommodationServiceClient struct {
@@ -83,6 +84,15 @@ func (c *accommodationServiceClient) GetOwnerIdByAccommodationId(ctx context.Con
 	return out, nil
 }
 
+func (c *accommodationServiceClient) SetAutomaticAcception(ctx context.Context, in *SetAutomaticStatusRequest, opts ...grpc.CallOption) (*SetAutomaticStatusResponse, error) {
+	out := new(SetAutomaticStatusResponse)
+	err := c.cc.Invoke(ctx, "/accommodation.AccommodationService/SetAutomaticAcception", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccommodationServiceServer is the server API for AccommodationService service.
 // All implementations must embed UnimplementedAccommodationServiceServer
 // for forward compatibility
@@ -92,6 +102,7 @@ type AccommodationServiceServer interface {
 	UpdateAccomodationOffer(context.Context, *AccommodationOffer) (*common.RequestResult, error)
 	FilterAccommodations(context.Context, *AccommodationSearch) (*GetFilteredAccommodationsResponse, error)
 	GetOwnerIdByAccommodationId(context.Context, *GetOwnerIdRequest) (*GetOwnerIdResponse, error)
+	SetAutomaticAcception(context.Context, *SetAutomaticStatusRequest) (*SetAutomaticStatusResponse, error)
 	mustEmbedUnimplementedAccommodationServiceServer()
 }
 
@@ -113,6 +124,9 @@ func (UnimplementedAccommodationServiceServer) FilterAccommodations(context.Cont
 }
 func (UnimplementedAccommodationServiceServer) GetOwnerIdByAccommodationId(context.Context, *GetOwnerIdRequest) (*GetOwnerIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOwnerIdByAccommodationId not implemented")
+}
+func (UnimplementedAccommodationServiceServer) SetAutomaticAcception(context.Context, *SetAutomaticStatusRequest) (*SetAutomaticStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetAutomaticAcception not implemented")
 }
 func (UnimplementedAccommodationServiceServer) mustEmbedUnimplementedAccommodationServiceServer() {}
 
@@ -217,6 +231,24 @@ func _AccommodationService_GetOwnerIdByAccommodationId_Handler(srv interface{}, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccommodationService_SetAutomaticAcception_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetAutomaticStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).SetAutomaticAcception(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/accommodation.AccommodationService/SetAutomaticAcception",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).SetAutomaticAcception(ctx, req.(*SetAutomaticStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccommodationService_ServiceDesc is the grpc.ServiceDesc for AccommodationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +275,10 @@ var AccommodationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOwnerIdByAccommodationId",
 			Handler:    _AccommodationService_GetOwnerIdByAccommodationId_Handler,
+		},
+		{
+			MethodName: "SetAutomaticAcception",
+			Handler:    _AccommodationService_SetAutomaticAcception_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

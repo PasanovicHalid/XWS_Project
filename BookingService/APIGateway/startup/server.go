@@ -65,6 +65,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/accommodation/get-all-offers", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/accommodation/get-filtered-accommodations", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/accommodation/getOwnerId/{id}", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/accommodation/setAutomaticAcception", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getReservationById/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getHostPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getGuestPendingReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))

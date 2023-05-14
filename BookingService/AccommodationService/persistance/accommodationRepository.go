@@ -73,6 +73,7 @@ func (repository *AccommodationRepository) UpdateAccommodationOffer(ctx *context
 		AvailableEndDateTimeUTC:   reservation.AvailableEndDateTimeUTC,
 		Price:                     reservation.Price,
 		PerGuest:                  reservation.PerGuest,
+		AutomaticAcceptation:      reservation.AutomaticAcceptation,
 	}
 	_, err := repository.accommodationsOffers.ReplaceOne(*ctx, bson.M{"_id": id}, temp)
 	if err != nil {

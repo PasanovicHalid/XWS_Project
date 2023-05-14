@@ -302,3 +302,23 @@ func (service *AccommodationService) GetOwnerIdByAccommodationId(message *accomo
 	}
 	return response, nil
 }
+
+func (service *AccommodationService) SetAutomaticAcception(message *accomodancePB.SetAutomaticStatusRequest) (*accomodancePB.SetAutomaticStatusResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	accommodationOffer.AutomaticAcceptation = message.Status
+
+	service.accomodationRepository.UpdateAccommodationOffer(&ctx, accommodationOffer)
+
+	response := &accomodancePB.SetAutomaticStatusResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}
+	return response, nil
+}

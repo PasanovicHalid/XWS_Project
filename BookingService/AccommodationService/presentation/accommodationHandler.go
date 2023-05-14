@@ -38,3 +38,7 @@ func (handler *AccommodationHandler) FilterAccommodations(ctx context.Context, m
 func (handler *AccommodationHandler) GetOwnerIdByAccommodationId(ctx context.Context, message *accomodancePB.GetOwnerIdRequest) (*accomodancePB.GetOwnerIdResponse, error) {
 	return handler.accomodationService.GetOwnerIdByAccommodationId(message)
 }
+
+func (handler *AccommodationHandler) SetAutomaticAcception(ctx context.Context, message *accomodancePB.SetAutomaticStatusRequest) (*accomodancePB.SetAutomaticStatusResponse, error) {
+	return handler.accomodationService.SetAutomaticAcception(message)
+}
