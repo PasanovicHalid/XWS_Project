@@ -17,6 +17,7 @@ import { fadeAnimation } from './animations/fade';
 import { CreateAccommodationComponent } from './accommodation/create-accommodation/create-accommodation.component';
 import { FormsModule } from '@angular/forms';
 import { CreateAccommodationOfferComponent } from './accommodation/create-accommodation-offer/create-accommodation-offer.component';
+import { ReservationModule } from './reservation/reservation.module';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")
@@ -40,6 +41,7 @@ export function tokenGetter() {
     AuthentificationModule,
     FormsModule,
     NavsModule,
+    ReservationModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
