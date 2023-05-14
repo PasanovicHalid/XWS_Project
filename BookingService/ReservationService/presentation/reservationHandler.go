@@ -234,11 +234,11 @@ func (handler *ReservationHandler) CancelReservation(ctx context.Context, reques
 	if err != nil {
 		return nil, err
 	}
-
 	// Set the status of other reservations to "Pending"
 	for _, otherReservation := range otherReservations {
 		if otherReservation.Id != request.Id {
 			otherReservation.ReservationStatus = domain.Pending
+
 			err = handler.reservationService.UpdateReservation(otherReservation)
 			if err != nil {
 				return nil, err

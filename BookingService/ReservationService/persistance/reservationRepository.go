@@ -96,9 +96,8 @@ func (repository *ReservationRepository) GetAllReservations(ctx *context.Context
 	return reservations, nil
 }
 func (repository *ReservationRepository) GetReservationsByAccommodationOfferID(ctx *context.Context, accommodationOfferID string) ([]*domain.Reservation, error) {
-	filter := bson.M{"accommodationOfferId": accommodationOfferID}
+	filter := bson.M{"offerId": accommodationOfferID}
 	options := options.Find()
-
 	cur, err := repository.reservations.Find(*ctx, filter, options)
 	if err != nil {
 		return nil, err
