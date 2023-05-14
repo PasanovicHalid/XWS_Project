@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CreateReservationComponent implements OnInit{
   reservation:CreateReservationRequest = new CreateReservationRequest();
+  
 
   userInfo: UpdateUserRequest = new UpdateUserRequest();
   constructor(private reservationService : ReservationsService,

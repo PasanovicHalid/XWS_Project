@@ -11,4 +11,5 @@ type AccommodationOffer struct {
 	AvailableEndDateTimeUTC   time.Time `bson:"AvailablendDateTimeUTC" json:"endDateTimeUTC"`
 	Price                     int       `bson:"price,omitempty"`
 	PerGuest                  bool      `bson:"perGuest,omitempty"`
+	AutomaticAcceptation      bool      `bson:"automatic"`
 }

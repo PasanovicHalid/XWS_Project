@@ -4,11 +4,13 @@ import { CreateReservationComponent } from './create-reservation/create-reservat
 import { AngularMaterialModule } from '../library-modules/angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { PendingHostReservationsComponent } from './pending-host-reservations/pending-host-reservations.component';
 
 
 @NgModule({
   declarations: [
-    CreateReservationComponent
+    CreateReservationComponent,
+    PendingHostReservationsComponent,
   ],
   imports: [
     CommonModule,
