@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { PendingHostReservationsComponent } from './pending-host-reservations/pending-host-reservations.component';
 import { PendingGuestReservationsComponent } from './pending-guest-reservations/pending-guest-reservations.component';
+import { CancelReservationComponent } from './cancel-reservation/cancel-reservation.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { PendingGuestReservationsComponent } from './pending-guest-reservations/
     CreateReservationComponent,
     PendingHostReservationsComponent,
     PendingGuestReservationsComponent,
+    CancelReservationComponent,
   ],
   imports: [
     CommonModule,
