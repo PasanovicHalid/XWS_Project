@@ -9,6 +9,7 @@ import { ChangeUsernameRequest } from '../contracts/requests/change-username-req
 import { Accommodation } from 'src/app/accommodation/create-accommodation/model/accommodation.model';
 import { CreateOfferRequest } from 'src/app/accommodation/create-accommodation-offer/model/accommodationOffer.model';
 import { AccommodationFilterOffer } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/filterOffer.model';
+import { Accommodations } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/temp.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,14 +58,14 @@ export class AccomodationService {
     ).pipe(catchError(this.handleError))
   }
 
-  Filter(filter: AccommodationFilterOffer) : Observable<any>{
-    return this.http.post(
+  Filter(filter: AccommodationFilterOffer): Observable<Accommodations> {
+    return this.http.post<Accommodations>(
       this.basePathTemp + 'get-filtered-accommodations',
       filter,
       {
         headers: this.headers,
       },
-    ).pipe(catchError(this.handleError))
+    )
   }
 
   public Logout(): void {
