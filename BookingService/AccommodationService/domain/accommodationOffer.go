@@ -10,4 +10,5 @@ type AccommodationOffer struct {
 	AvailableStartDateTimeUTC time.Time `bson:"AvailabletartDateTimeUTC" json:"startDateTimeUTC"`
 	AvailableEndDateTimeUTC   time.Time `bson:"AvailablendDateTimeUTC" json:"endDateTimeUTC"`
 	Price                     int       `bson:"price,omitempty"`
+	PerGuest                  bool      `bson:"perGuest,omitempty"`
 }
