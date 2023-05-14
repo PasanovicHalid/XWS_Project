@@ -232,13 +232,13 @@ func (service *AccommodationService) DeleteAllAccommodationsByOwner(identityId s
 		if err != nil {
 			return &common_pb.RequestResult{
 				Code:    500,
-				Message: "NEUSPESNO BRISANJE",
+				Message: "BRISANJE NEUSPESNO",
 			}, err
 		}
 	}
 	return &common_pb.RequestResult{
 		Code:    200,
-		Message: "USPESNO",
+		Message: "BRISANJE NEUSPESNO",
 	}, nil
 }
 

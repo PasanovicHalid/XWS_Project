@@ -1,0 +1,53 @@
+<div class="content">
+    <div class="tabs">
+        <mat-tab-group [selectedIndex]="1" class="tab-group">
+            <mat-tab label="Create Accommodation">
+                <div class="content">
+                    <div class="image-container">
+                        <div class="image">
+                            <img src="../../../assets/logo.png" alt="Company Image">
+                        </div>
+                    </div>
+                    <div class="user-info-container">
+                        <h5>Enter your basic information</h5>
+                        <div class="inputs">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email</mat-label>
+                                <input matInput placeholder="Email">
+                            </mat-form-field>
+                            <div class="inline-items">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>First Name</mat-label>
+                                    <input matInput placeholder="First Name">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Last Name</mat-label>
+                                    <input matInput placeholder="Last Name">
+                                </mat-form-field>
+                            </div>
+                            <div class="inline-items">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Phone number</mat-label>
+                                    <input matInput placeholder="Phone number">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Address</mat-label>
+                                    <input matInput placeholder="Address">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button mat-raised-button color="primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <!-- <mat-tab label="User Info">
+                <app-user-info></app-user-info>
+            </mat-tab>
+            <mat-tab label="Change Username">
+                <app-change-username></app-change-username>
+            </mat-tab> -->
+        </mat-tab-group>
+    </div>
+</div>
