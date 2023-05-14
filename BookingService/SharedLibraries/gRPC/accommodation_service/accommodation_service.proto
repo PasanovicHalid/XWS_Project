@@ -6,15 +6,80 @@ package accommodation;
 
 import "google/api/annotations.proto";
 import "common/common.proto";
+import "google/protobuf/timestamp.proto";
 
 service AccommodationService {
-    rpc TempServiceMethod(TempMessage) returns (common.RequestResult) {
+    rpc CreateAccomodation(newAccomodation) returns (common.RequestResult) {
         option (google.api.http) = {
-            get: "/api/accommodation/create"
+            post: "/api/accommodation/create"
+            body: "*"
+        };
+    }
+
+    rpc CreateAccomodationOffer(CreateOfferRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/accommodation/create-offer"
+            body: "*"
+        };
+    }
+
+    rpc UpdateAccomodationOffer(AccommodationOffer) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/accommodation/update-offer"
+            body: "*"
+        };
+    }
+
+    rpc FilterAccommodations(AccommodationSearch) returns (GetFilteredAccommodationsResponse) {
+        option (google.api.http) = {
+            post: "/api/accommodation/get-filtered-accommodations"
+            body: "*"
         };
     }
 }
 
-message TempMessage {
-    string poruka = 1;
+message newAccomodation {
+    string id = 1;
+    string name = 2;
+    string location = 3;
+    bool wifi = 4;
+    bool kitchen = 5;
+    bool air_conditioner = 6;
+    bool parking = 7;
+    int32 min_number_of_guests = 8;
+    int32 max_number_of_guests = 9;
+    repeated string images = 10;
+    string ownerId = 11;
+}
+
+message GetFilteredAccommodationsResponse {
+    repeated newAccomodation filtered_accommodations = 1;
+}
+
+message CreateOfferRequest {
+  string accommodation_id = 1;
+  google.protobuf.Timestamp start_date_time_utc = 2;
+  google.protobuf.Timestamp end_date_time_utc = 3;
+  int32 price = 4;
+  bool per_guest = 5;
+}
+
+message EmptyMessage{
+
+}
+
+message AccommodationOffer {
+  string id = 1;
+  string accommodation_id = 2;
+  google.protobuf.Timestamp start_date_time_utc = 3;
+  google.protobuf.Timestamp end_date_time_utc = 4;
+  int32 price = 5;
+  bool per_guest = 6;
+}
+
+message AccommodationSearch { 
+    string location = 1;
+    google.protobuf.Timestamp start_date_time_utc = 2;
+    google.protobuf.Timestamp end_date_time_utc = 3;
+    int32 guest_number = 4;
 }

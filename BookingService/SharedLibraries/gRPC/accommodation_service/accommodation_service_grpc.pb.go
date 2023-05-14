@@ -20,14 +20,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AccommodationService_TempServiceMethod_FullMethodName = "/accommodation.AccommodationService/TempServiceMethod"
+	AccommodationService_CreateAccomodation_FullMethodName      = "/accommodation.AccommodationService/CreateAccomodation"
+	AccommodationService_CreateAccomodationOffer_FullMethodName = "/accommodation.AccommodationService/CreateAccomodationOffer"
+	AccommodationService_UpdateAccomodationOffer_FullMethodName = "/accommodation.AccommodationService/UpdateAccomodationOffer"
+	AccommodationService_FilterAccommodations_FullMethodName    = "/accommodation.AccommodationService/FilterAccommodations"
 )
 
 // AccommodationServiceClient is the client API for AccommodationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccommodationServiceClient interface {
-	TempServiceMethod(ctx context.Context, in *TempMessage, opts ...grpc.CallOption) (*common.RequestResult, error)
+	CreateAccomodation(ctx context.Context, in *NewAccomodation, opts ...grpc.CallOption) (*common.RequestResult, error)
+	CreateAccomodationOffer(ctx context.Context, in *CreateOfferRequest, opts ...grpc.CallOption) (*common.RequestResult, error)
+	UpdateAccomodationOffer(ctx context.Context, in *AccommodationOffer, opts ...grpc.CallOption) (*common.RequestResult, error)
+	FilterAccommodations(ctx context.Context, in *AccommodationSearch, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error)
 }
 
 type accommodationServiceClient struct {
@@ -38,9 +44,36 @@ func NewAccommodationServiceClient(cc grpc.ClientConnInterface) AccommodationSer
 	return &accommodationServiceClient{cc}
 }
 
-func (c *accommodationServiceClient) TempServiceMethod(ctx context.Context, in *TempMessage, opts ...grpc.CallOption) (*common.RequestResult, error) {
+func (c *accommodationServiceClient) CreateAccomodation(ctx context.Context, in *NewAccomodation, opts ...grpc.CallOption) (*common.RequestResult, error) {
 	out := new(common.RequestResult)
-	err := c.cc.Invoke(ctx, AccommodationService_TempServiceMethod_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, AccommodationService_CreateAccomodation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accommodationServiceClient) CreateAccomodationOffer(ctx context.Context, in *CreateOfferRequest, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, AccommodationService_CreateAccomodationOffer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accommodationServiceClient) UpdateAccomodationOffer(ctx context.Context, in *AccommodationOffer, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, AccommodationService_UpdateAccomodationOffer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accommodationServiceClient) FilterAccommodations(ctx context.Context, in *AccommodationSearch, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error) {
+	out := new(GetFilteredAccommodationsResponse)
+	err := c.cc.Invoke(ctx, AccommodationService_FilterAccommodations_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +84,10 @@ func (c *accommodationServiceClient) TempServiceMethod(ctx context.Context, in *
 // All implementations must embed UnimplementedAccommodationServiceServer
 // for forward compatibility
 type AccommodationServiceServer interface {
-	TempServiceMethod(context.Context, *TempMessage) (*common.RequestResult, error)
+	CreateAccomodation(context.Context, *NewAccomodation) (*common.RequestResult, error)
+	CreateAccomodationOffer(context.Context, *CreateOfferRequest) (*common.RequestResult, error)
+	UpdateAccomodationOffer(context.Context, *AccommodationOffer) (*common.RequestResult, error)
+	FilterAccommodations(context.Context, *AccommodationSearch) (*GetFilteredAccommodationsResponse, error)
 	mustEmbedUnimplementedAccommodationServiceServer()
 }
 
@@ -59,8 +95,17 @@ type AccommodationServiceServer interface {
 type UnimplementedAccommodationServiceServer struct {
 }
 
-func (UnimplementedAccommodationServiceServer) TempServiceMethod(context.Context, *TempMessage) (*common.RequestResult, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TempServiceMethod not implemented")
+func (UnimplementedAccommodationServiceServer) CreateAccomodation(context.Context, *NewAccomodation) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccomodation not implemented")
+}
+func (UnimplementedAccommodationServiceServer) CreateAccomodationOffer(context.Context, *CreateOfferRequest) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccomodationOffer not implemented")
+}
+func (UnimplementedAccommodationServiceServer) UpdateAccomodationOffer(context.Context, *AccommodationOffer) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccomodationOffer not implemented")
+}
+func (UnimplementedAccommodationServiceServer) FilterAccommodations(context.Context, *AccommodationSearch) (*GetFilteredAccommodationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FilterAccommodations not implemented")
 }
 func (UnimplementedAccommodationServiceServer) mustEmbedUnimplementedAccommodationServiceServer() {}
 
@@ -75,20 +120,74 @@ func RegisterAccommodationServiceServer(s grpc.ServiceRegistrar, srv Accommodati
 	s.RegisterService(&AccommodationService_ServiceDesc, srv)
 }
 
-func _AccommodationService_TempServiceMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TempMessage)
+func _AccommodationService_CreateAccomodation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewAccomodation)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccommodationServiceServer).TempServiceMethod(ctx, in)
+		return srv.(AccommodationServiceServer).CreateAccomodation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AccommodationService_TempServiceMethod_FullMethodName,
+		FullMethod: AccommodationService_CreateAccomodation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccommodationServiceServer).TempServiceMethod(ctx, req.(*TempMessage))
+		return srv.(AccommodationServiceServer).CreateAccomodation(ctx, req.(*NewAccomodation))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccommodationService_CreateAccomodationOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOfferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).CreateAccomodationOffer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccommodationService_CreateAccomodationOffer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).CreateAccomodationOffer(ctx, req.(*CreateOfferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccommodationService_UpdateAccomodationOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccommodationOffer)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).UpdateAccomodationOffer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccommodationService_UpdateAccomodationOffer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).UpdateAccomodationOffer(ctx, req.(*AccommodationOffer))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccommodationService_FilterAccommodations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccommodationSearch)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).FilterAccommodations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccommodationService_FilterAccommodations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).FilterAccommodations(ctx, req.(*AccommodationSearch))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -101,8 +200,20 @@ var AccommodationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AccommodationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "TempServiceMethod",
-			Handler:    _AccommodationService_TempServiceMethod_Handler,
+			MethodName: "CreateAccomodation",
+			Handler:    _AccommodationService_CreateAccomodation_Handler,
+		},
+		{
+			MethodName: "CreateAccomodationOffer",
+			Handler:    _AccommodationService_CreateAccomodationOffer_Handler,
+		},
+		{
+			MethodName: "UpdateAccomodationOffer",
+			Handler:    _AccommodationService_UpdateAccomodationOffer_Handler,
+		},
+		{
+			MethodName: "FilterAccommodations",
+			Handler:    _AccommodationService_FilterAccommodations_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

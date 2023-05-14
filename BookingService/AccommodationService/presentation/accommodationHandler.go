@@ -19,10 +19,18 @@ func NewAccomodationHandler(accomodationService *application.AccommodationServic
 	}
 }
 
-func (handler *AccommodationHandler) TempServiceMethod(ctx context.Context, message *accomodancePB.TempMessage) (*common_pb.RequestResult, error) {
-	handler.accomodationService.PrintSuccess(message.GetPoruka())
-	return &common_pb.RequestResult{
-		Code:    200,
-		Message: "USPESNO",
-	}, nil
+func (handler *AccommodationHandler) CreateAccomodation(ctx context.Context, message *accomodancePB.NewAccomodation) (*common_pb.RequestResult, error) {
+	return handler.accomodationService.CreateAccomodation(message)
+}
+
+func (handler *AccommodationHandler) CreateAccomodationOffer(ctx context.Context, message *accomodancePB.CreateOfferRequest) (*common_pb.RequestResult, error) {
+	return handler.accomodationService.CreateAccomodationOffer(message)
+}
+
+func (handler *AccommodationHandler) UpdateAccomodationOffer(ctx context.Context, message *accomodancePB.AccommodationOffer) (*common_pb.RequestResult, error) {
+	return handler.accomodationService.UpdateAccommodationOffer(message)
+}
+
+func (handler *AccommodationHandler) FilterAccommodations(ctx context.Context, message *accomodancePB.AccommodationSearch) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
+	return handler.accomodationService.FilterAccommodations(message)
 }
