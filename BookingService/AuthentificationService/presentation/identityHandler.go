@@ -28,9 +28,9 @@ func (handler *IdentityHandler) Register(ctx context.Context, request *auth_pb.R
 	}
 
 	if request.IsHost {
-		identity.Role = "Host"
+		identity.Role = domain.Role_Host
 	} else {
-		identity.Role = "Guest"
+		identity.Role = domain.Role_Guest
 	}
 
 	jwtToken, err := handler.identityService.RegisterIdentity(identity)

@@ -42,7 +42,7 @@ func (handler *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request, p
 	jwt_claims := r.Context().Value(mw.JwtContent{}).(*authentification.SignedDetails)
 	id := jwt_claims.Id
 
-	if jwt_claims.Role == "guest" {
+	if jwt_claims.Role == "Guest" {
 		hasReservation, err := handler.checkIfGuestHasReservations(id)
 
 		if err != nil {
@@ -55,7 +55,7 @@ func (handler *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request, p
 			return
 		}
 
-	} else if jwt_claims.Role == "host" {
+	} else if jwt_claims.Role == "Host" {
 		hasReservation, err := handler.checkIfHostHasReservations(id)
 
 		if err != nil {

@@ -66,7 +66,7 @@ services:
     container_name: reservation_service
     build:
       context: .
-      dockerfile: ./ReservationService/Dockerfile
+      dockerfile: ./ReservationService/Dockerfile.debug
     restart: on-failure
     ports:
       - ${RESERVATION_SERVICE_PORT}:${RESERVATION_SERVICE_PORT}
@@ -86,7 +86,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile.debug
+      dockerfile: ./APIGateway/Dockerfile
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
