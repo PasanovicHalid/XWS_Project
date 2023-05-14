@@ -95,3 +95,28 @@ func (repository *ReservationRepository) GetAllReservations(ctx *context.Context
 
 	return reservations, nil
 }
+func (repository *ReservationRepository) GetReservationsByAccommodationOfferID(ctx *context.Context, accommodationOfferID string) ([]*domain.Reservation, error) {
+	filter := bson.M{"offerId": accommodationOfferID}
+	options := options.Find()
+	cur, err := repository.reservations.Find(*ctx, filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(*ctx)
+
+	reservations := []*domain.Reservation{}
+	for cur.Next(*ctx) {
+		reservation := &domain.Reservation{}
+		err := cur.Decode(&reservation)
+		if err != nil {
+			return nil, err
+		}
+		reservations = append(reservations, reservation)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return reservations, nil
+}

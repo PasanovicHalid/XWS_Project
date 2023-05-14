@@ -75,6 +75,13 @@ service ReservationService {
             body: "*"
         };
     }
+
+    rpc CancelReservation (CancelReservationRequest) returns (CancelReservationResponse) {
+        option (google.api.http) = {
+            put: "/api/reservation/cancelReservation"
+            body: "*"
+        };
+    }
 }
 
 enum ReservationStatus{
@@ -189,6 +196,13 @@ message GetGuestAcceptedReservationsResponse {
     repeated Reservation reservations = 2;
 }
 
+
+message GetAcceptedPendingReservationsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Reservation reservations = 2;
+}
+
+
 message AcceptReservationRequest {
     string id = 1;
 }
@@ -204,4 +218,15 @@ message RejectReservationRequest {
 message RejectReservationResponse {
     common.RequestResult requestResult = 1;
 }
+
+message CancelReservationRequest {
+    string id = 1;
+}
+
+message CancelReservationResponse {
+    common.RequestResult requestResult = 1;
+}
+
+
+
 
