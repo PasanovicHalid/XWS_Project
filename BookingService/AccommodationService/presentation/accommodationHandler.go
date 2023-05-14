@@ -36,6 +36,18 @@ func (handler *AccommodationHandler) FilterAccommodations(ctx context.Context, m
 	return handler.accomodationService.FilterAccommodations(message)
 }
 
+func (handler *AccommodationHandler) GetOwnerIdByAccommodationId(ctx context.Context, message *accomodancePB.GetOwnerIdRequest) (*accomodancePB.GetOwnerIdResponse, error) {
+	return handler.accomodationService.GetOwnerIdByAccommodationId(message)
+}
+
+func (handler *AccommodationHandler) SetAutomaticAcception(ctx context.Context, message *accomodancePB.SetAutomaticStatusRequest) (*accomodancePB.SetAutomaticStatusResponse, error) {
+	return handler.accomodationService.SetAutomaticAcception(message)
+}
+
+func (handler *AccommodationHandler) GetAutomaticAcception(ctx context.Context, message *accomodancePB.GetAutomaticStatusRequest) (*accomodancePB.GetAutomaticStatusResponse, error) {
+	return handler.accomodationService.GetAutomaticAcception(message)
+}
+
 func (handler *AccommodationHandler) GetAllAccommodationsByOwner(ctx context.Context, id *accomodancePB.IdentityIdRequest) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
 	accommodations := handler.accomodationService.GetAllAccommodationsByOwner(id.GetId())
 	return ConvertToGetFilteredAccommodationsResponse(accommodations)
@@ -68,4 +80,5 @@ func ConvertToGetFilteredAccommodationsResponse(accommodations []domain.Accommod
 		response.FilteredAccommodations = append(response.FilteredAccommodations, newAccommodation)
 	}
 	return response, nil
+
 }

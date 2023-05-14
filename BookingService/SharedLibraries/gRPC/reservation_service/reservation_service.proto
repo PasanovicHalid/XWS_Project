@@ -174,8 +174,7 @@ message GetHostPendingReservationsRequest {
 }
 
 message GetHostPendingReservationsResponse {
-    common.RequestResult requestResult = 1;
-    repeated Reservation reservations = 2;
+    repeated Reservation reservations = 1;
 }
 
 message GetGuestPendingReservationsRequest {
@@ -183,8 +182,7 @@ message GetGuestPendingReservationsRequest {
 }
 
 message GetGuestPendingReservationsResponse {
-    common.RequestResult requestResult = 1;
-    repeated Reservation reservations = 2;
+    repeated Reservation reservations = 1;
 }
 
 message GetGuestAcceptedReservationsRequest {
@@ -192,14 +190,12 @@ message GetGuestAcceptedReservationsRequest {
 }
 
 message GetGuestAcceptedReservationsResponse {
-    common.RequestResult requestResult = 1;
-    repeated Reservation reservations = 2;
+    repeated Reservation reservations = 1;
 }
 
 
 message GetAcceptedPendingReservationsResponse {
-    common.RequestResult requestResult = 1;
-    repeated Reservation reservations = 2;
+    repeated Reservation reservations = 1;
 }
 
 
