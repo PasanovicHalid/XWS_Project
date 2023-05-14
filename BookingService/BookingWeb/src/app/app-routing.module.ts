@@ -14,6 +14,7 @@ import { CreateAccommodationOfferComponent } from './accommodation/create-accomm
 import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
 import { FilterAccommodationOffersComponent } from './accommodation/filter-acommodation-offers/filter-accommodation-offers/filter-accommodation-offers.component';
 import { PendingHostReservationsComponent } from './reservation/pending-host-reservations/pending-host-reservations.component';
+import { CancelReservationComponent } from './reservation/cancel-reservation/cancel-reservation.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
       { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
       { path: 'filter-offers', component: FilterAccommodationOffersComponent, canActivate: [AuthGuard] },
       { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
+      { path: 'cancel-reservation', component: CancelReservationComponent, canActivate: [AuthGuard] },
     ]
   },
 ];

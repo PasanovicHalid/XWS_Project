@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { UserService } from 'src/app/authentification/services/user.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { Reservation } from '../contracts/reservation.model';
+import { ReservationId } from '../contracts/reservation-id.model';
 
 @Component({
   selector: 'app-pending-host-reservations',
@@ -14,7 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class PendingHostReservationsComponent implements OnInit{
 
   id:string = "";
-  dataSource: MatTableDataSource<CreateReservationRequest> = new MatTableDataSource<CreateReservationRequest>();
+  dataSource: MatTableDataSource<Reservation> = new MatTableDataSource<Reservation>();
 
   displayedColumns: string[] = ['offer', 'customer', 'number', 'start', 'end', 'accept','reject'];
   constructor(private resetvationService: ReservationsService,
@@ -42,7 +44,11 @@ export class PendingHostReservationsComponent implements OnInit{
     this.resetvationService.GetAllHostPendingReservations(this.id).subscribe({
       next: (response) => {
         
-          
+        if (response.hasOwnProperty('reservations')) { // Check if 'reservations' property exists
+          this.dataSource = new MatTableDataSource<Reservation>(response.reservations);
+        } else {
+          // Handle error if 'reservations' property is missing
+        }
        
       },
       error: () => {
@@ -52,7 +58,10 @@ export class PendingHostReservationsComponent implements OnInit{
   }
 
   acceptReservation(element:any){
-    this.resetvationService.AcceptReservation(element.Id).subscribe(res=>{
+    console.log(element)
+    var id :ReservationId = new ReservationId();
+    id = element.id;
+    this.resetvationService.AcceptReservation(element.id).subscribe(res=>{
       setTimeout(()=>{
         window.location.reload();
       }, 100);
@@ -60,7 +69,7 @@ export class PendingHostReservationsComponent implements OnInit{
   }
 
   rejectReservation(element:any){
-    this.resetvationService.RejectReservation(element.Id).subscribe(res=>{
+    this.resetvationService.RejectReservation(element.id).subscribe(res=>{
       setTimeout(()=>{
         window.location.reload();
       }, 100);
