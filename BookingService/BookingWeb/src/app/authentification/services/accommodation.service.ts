@@ -48,9 +48,19 @@ export class AccomodationService {
     ).pipe(catchError(this.handleError))
   }
 
-  CreateOffer(newOffer: CreateOfferRequest) : Observable<any>{
+  public CreateOffer(newOffer: CreateOfferRequest) : Observable<any>{
     return this.http.post(
       this.basePathTemp + 'create-offer',
+      newOffer,
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
+
+  public UpdateOffer(newOffer: CreateOfferRequest) {
+    return this.http.post(
+      this.basePathTemp + 'update-offer',
       newOffer,
       {
         headers: this.headers,

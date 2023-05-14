@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import { AccomodationService } from 'src/app/authentification/services/accommodation.service';
-import { CreateOfferRequest } from './model/accommodationOffer.model';
+import { CreateOfferRequest } from '../../create-accommodation-offer/model/accommodationOffer.model';
 
 @Component({
-  selector: 'app-create-accommodation-offer',
-  templateUrl: './create-accommodation-offer.component.html',
-  styleUrls: ['./create-accommodation-offer.component.scss']
+  selector: 'app-update-accommodation-offer',
+  templateUrl: './update-accommodation-offer.component.html',
+  styleUrls: ['./update-accommodation-offer.component.scss']
 })
-export class CreateAccommodationOfferComponent {
-
+export class UpdateAccommodationOfferComponent {
   newOffer : CreateOfferRequest = new CreateOfferRequest()
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -27,7 +24,6 @@ export class CreateAccommodationOfferComponent {
     console.log(this.endDate)
     this.newOffer.start_date_time_utc = temps + "T12:00:00.000Z";
     this.newOffer.end_date_time_utc = tempe + "T12:00:00.000Z";
-    this.accommodationService.CreateOffer(this.newOffer).subscribe()
+    this.accommodationService.UpdateOffer(this.newOffer).subscribe()
   }
-  
 }
