@@ -36,6 +36,14 @@ service AccommodationService {
             body: "*"
         };
     }
+
+    rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {
+
+    }
+
+    rpc DeleteAllAccommodationsByOwner(IdentityIdRequest) returns (common.RequestResult) {
+
+    }
 }
 
 message newAccomodation {
@@ -82,4 +90,13 @@ message AccommodationSearch {
     google.protobuf.Timestamp start_date_time_utc = 2;
     google.protobuf.Timestamp end_date_time_utc = 3;
     int32 guest_number = 4;
+}
+
+message IdentityIdRequest {
+    string Id = 1;
+}
+
+message DeleteAllAccommodationsByOwnerResponse{
+    common.RequestResult requestResult = 1;
+    string error = 2;
 }

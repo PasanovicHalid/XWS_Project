@@ -20,10 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AccommodationService_CreateAccomodation_FullMethodName      = "/accommodation.AccommodationService/CreateAccomodation"
-	AccommodationService_CreateAccomodationOffer_FullMethodName = "/accommodation.AccommodationService/CreateAccomodationOffer"
-	AccommodationService_UpdateAccomodationOffer_FullMethodName = "/accommodation.AccommodationService/UpdateAccomodationOffer"
-	AccommodationService_FilterAccommodations_FullMethodName    = "/accommodation.AccommodationService/FilterAccommodations"
+	AccommodationService_CreateAccomodation_FullMethodName             = "/accommodation.AccommodationService/CreateAccomodation"
+	AccommodationService_CreateAccomodationOffer_FullMethodName        = "/accommodation.AccommodationService/CreateAccomodationOffer"
+	AccommodationService_UpdateAccomodationOffer_FullMethodName        = "/accommodation.AccommodationService/UpdateAccomodationOffer"
+	AccommodationService_FilterAccommodations_FullMethodName           = "/accommodation.AccommodationService/FilterAccommodations"
+	AccommodationService_GetAllAccommodationsByOwner_FullMethodName    = "/accommodation.AccommodationService/GetAllAccommodationsByOwner"
+	AccommodationService_DeleteAllAccommodationsByOwner_FullMethodName = "/accommodation.AccommodationService/DeleteAllAccommodationsByOwner"
 )
 
 // AccommodationServiceClient is the client API for AccommodationService service.
@@ -34,6 +36,8 @@ type AccommodationServiceClient interface {
 	CreateAccomodationOffer(ctx context.Context, in *CreateOfferRequest, opts ...grpc.CallOption) (*common.RequestResult, error)
 	UpdateAccomodationOffer(ctx context.Context, in *AccommodationOffer, opts ...grpc.CallOption) (*common.RequestResult, error)
 	FilterAccommodations(ctx context.Context, in *AccommodationSearch, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error)
+	GetAllAccommodationsByOwner(ctx context.Context, in *IdentityIdRequest, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error)
+	DeleteAllAccommodationsByOwner(ctx context.Context, in *IdentityIdRequest, opts ...grpc.CallOption) (*common.RequestResult, error)
 }
 
 type accommodationServiceClient struct {
@@ -80,6 +84,24 @@ func (c *accommodationServiceClient) FilterAccommodations(ctx context.Context, i
 	return out, nil
 }
 
+func (c *accommodationServiceClient) GetAllAccommodationsByOwner(ctx context.Context, in *IdentityIdRequest, opts ...grpc.CallOption) (*GetFilteredAccommodationsResponse, error) {
+	out := new(GetFilteredAccommodationsResponse)
+	err := c.cc.Invoke(ctx, AccommodationService_GetAllAccommodationsByOwner_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accommodationServiceClient) DeleteAllAccommodationsByOwner(ctx context.Context, in *IdentityIdRequest, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, AccommodationService_DeleteAllAccommodationsByOwner_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccommodationServiceServer is the server API for AccommodationService service.
 // All implementations must embed UnimplementedAccommodationServiceServer
 // for forward compatibility
@@ -88,6 +110,8 @@ type AccommodationServiceServer interface {
 	CreateAccomodationOffer(context.Context, *CreateOfferRequest) (*common.RequestResult, error)
 	UpdateAccomodationOffer(context.Context, *AccommodationOffer) (*common.RequestResult, error)
 	FilterAccommodations(context.Context, *AccommodationSearch) (*GetFilteredAccommodationsResponse, error)
+	GetAllAccommodationsByOwner(context.Context, *IdentityIdRequest) (*GetFilteredAccommodationsResponse, error)
+	DeleteAllAccommodationsByOwner(context.Context, *IdentityIdRequest) (*common.RequestResult, error)
 	mustEmbedUnimplementedAccommodationServiceServer()
 }
 
@@ -106,6 +130,12 @@ func (UnimplementedAccommodationServiceServer) UpdateAccomodationOffer(context.C
 }
 func (UnimplementedAccommodationServiceServer) FilterAccommodations(context.Context, *AccommodationSearch) (*GetFilteredAccommodationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FilterAccommodations not implemented")
+}
+func (UnimplementedAccommodationServiceServer) GetAllAccommodationsByOwner(context.Context, *IdentityIdRequest) (*GetFilteredAccommodationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllAccommodationsByOwner not implemented")
+}
+func (UnimplementedAccommodationServiceServer) DeleteAllAccommodationsByOwner(context.Context, *IdentityIdRequest) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAllAccommodationsByOwner not implemented")
 }
 func (UnimplementedAccommodationServiceServer) mustEmbedUnimplementedAccommodationServiceServer() {}
 
@@ -192,6 +222,42 @@ func _AccommodationService_FilterAccommodations_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccommodationService_GetAllAccommodationsByOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdentityIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).GetAllAccommodationsByOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccommodationService_GetAllAccommodationsByOwner_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).GetAllAccommodationsByOwner(ctx, req.(*IdentityIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccommodationService_DeleteAllAccommodationsByOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdentityIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).DeleteAllAccommodationsByOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccommodationService_DeleteAllAccommodationsByOwner_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).DeleteAllAccommodationsByOwner(ctx, req.(*IdentityIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccommodationService_ServiceDesc is the grpc.ServiceDesc for AccommodationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -214,6 +280,14 @@ var AccommodationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FilterAccommodations",
 			Handler:    _AccommodationService_FilterAccommodations_Handler,
+		},
+		{
+			MethodName: "GetAllAccommodationsByOwner",
+			Handler:    _AccommodationService_GetAllAccommodationsByOwner_Handler,
+		},
+		{
+			MethodName: "DeleteAllAccommodationsByOwner",
+			Handler:    _AccommodationService_DeleteAllAccommodationsByOwner_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
