@@ -50,7 +50,11 @@ service AccommodationService {
         };
     }
 
-    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {}
+    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {
+        option (google.api.http) = {
+            get: "/api/accommodation/getAutomaticAcception/{id}"
+        };
+    }
        
 
     rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {

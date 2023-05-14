@@ -93,6 +93,62 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 	}, nil
 }
 
+func (handler *ReservationHandler) CreateReservationAutomaticly(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
+	layout := "2006-01-02T15:04:05Z"
+
+	startTimeStr := request.StartDateTimeUtc
+	if startTimeStr == "" {
+		return nil, errors.New("StartDateTimeUtc is empty")
+	}
+
+	endTimeStr := request.EndDateTimeUtc
+	if endTimeStr == "" {
+		return nil, errors.New("EndDateTimeUtc is empty")
+	}
+
+	startTime, err := time.Parse(layout, startTimeStr)
+	if err != nil {
+		return nil, err
+	}
+
+	endTime, err := time.Parse(layout, endTimeStr)
+	if err != nil {
+		return nil, err
+	}
+
+	reservationID, err := generateRandomString(10)
+	if err != nil {
+		return nil, err
+	}
+
+	reservationStatus := domain.Accepted
+
+	fmt.Print(reservationID)
+
+	reservation := &domain.Reservation{
+		Id:                   reservationID,
+		AccommodationOfferId: request.AccommodationOfferId,
+		CustomerId:           request.CustomerId,
+		HostId:               request.HostId,
+		ReservationStatus:    reservationStatus,
+		NumberOfGuests:       int(request.NumberOfGuests),
+		StartDateTimeUTC:     startTime,
+		EndDateTimeUTC:       endTime,
+	}
+
+	err = handler.reservationService.CreateReservation(reservation)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &reservation_pb.CreateReservationResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}
+
 func (handler *ReservationHandler) CheckGuestActiveReservations(ctx context.Context, request *reservation_pb.CheckUserActiveReservationsRequest) (response *reservation_pb.CheckUserActiveReservationsResponse, err error) {
 	// Retrieve the guest ID from the request
 	guestID := request.Id
@@ -203,6 +259,21 @@ func (handler *ReservationHandler) AcceptReservation(ctx context.Context, reques
 		return nil, err
 	}
 
+	otherReservations, err := handler.reservationService.GetReservationsByAccommodationOfferID(reservation.AccommodationOfferId)
+	if err != nil {
+		return nil, err
+	}
+	// Set the status of other reservations to "Pending"
+	for _, otherReservation := range otherReservations {
+		if otherReservation.Id != request.Id {
+			otherReservation.ReservationStatus = domain.Rejected
+
+			err = handler.reservationService.UpdateReservation(otherReservation)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
 	// Prepare the response
 	response := &reservation_pb.AcceptReservationResponse{
 		RequestResult: &common_pb.RequestResult{
