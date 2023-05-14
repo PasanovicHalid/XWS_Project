@@ -41,4 +41,14 @@ export class ReservationsService {
     console.log(requestBody)
     return this.http.put(this.basePath + 'rejectReservation', requestBody, {headers: this.headers,})
   }
+
+  public CancelReservation(id: string): Observable<any> {
+    const requestBody = { "id": id };
+    console.log(requestBody)
+    return this.http.put(this.basePath + 'cancelReservation', requestBody, { headers: this.headers });
+  }
+
+  public GetAllGuestAcceptedReservations(id: any): Observable<Reservations> {
+    return this.http.get<Reservations>(this.basePath + 'getGuestAcceptedReservations/'+id,  {headers: this.headers,})
+  }
 }

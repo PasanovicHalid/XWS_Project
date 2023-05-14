@@ -74,6 +74,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/reservation/acceptReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/rejectReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/cancelReservation", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/reservation/getGuestAcceptedReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 
 	server.final_mux = final_mux
 
