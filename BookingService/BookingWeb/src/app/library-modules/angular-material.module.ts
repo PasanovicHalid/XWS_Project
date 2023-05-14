@@ -41,6 +41,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { FormsModule } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -106,7 +107,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatTabsModule,
     MatTooltipModule,
     MatTreeModule,
-    MatRadioModule
+    MatRadioModule,
   ],
   providers: [],
   bootstrap: []

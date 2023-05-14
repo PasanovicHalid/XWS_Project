@@ -11,6 +11,7 @@ import { UserPanelComponent } from './authentification/user-panel/user-panel.com
 import { AuthGuard } from './guards/auth.gard';
 import { CreateAccommodationComponent } from './accommodation/create-accommodation/create-accommodation.component';
 import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
+import { PendingHostReservationsComponent } from './reservation/pending-host-reservations/pending-host-reservations.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'user-panel', component: UserPanelComponent, canActivate: [AuthGuard] },
       { path: 'create-accommodation', component: CreateAccommodationComponent, canActivate: [AuthGuard]},
       { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
+      { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
     ]
   },
 ];

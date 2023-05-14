@@ -240,9 +240,6 @@ func (handler *ReservationHandler) GetHostPendingReservations(ctx context.Contex
 
 	// Prepare the response
 	response = &reservation_pb.GetHostPendingReservationsResponse{
-		RequestResult: &common_pb.RequestResult{
-			Code: 200,
-		},
 		Reservations: pbPendingReservations,
 	}
 	return response, nil
@@ -401,9 +398,6 @@ func (handler *ReservationHandler) GetGuestPendingReservations(ctx context.Conte
 
 	// Prepare the response
 	response = &reservation_pb.GetGuestPendingReservationsResponse{
-		RequestResult: &common_pb.RequestResult{
-			Code: 200,
-		},
 		Reservations: pbPendingReservations,
 	}
 	return response, nil
@@ -442,9 +436,6 @@ func (handler *ReservationHandler) GetGuestAcceptedReservations(ctx context.Cont
 
 	// Prepare the response
 	response = &reservation_pb.GetGuestAcceptedReservationsResponse{
-		RequestResult: &common_pb.RequestResult{
-			Code: 200,
-		},
 		Reservations: pbReservations,
 	}
 	return response, nil
