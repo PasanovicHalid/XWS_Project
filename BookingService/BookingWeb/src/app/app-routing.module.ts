@@ -9,6 +9,7 @@ import { RegisterComponent } from './authentification/register/register.componen
 import { InitialUserInfoEntryComponent } from './authentification/initial-user-info-entry/initial-user-info-entry.component';
 import { UserPanelComponent } from './authentification/user-panel/user-panel.component';
 import { AuthGuard } from './guards/auth.gard';
+import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
       { path: 'user-panel', component: UserPanelComponent, canActivate: [AuthGuard] },
+      { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
     ]
   },
 ];

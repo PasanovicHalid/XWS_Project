@@ -2,6 +2,8 @@ package presentation
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"time"
@@ -21,6 +23,15 @@ func NewReservationHandler(reservationService *application.ReservationService) *
 	return &ReservationHandler{
 		reservationService: reservationService,
 	}
+}
+
+func generateRandomString(length int) (string, error) {
+	bytes := make([]byte, length)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(bytes)[:length], nil
 }
 
 func (handler *ReservationHandler) CreateReservation(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
@@ -48,8 +59,16 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 	if err != nil {
 		return nil, err
 	}
+
+	reservationID, err := generateRandomString(10)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Print(reservationID)
+
 	reservation := &domain.Reservation{
-		Id:                   request.Id,
+		Id:                   reservationID,
 		AccommodationOfferId: request.AccommodationOfferId,
 		CustomerId:           request.CustomerId,
 		HostId:               request.HostId,
@@ -270,6 +289,47 @@ func (handler *ReservationHandler) GetGuestPendingReservations(ctx context.Conte
 			Code: 200,
 		},
 		Reservations: pbPendingReservations,
+	}
+	return response, nil
+}
+
+func (handler *ReservationHandler) GetGuestAcceptedReservations(ctx context.Context, request *reservation_pb.GetGuestAcceptedReservationsRequest) (response *reservation_pb.GetGuestAcceptedReservationsResponse, err error) {
+	// Retrieve the guest ID from the request
+	guestID := request.Id
+
+	// Get all reservations for the guest
+	reservations, err := handler.reservationService.GetAllReservations()
+	if err != nil {
+		return nil, err
+	}
+
+	// Filter reservations to include only those with status ACCEPTED for the guest
+	pendingReservations := []*domain.Reservation{}
+	for _, reservation := range reservations {
+		if reservation.CustomerId == guestID && reservation.ReservationStatus == domain.Accepted {
+			pendingReservations = append(pendingReservations, reservation)
+		}
+	}
+	pbReservations := make([]*reservation_pb.Reservation, len(pendingReservations))
+	for i, res := range pendingReservations {
+		pbReservations[i] = &reservation_pb.Reservation{
+			Id:                   res.Id,
+			AccommodationOfferId: res.AccommodationOfferId,
+			CustomerId:           res.CustomerId,
+			HostId:               res.HostId,
+			ReservationStatus:    reservation_pb.ReservationStatus_ACCEPTED,
+			NumberOfGuests:       int32(res.NumberOfGuests),
+			StartDateTimeUtc:     res.StartDateTimeUTC.String(),
+			EndDateTimeUtc:       res.EndDateTimeUTC.String(),
+		}
+	}
+
+	// Prepare the response
+	response = &reservation_pb.GetGuestAcceptedReservationsResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+		Reservations: pbReservations,
 	}
 	return response, nil
 }
