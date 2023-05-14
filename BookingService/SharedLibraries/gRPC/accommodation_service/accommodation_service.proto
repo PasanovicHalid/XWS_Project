@@ -49,6 +49,10 @@ service AccommodationService {
             body: "*"
         };
     }
+
+    rpc GetAutomaticAcception(GetAutomaticStatusRequest) returns (GetAutomaticStatusResponse) {
+       
+    }
 }
 
 message newAccomodation {
@@ -112,4 +116,12 @@ message SetAutomaticStatusRequest{
 
 message SetAutomaticStatusResponse{
     common.RequestResult requestResult = 1;
+}
+
+message GetAutomaticStatusRequest{
+    string id = 1;
+}
+
+message GetAutomaticStatusResponse{
+    bool status = 1;
 }

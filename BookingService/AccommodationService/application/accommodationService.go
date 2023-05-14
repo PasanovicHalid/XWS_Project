@@ -322,3 +322,19 @@ func (service *AccommodationService) SetAutomaticAcception(message *accomodanceP
 	}
 	return response, nil
 }
+
+func (service *AccommodationService) GetAutomaticAcception(message *accomodancePB.GetAutomaticStatusRequest) (*accomodancePB.GetAutomaticStatusResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	accommodationOffer, err := service.accomodationRepository.GetAccommodationOfferById(&ctx, message.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	status := accommodationOffer.AutomaticAcceptation
+
+	response := &accomodancePB.GetAutomaticStatusResponse{
+		Status: status,
+	}
+	return response, nil
+}

@@ -65,6 +65,8 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 		return nil, err
 	}
 
+	reservationStatus := domain.Pending
+
 	fmt.Print(reservationID)
 
 	reservation := &domain.Reservation{
@@ -72,7 +74,7 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 		AccommodationOfferId: request.AccommodationOfferId,
 		CustomerId:           request.CustomerId,
 		HostId:               request.HostId,
-		ReservationStatus:    domain.Pending,
+		ReservationStatus:    reservationStatus,
 		NumberOfGuests:       int(request.NumberOfGuests),
 		StartDateTimeUTC:     startTime,
 		EndDateTimeUTC:       endTime,
