@@ -184,7 +184,7 @@ message GetGuestAcceptedReservationsRequest {
     string id = 1;
 }
 
-message GetAcceptedPendingReservationsResponse {
+message GetGuestAcceptedReservationsResponse {
     common.RequestResult requestResult = 1;
     repeated Reservation reservations = 2;
 }

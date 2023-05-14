@@ -2,6 +2,8 @@ package presentation
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"time"
@@ -21,6 +23,15 @@ func NewReservationHandler(reservationService *application.ReservationService) *
 	return &ReservationHandler{
 		reservationService: reservationService,
 	}
+}
+
+func generateRandomString(length int) (string, error) {
+	bytes := make([]byte, length)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(bytes)[:length], nil
 }
 
 func (handler *ReservationHandler) CreateReservation(ctx context.Context, request *reservation_pb.CreateReservationRequest) (response *reservation_pb.CreateReservationResponse, err error) {
@@ -48,8 +59,16 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 	if err != nil {
 		return nil, err
 	}
+
+	reservationID, err := generateRandomString(10)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Print(reservationID)
+
 	reservation := &domain.Reservation{
-		Id:                   request.Id,
+		Id:                   reservationID,
 		AccommodationOfferId: request.AccommodationOfferId,
 		CustomerId:           request.CustomerId,
 		HostId:               request.HostId,

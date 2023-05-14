@@ -14,7 +14,7 @@ import { SideNavComponent } from './navs/side-nav/side-nav.component';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { fadeAnimation } from './animations/fade';
-
+import { ReservationModule } from './reservation/reservation.module';
 export function tokenGetter() {
   return localStorage.getItem("jwt")
 }
@@ -25,7 +25,7 @@ export function tokenGetter() {
     PublicLayoutComponent,
     PrivateLayoutComponent,
     DashboardComponent,
-    LandingPageComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +34,7 @@ export function tokenGetter() {
     AngularMaterialModule,
     AuthentificationModule,
     NavsModule,
+    ReservationModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
