@@ -1,53 +1,40 @@
 <div class="content">
     <div class="tabs">
-        <mat-tab-group [selectedIndex]="1" class="tab-group">
-            <mat-tab label="Create Accommodation">
-                <div class="content">
-                    <div class="image-container">
-                        <div class="image">
-                            <img src="../../../assets/logo.png" alt="Company Image">
-                        </div>
-                    </div>
-                    <div class="user-info-container">
-                        <h5>Enter your basic information</h5>
-                        <div class="inputs">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email</mat-label>
-                                <input matInput placeholder="Email">
-                            </mat-form-field>
-                            <div class="inline-items">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>First Name</mat-label>
-                                    <input matInput placeholder="First Name">
-                                </mat-form-field>
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Last Name</mat-label>
-                                    <input matInput placeholder="Last Name">
-                                </mat-form-field>
-                            </div>
-                            <div class="inline-items">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Phone number</mat-label>
-                                    <input matInput placeholder="Phone number">
-                                </mat-form-field>
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Address</mat-label>
-                                    <input matInput placeholder="Address">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="buttons">
-                            <button mat-raised-button color="primary">Save</button>
-                        </div>
-                    </div>
+      <mat-tab-group [selectedIndex]="0" class="remove-border-bottom">
+        <mat-tab>
+            <div class="content">
+              <div class="user-info-container" style="margin-bottom: 40px;">
+                <h5>Enter accommodation informations</h5>
+                <div class="inputs">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="newAccommodation.name" name="name" placeholder="Name">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Location</mat-label>
+                    <input matInput [(ngModel)]="newAccommodation.location" name="location" placeholder="Location">
+                  </mat-form-field>
+                  <mat-checkbox [(ngModel)]="newAccommodation.wifi" name="wifi">Wifi</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="newAccommodation.kitchen" name="kitchen">Kitchen</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="newAccommodation.air_conditioner" name="airConditioner">Air conditioner</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="newAccommodation.parking" name="parking">Parking</mat-checkbox>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Minimum number of guests</mat-label>
+                    <input matInput [(ngModel)]="newAccommodation.min_number_of_guests" name="minNumberOfGuest" placeholder="Minimum number of guests">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Maximum number of guests</mat-label>
+                    <input matInput [(ngModel)]="newAccommodation.max_number_of_guests" name="maxNumberOfGuest" placeholder="Maximum number of guests">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Images (separated by commas)</mat-label>
+                    <input matInput [(ngModel)]="temp" name="images" placeholder="Images">
+                  </mat-form-field>
+                    <button mat-raised-button color="primary" (click)="CreateAccommodation()" style="margin-top: 65px; float: right; width: 70px; height: 40px;">Save</button>
                 </div>
-            </mat-tab>
-            <!-- <mat-tab label="User Info">
-                <app-user-info></app-user-info>
-            </mat-tab>
-            <mat-tab label="Change Username">
-                <app-change-username></app-change-username>
-            </mat-tab> -->
-        </mat-tab-group>
-    </div>
-</div>
+              </div>
+            </div>
+          </mat-tab>
+          </mat-tab-group>
+          </div>
+          </div>

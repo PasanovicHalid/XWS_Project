@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService/application/common/interfaces/persistance"
@@ -24,7 +25,9 @@ func NewAccomodationService(accomodationRepository persistance.IAccommodationRep
 func (service *AccommodationService) CreateAccomodation(newAccomodation *accomodancePB.NewAccomodation) (*common_pb.RequestResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
 	defer cancel()
+	fmt.Println(newAccomodation.Wifi)
 	newAccomodationClass := mapNewAccomodationToAccommodation(newAccomodation)
+	fmt.Println(newAccomodationClass.Wifi)
 	err := service.accomodationRepository.CreateAccomodation(&ctx, newAccomodationClass)
 	if err != nil {
 		return &common_pb.RequestResult{

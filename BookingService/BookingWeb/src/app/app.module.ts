@@ -15,6 +15,8 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { fadeAnimation } from './animations/fade';
 import { CreateAccommodationComponent } from './accommodation/create-accommodation/create-accommodation.component';
+import { FormsModule } from '@angular/forms';
+import { CreateAccommodationOfferComponent } from './accommodation/create-accommodation-offer/create-accommodation-offer.component';
 import { ReservationModule } from './reservation/reservation.module';
 
 export function tokenGetter() {
@@ -29,6 +31,7 @@ export function tokenGetter() {
     DashboardComponent,
     LandingPageComponent,
     CreateAccommodationComponent,
+    CreateAccommodationOfferComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +39,7 @@ export function tokenGetter() {
     BrowserAnimationsModule,
     AngularMaterialModule,
     AuthentificationModule,
+    FormsModule,
     NavsModule,
     ReservationModule,
     JwtModule.forRoot({
