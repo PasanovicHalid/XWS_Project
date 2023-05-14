@@ -9,8 +9,8 @@ import { ChangeUsernameRequest } from '../contracts/requests/change-username-req
 import { Accommodation } from 'src/app/accommodation/create-accommodation/model/accommodation.model';
 import { CreateOfferRequest } from 'src/app/accommodation/create-accommodation-offer/model/accommodationOffer.model';
 import { AccommodationFilterOffer } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/filterOffer.model';
+import { Accommodations } from 'src/app/accommodation/filter-acommodation-offers/filter-accommodation-offers/model/temp.model';
 import { SetAutomaticStatusRequest } from '../contracts/requests/set-automatic-status-request.model';
-
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class AccomodationService {
     ).pipe(catchError(this.handleError))
   }
 
-  CreateOffer(newOffer: CreateOfferRequest) : Observable<any>{
+  public CreateOffer(newOffer: CreateOfferRequest) : Observable<any>{
     return this.http.post(
       this.basePathTemp + 'create-offer',
       newOffer,
@@ -59,14 +59,24 @@ export class AccomodationService {
     ).pipe(catchError(this.handleError))
   }
 
-  Filter(filter: AccommodationFilterOffer) : Observable<any>{
+  public UpdateOffer(newOffer: CreateOfferRequest) {
     return this.http.post(
+      this.basePathTemp + 'update-offer',
+      newOffer,
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
+
+  Filter(filter: AccommodationFilterOffer): Observable<Accommodations> {
+    return this.http.post<Accommodations>(
       this.basePathTemp + 'get-filtered-accommodations',
       filter,
       {
         headers: this.headers,
       },
-    ).pipe(catchError(this.handleError))
+    )
   }
 
   public Logout(): void {

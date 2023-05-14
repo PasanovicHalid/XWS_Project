@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AccommodationService/domain"
@@ -29,6 +30,8 @@ func (handler *AccommodationHandler) CreateAccomodationOffer(ctx context.Context
 }
 
 func (handler *AccommodationHandler) UpdateAccomodationOffer(ctx context.Context, message *accomodancePB.AccommodationOffer) (*common_pb.RequestResult, error) {
+	fmt.Println(message.GetStartDateTimeUtc().String())
+	fmt.Println(message.GetEndDateTimeUtc().String())
 	return handler.accomodationService.UpdateAccommodationOffer(message)
 }
 
