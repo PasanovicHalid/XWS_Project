@@ -11,24 +11,24 @@
   
     <!-- Name Column -->
     <ng-container matColumnDef="customer">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef> Customer id </th>
       <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
     </ng-container>
   
     <!-- Weight Column -->
     <ng-container matColumnDef="number">
-      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <th mat-header-cell *matHeaderCellDef> Number of guests </th>
       <td mat-cell *matCellDef="let element"> {{element.numberOfGuests}} </td>
     </ng-container>
   
     <!-- Symbol Column -->
     <ng-container matColumnDef="start">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <th mat-header-cell *matHeaderCellDef> Start </th>
       <td mat-cell *matCellDef="let element"> {{element.startDateTimeUtc}} </td>
     </ng-container>
 
     <ng-container matColumnDef="end">
-        <th mat-header-cell *matHeaderCellDef> Symbol </th>
+        <th mat-header-cell *matHeaderCellDef> End </th>
         <td mat-cell *matCellDef="let element"> {{element.endDateTimeUtc}} </td>
       </ng-container>
 
@@ -39,7 +39,7 @@
     
     <ng-container matColumnDef="reject">
         <th mat-header-cell *matHeaderCellDef> Reject reservation</th>
-        <td mat-cell *matCellDef="let element"> <button mat-button color="danger">Reject </button> </td>
+        <td mat-cell *matCellDef="let element"> <button mat-button color="danger" (click)="rejectReservation(element)">Reject </button> </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

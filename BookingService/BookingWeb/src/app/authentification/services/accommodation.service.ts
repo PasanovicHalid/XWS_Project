@@ -8,6 +8,7 @@ import { ChangePasswordRequest } from '../contracts/requests/change-password-req
 import { ChangeUsernameRequest } from '../contracts/requests/change-username-request';
 import { Accommodation } from 'src/app/accommodation/create-accommodation/model/accommodation.model';
 import { CreateOfferRequest } from 'src/app/accommodation/create-accommodation-offer/model/accommodationOffer.model';
+import { SetAutomaticStatusRequest } from '../contracts/requests/set-automatic-status-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -132,5 +133,13 @@ export class AccomodationService {
 
   private handleError(error: HttpErrorResponse) {
     return throwError(() => new Error(error.status + '\n' + error.error));
+  }
+
+  public SetAutomaticAcception(request: SetAutomaticStatusRequest) :any{
+    return this.http.post(this.basePath + 'setAutomaticAcception',request, {headers: this.headers,})
+  }
+
+  public GetAutomaticAcception(id:string) :any{
+    return this.http.get(this.basePath + 'getAutomaticAcception/'+ id, {headers: this.headers,})
   }
 }
