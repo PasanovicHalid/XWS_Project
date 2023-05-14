@@ -259,7 +259,7 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 					accommodation.Location == message.Location &&
 					accommodation.MinNumberOfGuest <= int(message.GuestNumber) &&
 					accommodation.MaxNumberOfGuest >= int(message.GuestNumber) {
-					filteredAccommodations = append(filteredAccommodations, convertToNewAccomodation(*accommodation))
+					filteredAccommodations = append(filteredAccommodations, convertToNewAccomodation(*accommodation, offer.Id))
 					break
 				}
 			}
@@ -272,19 +272,20 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 	return response, nil
 }
 
-func convertToNewAccomodation(accommodation domain.Accommodation) *accomodancePB.NewAccomodation {
+func convertToNewAccomodation(accommodation domain.Accommodation, offer string) *accomodancePB.NewAccomodation {
 	return &accomodancePB.NewAccomodation{
-		Id:                accommodation.Id,
-		Name:              accommodation.Name,
-		Location:          accommodation.Location,
-		Wifi:              accommodation.Wifi,
-		Kitchen:           accommodation.Kitchen,
-		AirConditioner:    accommodation.AirConditioner,
-		Parking:           accommodation.Parking,
-		MinNumberOfGuests: int32(accommodation.MinNumberOfGuest),
-		MaxNumberOfGuests: int32(accommodation.MaxNumberOfGuest),
-		Images:            accommodation.Images,
-		OwnerId:           accommodation.OwnerId,
+		Id:                   accommodation.Id,
+		Name:                 accommodation.Name,
+		Location:             accommodation.Location,
+		Wifi:                 accommodation.Wifi,
+		Kitchen:              accommodation.Kitchen,
+		AirConditioner:       accommodation.AirConditioner,
+		Parking:              accommodation.Parking,
+		MinNumberOfGuests:    int32(accommodation.MinNumberOfGuest),
+		MaxNumberOfGuests:    int32(accommodation.MaxNumberOfGuest),
+		Images:               accommodation.Images,
+		OwnerId:              accommodation.OwnerId,
+		AccommodationOfferId: offer,
 	}
 }
 

@@ -142,4 +142,8 @@ export class AccomodationService {
   public GetAutomaticAcception(id:string) :any{
     return this.http.get(this.basePath + 'getAutomaticAcception/'+ id, {headers: this.headers,})
   }
+
+  public GetOwnerIdByAccommodationId(id:string) :Observable<any>{
+    return this.http.get<Observable<any>>(this.basePath + 'getOwnerId/'+ id, {headers: this.headers,})
+  }
 }

@@ -78,6 +78,7 @@ message newAccomodation {
     int32 max_number_of_guests = 9;
     repeated string images = 10;
     string ownerId = 11;
+    string accommodationOfferId = 12;
 }
 
 message GetFilteredAccommodationsResponse {

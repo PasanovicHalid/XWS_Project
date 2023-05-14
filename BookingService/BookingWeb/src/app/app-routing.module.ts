@@ -13,6 +13,7 @@ import { CreateAccommodationComponent } from './accommodation/create-accommodati
 import { CreateAccommodationOfferComponent } from './accommodation/create-accommodation-offer/create-accommodation-offer.component';
 import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
 import { PendingHostReservationsComponent } from './reservation/pending-host-reservations/pending-host-reservations.component';
+import { PendingGuestReservationsComponent } from './reservation/pending-guest-reservations/pending-guest-reservations.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,8 @@ const routes: Routes = [
       { path: 'create-accommodation-offer', component: CreateAccommodationOfferComponent, canActivate: [AuthGuard]},
       { path: 'create-reservation', component: CreateReservationComponent, canActivate: [AuthGuard] },
       { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
+      { path: 'pending-guest-reservation', component: PendingGuestReservationsComponent, canActivate: [AuthGuard] },
+
     ]
   },
 ];
