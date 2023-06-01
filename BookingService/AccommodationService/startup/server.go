@@ -48,6 +48,8 @@ func (server *Server) Start() {
 	grpcServer := grpc.NewServer()
 	reservation_pb.RegisterAccommodationServiceServer(grpcServer, server.accommodationHandler)
 
+	log.Println("Starting gRPC server on port " + server.config.Port)
+
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}

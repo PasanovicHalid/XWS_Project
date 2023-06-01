@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/recommendation";
+
+package recommendation;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+service RecommendationService {
+    rpc GetRecommendation (RecommendationRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            get: "/api/recommendation/getRecommendation/{id}"
+        };
+    }
+}
+
+message RecommendationRequest {
+    string id = 1;
+}
+
+
+
+
+
+

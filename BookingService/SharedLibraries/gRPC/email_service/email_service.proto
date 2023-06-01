@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/email";
+
+package email;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+service EmailService {
+    rpc SendEmail(EmailRequest) returns (common.RequestResult) {}
+}
+
+message EmailRequest {
+    string email = 1;
+    string subject = 2;
+    string body = 3;
+}
+
+

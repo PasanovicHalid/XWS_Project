@@ -16,6 +16,8 @@ import (
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
 	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
+	ratingPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
+	recommendationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/recommendation_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -104,6 +106,20 @@ func (server *Server) initHandlers() {
 	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
 	fmt.Println(acommodanceEndpoint)
 	err = accomodancePB.RegisterAccommodationServiceHandlerFromEndpoint(context.TODO(), server.mux, acommodanceEndpoint, opts)
+
+	if err != nil {
+		panic(err)
+	}
+
+	recommendationEndpoint := fmt.Sprintf("%s:%s", server.config.RecommendationHost, server.config.RecommendationPort)
+	err = recommendationPB.RegisterRecommendationServiceHandlerFromEndpoint(context.TODO(), server.mux, recommendationEndpoint, opts)
+
+	if err != nil {
+		panic(err)
+	}
+
+	ratingEndpoint := fmt.Sprintf("%s:%s", server.config.RatingHost, server.config.RatingPort)
+	err = ratingPB.RegisterRatingServiceHandlerFromEndpoint(context.TODO(), server.mux, ratingEndpoint, opts)
 
 	if err != nil {
 		panic(err)

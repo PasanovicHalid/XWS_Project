@@ -74,6 +74,52 @@ services:
     networks:
       - network
 
+  email_service:
+    image: email_service
+    container_name: email_service
+    build:
+      context: .
+      dockerfile: ./EmailService/Dockerfile
+    restart: on-failure
+    environment:
+      EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+    networks:
+      - network
+
+  recommendation_service:
+    image: recommendation_service
+    container_name: recommendation_service
+    build:
+      context: .
+      dockerfile: ./RecommendationService/Dockerfile
+    restart: on-failure
+    environment:
+      RECOMMENDATION_SERVICE_PORT: ${RECOMMENDATION_SERVICE_PORT}
+      RECOMMENDATION_DB_HOST: ${RECOMMENDATION_DB_HOST}
+      RECOMMENDATION_DB_PORT: ${RECOMMENDATION_DB_PORT}
+    depends_on:
+        recommendation_db:
+          condition: service_healthy
+    networks:
+      - network
+
+  rating_service:
+    image: rating_service
+    container_name: rating_service
+    build:
+      context: .
+      dockerfile: ./RatingService/Dockerfile
+    restart: on-failure
+    environment:
+      RATING_SERVICE_PORT: ${RATING_SERVICE_PORT}
+      RATING_DB_HOST: ${RATING_DB_HOST}
+      RATING_DB_PORT: ${RATING_DB_PORT}
+    depends_on:
+      rating_db:
+        condition: service_healthy
+    networks:
+      - network
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -95,6 +141,10 @@ services:
       RESERVATION_SERVICE_PORT: ${RESERVATION_SERVICE_PORT}
       API_GATEWAY_DB_HOST: ${API_GATEWAY_DB_HOST}
       API_GATEWAY_DB_PORT: ${API_GATEWAY_DB_PORT}
+      RECOMMENDATION_SERVICE_PORT: ${RECOMMENDATION_SERVICE_PORT}
+      RECOMMENDATION_SERVICE_HOST: ${RECOMMENDATION_SERVICE_HOST}
+      RATING_SERVICE_PORT: ${RATING_SERVICE_PORT}
+      RATING_SERVICE_HOST: ${RATING_SERVICE_HOST}
     depends_on:
         api_gateway_db:
           condition: service_healthy
@@ -167,6 +217,39 @@ services:
     networks:
       - network
 
+  rating_db:
+    image: mongo
+    container_name: rating_db
+    restart: on-failure
+    ports:
+      - "${RATING_DB_EXTERNAL_PORT}:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - rating_db:/data/db
+    networks:
+      - network
+
+  recommendation_db:
+    image: neo4j:latest
+    container_name: recommendation_db
+    restart: on-failure
+    ports:
+      - "${RECOMMENDATION_DB_EXTERNAL_PORT}:7474"
+      - "${RECOMMENDATION_DB_EXTERNAL_PORT2}:7687"
+    healthcheck:
+      test: wget http://localhost:7474 || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - recommendation_db_data:/data
+      - recommendation_db_conf:/conf/
+    networks:
+      - network
 
   api_gateway_db:
     image: mongo
@@ -183,6 +266,15 @@ services:
       - api_gateway_db:/data/db
     networks:
       - network
+  
+  nats:
+    image: nats
+    container_name: nats
+    restart: on-failure
+    ports:
+      - "${NATS_EXTERNAL_PORT}:4222"
+    networks:
+      - network
 
 networks:
   network:
@@ -194,3 +286,6 @@ volumes:
   accommodation_db:
   reservation_db:
   api_gateway_db:
+  rating_db:
+  recommendation_db_data:
+  recommendation_db_conf:

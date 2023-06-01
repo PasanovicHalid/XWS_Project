@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating";
+
+package rating;
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+service RatingService {
+    rpc GetRating (GetRatingRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            get: "/api/rating/{id}"
+        };
+    }
+}
+
+message GetRatingRequest {
+    string id = 1;
+}
+
+
+
+
