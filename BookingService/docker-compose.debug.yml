@@ -283,6 +283,15 @@ services:
       - api_gateway_db:/data/db
     networks:
       - network
+  
+  nats:
+    image: nats
+    container_name: nats
+    restart: on-failure
+    ports:
+      - "${NATS_EXTERNAL_PORT}:4222"
+    networks:
+      - network
 
 networks:
   network:
