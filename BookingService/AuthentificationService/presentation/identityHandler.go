@@ -6,18 +6,21 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/domain"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/infrastructure/message_queues"
 	auth_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 )
 
 type IdentityHandler struct {
-	identityService *application.IdentityService
+	identityService        *application.IdentityService
+	deleteUserOrchestrator *message_queues.DeleteUserOrchestrator
 	auth_pb.UnimplementedAuthenticateServiceServer
 }
 
-func NewIdentityHandler(identityService *application.IdentityService) *IdentityHandler {
+func NewIdentityHandler(identityService *application.IdentityService, deleteUserOrchestrator *message_queues.DeleteUserOrchestrator) *IdentityHandler {
 	return &IdentityHandler{
-		identityService: identityService,
+		identityService:        identityService,
+		deleteUserOrchestrator: deleteUserOrchestrator,
 	}
 }
 
@@ -175,18 +178,29 @@ func (handler *IdentityHandler) GetIdentityByUsername(ctx context.Context, reque
 }
 
 func (handler *IdentityHandler) Remove(ctx context.Context, request *auth_pb.RemoveRequest) (*auth_pb.RemoveResponse, error) {
-	err := handler.identityService.DeleteIdentity(request.IdentityId)
+	// err := handler.identityService.DeleteIdentity(request.IdentityId)
+
+	// if err != nil {
+	// 	if err == persistance.ErrorIdentityNotFound {
+	// 		return &auth_pb.RemoveResponse{
+	// 			RequestResult: &common_pb.RequestResult{
+	// 				Code:    400,
+	// 				Message: "Invalid identity id",
+	// 			},
+	// 		}, nil
+	// 	}
+	// 	return nil, err
+	// }
+
+	err := handler.deleteUserOrchestrator.Start()
 
 	if err != nil {
-		if err == persistance.ErrorIdentityNotFound {
-			return &auth_pb.RemoveResponse{
-				RequestResult: &common_pb.RequestResult{
-					Code:    400,
-					Message: "Invalid identity id",
-				},
-			}, nil
-		}
-		return nil, err
+		return &auth_pb.RemoveResponse{
+			RequestResult: &common_pb.RequestResult{
+				Code:    400,
+				Message: "Something failed with orchestrator",
+			},
+		}, nil
 	}
 
 	return &auth_pb.RemoveResponse{
