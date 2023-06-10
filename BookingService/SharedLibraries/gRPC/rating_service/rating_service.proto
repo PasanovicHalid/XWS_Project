@@ -6,20 +6,90 @@ package rating;
 
 import "google/api/annotations.proto";
 import "common/common.proto";
-import "google/protobuf/timestamp.proto";
 
 service RatingService {
-    rpc GetRating (GetRatingRequest) returns (common.RequestResult) {
+    rpc GetAllRatingsMadeByCustomer (GetAllRatingsMadeByCustomerRequest) returns (GetAllRatingsResponse) {
         option (google.api.http) = {
-            get: "/api/rating/{id}"
+            post: "/api/rating/customer/ratings/{id}"
+            body: "*"
+        };
+    }
+
+    rpc GetAllRatingsForHost (GetAllRatingsForHostRequest) returns (GetAllRatingsResponse) {
+        option (google.api.http) = {
+            post: "/api/rating/host/ratings/{id}"
+            body: "*"
+        };
+    }
+
+    rpc UpdateRating (UpdateRatingRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            put: "/api/rating"
+            body: "*"
+        };
+    }
+
+    rpc DeleteRating (DeleteRatingRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            delete: "/api/rating/{id}"
+        };
+    }
+
+    rpc RateHost (RateHostRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/rating/host/{id}"
+            body: "*"
+        };
+    }
+
+    rpc RateAccommodation (RateAccommodationRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/rating/accommodation/{id}"
+            body: "*"
         };
     }
 }
 
-message GetRatingRequest {
+message GetAllRatingsMadeByCustomerRequest {
     string id = 1;
 }
 
+message GetAllRatingsForHostRequest {
+    string id = 1;
+}
 
+message RateHostRequest {
+    string id = 1;
+    string userId = 2;
+    double rating = 3;
+}
+
+message RateAccommodationRequest {
+    string id = 1;
+    string userId = 2;
+    double rating = 3;
+}
+
+message Rating {
+    string id = 1;
+    string userId = 2;
+    string hostId = 3;
+    string accommodationId = 4;
+    double rating = 5;
+}
+
+message GetAllRatingsResponse {
+    common.RequestResult requestResult = 1;
+    repeated Rating ratings = 2;
+}
+
+message UpdateRatingRequest {
+    string id = 1;
+    double rating = 2;
+}
+
+message DeleteRatingRequest {
+    string id = 1;
+}
 
 

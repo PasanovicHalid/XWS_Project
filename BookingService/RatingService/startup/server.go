@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/presentation"
 	rating_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -23,7 +25,16 @@ func NewServer(config *Configurations) *Server {
 		mux:    runtime.NewServeMux(),
 	}
 
-	server.ratingHandler = presentation.NewRatingHandler()
+	mongo, err := persistance.NewMongoClient(config.RatingDBHost, config.RatingDBPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ratingRepository := persistance.NewRatingRepository(mongo)
+
+	ratingService := application.NewRatingService(ratingRepository)
+
+	server.ratingHandler = presentation.NewRatingHandler(ratingService)
 
 	return server
 }
