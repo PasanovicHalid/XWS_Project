@@ -6,6 +6,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/domain"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -41,18 +42,30 @@ func (repository *RatingRepository) CreateRating(ctx *context.Context, rating *d
 }
 
 func (repository *RatingRepository) UpdateRating(ctx *context.Context, id string, rating float64) error {
-	_, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"rating": rating}})
+	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"rating": rating}})
 	if err != nil {
 		return err
 	}
+
+	if result.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+
 	return nil
 }
 
 func (repository *RatingRepository) DeleteRating(ctx *context.Context, id string) error {
-	_, err := repository.ratings.DeleteOne(*ctx, bson.M{"_id": id})
+	objId, _ := primitive.ObjectIDFromHex(id)
+
+	result, err := repository.ratings.DeleteOne(*ctx, bson.M{"_id": objId})
 	if err != nil {
 		return err
 	}
+
+	if result.DeletedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+
 	return nil
 }
 

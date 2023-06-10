@@ -52,7 +52,7 @@ func (h *RatingHandler) GetAllRatingsMadeByCustomer(ctx context.Context, request
 	}, nil
 }
 
-func (h *RatingHandler) GetAllRatingsForHostCustomer(ctx context.Context, request *rating_pb.GetAllRatingsForHostRequest) (*rating_pb.GetAllRatingsResponse, error) {
+func (h *RatingHandler) GetAllRatingsForHost(ctx context.Context, request *rating_pb.GetAllRatingsForHostRequest) (*rating_pb.GetAllRatingsResponse, error) {
 	ratings, err := h.ratingService.GetAllRatingsForHost(request.Id)
 
 	if err != nil {
