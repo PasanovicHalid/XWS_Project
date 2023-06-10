@@ -58,7 +58,7 @@ services:
     container_name: accommodation_service
     build:
       context: .
-      dockerfile: ./AccommodationService/Dockerfile
+      dockerfile: ./AccommodationService/Dockerfile.debug
     restart: on-failure
     ports:
       - ${ACCOMMODATION_SERVICE_PORT}:${ACCOMMODATION_SERVICE_PORT}

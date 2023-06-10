@@ -6,6 +6,8 @@ import (
 
 type Reservation struct {
 	Id                   string            `bson:"_id,omitempty"`
+	Deleted              bool              `bson:"deleted"`
+	SagaTimestamp        int64             `bson:"saga_timestamp"`
 	AccommodationOfferId string            `bson:"offerId,omitempty"`
 	CustomerId           string            `bson:"customerId,omitempty"`
 	HostId               string            ` bson:"hostId,omitempty"`

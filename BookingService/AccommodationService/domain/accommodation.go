@@ -2,6 +2,8 @@ package domain
 
 type Accommodation struct {
 	Id               string   `bson:"_id,omitempty"`
+	Deleted          bool     `bson:"deleted"`
+	SagaTimestamp    int64    `bson:"saga_timestamp"`
 	Name             string   `bson:"name,omitempty"`
 	OwnerId          string   `bson:"ownerId,omitempty"`
 	Location         string   `bson:"location,omitempty"`

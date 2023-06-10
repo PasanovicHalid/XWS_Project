@@ -39,5 +39,7 @@ type DeleteUserReply struct {
 }
 
 type DeleteUserEventInfo struct {
-	UserId string
+	UserId        string
+	SagaTimestamp int64
+	Role          string
 }

@@ -33,15 +33,53 @@ func NewDeleteUserCommandHandler(reservationService *application.ReservationServ
 func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserCommand) {
 
 	reply := &events.DeleteUserReply{}
+	reply.UserInfo = command.UserInfo
 
 	switch command.Type {
 	case events.DeleteGuestPreviousReservations:
 		log.Println("DeleteGuestPreviousReservations")
+
+		hasActiveReservation, err := handler.reservationService.CheckGuestActiveReservaton(command.UserInfo.UserId)
+
+		if err != nil || hasActiveReservation {
+			log.Println("Has active reservation or error")
+
+			reply.Type = events.GuestPreviousReservationsNotDeleted
+			break
+		}
+
+		err = handler.reservationService.DeleteReservationOfGuest(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)
+
+		if err != nil {
+			log.Println("Error deleting guest previous reservations")
+
+			reply.Type = events.GuestPreviousReservationsNotDeleted
+			break
+		}
+
 		reply.Type = events.DeletedGuestPreviousReservations
 	case events.DeleteHostLocationsPreviousReservations:
 		log.Println("DeleteHostLocationsPreviousReservations")
+
+		hasActiveReservation, err := handler.reservationService.CheckHostActiveReservaton(command.UserInfo.UserId)
+
+		if err != nil || hasActiveReservation {
+			log.Println("Has active reservation or error")
+
+			reply.Type = events.HostLocationsPreviousReservationsNotDeleted
+			break
+		}
+
+		err = handler.reservationService.DeleteReservationOfHost(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)
+
+		if err != nil {
+			log.Println("Error deleting host locations previous reservations")
+
+			reply.Type = events.HostLocationsPreviousReservationsNotDeleted
+			break
+		}
+
 		reply.Type = events.DeletedHostLocationsPreviousReservations
-		reply.Type = events.HostLocationsPreviousReservationsNotDeleted
 	default:
 		reply.Type = events.UnknownReply
 	}

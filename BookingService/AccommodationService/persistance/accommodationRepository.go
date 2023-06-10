@@ -39,7 +39,7 @@ func (repository *AccommodationRepository) CreateAccomodationOffer(ctx *context.
 }
 
 func (repository *AccommodationRepository) GetAllAccommodationOffers(ctx *context.Context) ([]*domain.AccommodationOffer, error) {
-	filter := bson.D{}
+	filter := bson.M{"deleted": false}
 	options := options.Find()
 
 	cur, err := repository.accommodationsOffers.Find(*ctx, filter, options)
@@ -75,7 +75,7 @@ func (repository *AccommodationRepository) UpdateAccommodationOffer(ctx *context
 		PerGuest:                  reservation.PerGuest,
 		AutomaticAcceptation:      reservation.AutomaticAcceptation,
 	}
-	_, err := repository.accommodationsOffers.ReplaceOne(*ctx, bson.M{"_id": id}, temp)
+	_, err := repository.accommodationsOffers.ReplaceOne(*ctx, bson.M{"_id": id, "deleted": false}, temp)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (repository *AccommodationRepository) UpdateAccommodationOffer(ctx *context
 }
 
 func (repository *AccommodationRepository) GetAllAccommodations(ctx *context.Context) ([]*domain.Accommodation, error) {
-	filter := bson.D{}
+	filter := bson.M{"deleted": false}
 	options := options.Find()
 
 	cur, err := repository.accomodations.Find(*ctx, filter, options)
@@ -110,8 +110,49 @@ func (repository *AccommodationRepository) GetAllAccommodations(ctx *context.Con
 	return offers, nil
 }
 
-func (repository *AccommodationRepository) DeleteAccommodation(ctx *context.Context, id string) error {
-	_, err := repository.accomodations.DeleteOne(*ctx, bson.M{"_id": id})
+func (repository *AccommodationRepository) GetAllAccommodationsSaga(ctx *context.Context, sagaTimestamp int64) ([]*domain.Accommodation, error) {
+	filter := bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}
+	options := options.Find()
+
+	cur, err := repository.accomodations.Find(*ctx, filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(*ctx)
+
+	offers := []*domain.Accommodation{}
+	for cur.Next(*ctx) {
+		reservation := &domain.Accommodation{}
+		err := cur.Decode(&reservation)
+		if err != nil {
+			return nil, err
+		}
+		offers = append(offers, reservation)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return offers, nil
+}
+
+func (repository *AccommodationRepository) DeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error {
+	objId, _ := primitive.ObjectIDFromHex(id)
+
+	_, err := repository.accomodations.UpdateOne(*ctx, bson.M{"_id": objId, "deleted": false}, bson.M{"$set": bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *AccommodationRepository) ReverseDeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error {
+	objId, _ := primitive.ObjectIDFromHex(id)
+
+	_, err := repository.accomodations.UpdateOne(*ctx, bson.M{"_id": objId, "deleted": true, "saga_timestamp": sagaTimestamp}, bson.M{"$set": bson.M{"deleted": false, "saga_timestamp": 0}})
 
 	if err != nil {
 		return err
@@ -121,9 +162,9 @@ func (repository *AccommodationRepository) DeleteAccommodation(ctx *context.Cont
 }
 
 func (repository *AccommodationRepository) GetAccommodationById(ctx *context.Context, id string) (*domain.Accommodation, error) {
-	objID := id
+	objID, _ := primitive.ObjectIDFromHex(id)
 
-	filter := bson.M{"_id": objID}
+	filter := bson.M{"_id": objID, "deleted": false}
 	result := repository.accomodations.FindOne(*ctx, filter)
 	if result.Err() != nil {
 		return nil, result.Err()
@@ -141,7 +182,7 @@ func (repository *AccommodationRepository) GetAccommodationById(ctx *context.Con
 func (repository *AccommodationRepository) GetAccommodationOfferById(ctx *context.Context, id string) (*domain.AccommodationOffer, error) {
 	objID, _ := primitive.ObjectIDFromHex(id)
 
-	filter := bson.M{"_id": objID}
+	filter := bson.M{"_id": objID, "deleted": false}
 	result := repository.accommodationsOffers.FindOne(*ctx, filter)
 	if result.Err() != nil {
 		return nil, result.Err()

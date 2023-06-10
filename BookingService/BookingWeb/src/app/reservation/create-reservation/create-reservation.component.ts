@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationsService } from '../services/reservations.service';
 import { CreateReservationRequest } from '../contracts/create-reservation-request.model';
 import { UserService } from 'src/app/authentification/services/user.service';
@@ -13,24 +13,29 @@ import { AccomodationService } from 'src/app/authentification/services/accommoda
   templateUrl: './create-reservation.component.html',
   styleUrls: ['./create-reservation.component.scss']
 })
-export class CreateReservationComponent implements OnInit{
-  reservation:CreateReservationRequest = new CreateReservationRequest();
-  
+export class CreateReservationComponent implements OnInit {
+  reservation: CreateReservationRequest = new CreateReservationRequest();
+
+  offerId: any;
+
 
   userInfo: UpdateUserRequest = new UpdateUserRequest();
-  constructor(private reservationService : ReservationsService,
-              private router: Router,
-              private userService : UserService,
-              private authService : AuthentificationService,
-              private toastr: ToastrService,
-              private accommodationService:AccomodationService) {}
+  constructor(private reservationService: ReservationsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private authService: AuthentificationService,
+    private toastr: ToastrService,
+    private accommodationService: AccomodationService) { }
 
   ngOnInit(): void {
     this.authService.GetIdentityId()
 
+    this.offerId = this.route.snapshot.paramMap.get('id');
+
     this.userService.GetUser(this.authService.GetIdentityId()).subscribe({
       next: (response) => {
-        if(response.requestResult.code != 200){
+        if (response.requestResult.code != 200) {
         }
         this.userInfo = response.user
       },
@@ -38,25 +43,24 @@ export class CreateReservationComponent implements OnInit{
       }
     });
   }
-  createReservation(){
-    this.reservation.accommodationOfferId = this.accommodationService.getId();
+  createReservation() {
+    this.reservation.accommodationOfferId = this.offerId;
     this.reservation.customerId = this.userInfo.identityId;
-    this.accommodationService.GetOwnerIdByAccommodationId(this.reservation.accommodationOfferId).subscribe(res=>{
-      this.reservation.hostId = res;
-    })
-    console.log(this.reservation)
-    this.reservationService.CreateReservation(this.reservation).subscribe({
-      next: (response) => {
-        if(response.requestResult.code != 200){
-          this.toastr.error(response.requestResult.message)
-          return
+    this.accommodationService.GetOwnerIdByAccommodationId(this.reservation.accommodationOfferId).subscribe(res => {
+      this.reservation.hostId = res.id;
+      console.log(this.reservation)
+      this.reservationService.CreateReservation(this.reservation).subscribe({
+        next: (response) => {
+          if (response.requestResult.code != 200) {
+            this.toastr.error(response.requestResult.message)
+            return
+          }
+          this.toastr.success("Successfully created reservation")
+        },
+        error: (err) => {
+          this.toastr.error("Something went wrong.")
         }
-        this.toastr.success("Successfully created reservation")
-      },
-      error: (err) => {
-        this.toastr.error("Something went wrong.")
-      }
-    });
-
+      });
+    })
   }
 }

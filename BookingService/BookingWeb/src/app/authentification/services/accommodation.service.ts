@@ -166,6 +166,6 @@ export class AccomodationService {
   }
 
   public GetOwnerIdByAccommodationId(id:string) :Observable<any>{
-    return this.http.get<Observable<any>>(this.basePath + 'getOwnerId/'+ id, {headers: this.headers,})
+    return this.http.get<Observable<any>>(this.basePathTemp + 'getOwnerId/'+ id, {headers: this.headers,})
   }
 }

@@ -227,22 +227,41 @@ func (service *AccommodationService) GetAllAccommodationsByOwner(identityId stri
 	return filteredAccommodations
 }
 
-func (service *AccommodationService) DeleteAllAccommodationsByOwner(identityId string) (*common_pb.RequestResult, error) {
+func (service *AccommodationService) GetAllAccommodationsByOwnerSaga(identityId string, sagaTimestamp int64) []domain.Accommodation {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	filteredAccommodations := []domain.Accommodation{}
+	accomodations, _ := service.accomodationRepository.GetAllAccommodationsSaga(&ctx, sagaTimestamp)
+	for _, accomodation := range accomodations {
+		if accomodation.OwnerId == identityId {
+			filteredAccommodations = append(filteredAccommodations, *accomodation)
+		}
+	}
+	return filteredAccommodations
+}
+
+func (service *AccommodationService) DeleteAllAccommodationsByOwner(identityId string, sagaTimestamp int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
 	defer cancel()
 	for _, accommodation := range service.GetAllAccommodationsByOwner(identityId) {
-		err := service.accomodationRepository.DeleteAccommodation(&ctx, accommodation.Id)
+		err := service.accomodationRepository.DeleteAccommodation(&ctx, accommodation.Id, sagaTimestamp)
 		if err != nil {
-			return &common_pb.RequestResult{
-				Code:    500,
-				Message: "BRISANJE NEUSPESNO",
-			}, err
+			return err
 		}
 	}
-	return &common_pb.RequestResult{
-		Code:    200,
-		Message: "BRISANJE NEUSPESNO",
-	}, nil
+	return nil
+}
+
+func (service *AccommodationService) ReverseDeleteAllAccommodationsByOwner(identityId string, sagaTimestamp int64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	for _, accommodation := range service.GetAllAccommodationsByOwnerSaga(identityId, sagaTimestamp) {
+		err := service.accomodationRepository.ReverseDeleteAccommodation(&ctx, accommodation.Id, sagaTimestamp)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (service *AccommodationService) FilterAccommodations(message *accomodancePB.AccommodationSearch) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
@@ -254,11 +273,12 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 	for _, accommodation := range accommodations {
 		for _, offer := range accommodationOffers {
 			if offer.AccommodationId == accommodation.Id {
-				if offer.AvailableStartDateTimeUTC.Before(message.StartDateTimeUtc.AsTime()) &&
-					offer.AvailableEndDateTimeUTC.After(message.EndDateTimeUtc.AsTime()) &&
-					accommodation.Location == message.Location &&
-					accommodation.MinNumberOfGuest <= int(message.GuestNumber) &&
-					accommodation.MaxNumberOfGuest >= int(message.GuestNumber) {
+				dateBefore := offer.AvailableStartDateTimeUTC.Before(message.StartDateTimeUtc.AsTime())
+				dateAfter := offer.AvailableEndDateTimeUTC.After(message.EndDateTimeUtc.AsTime())
+				locationEqual := accommodation.Location == message.Location
+				guestNumberMin := accommodation.MinNumberOfGuest <= int(message.GuestNumber)
+				guestNumberMax := accommodation.MaxNumberOfGuest >= int(message.GuestNumber)
+				if dateBefore && dateAfter && locationEqual && guestNumberMin && guestNumberMax {
 					filteredAccommodations = append(filteredAccommodations, convertToNewAccomodation(*accommodation, offer.Id))
 					break
 				}

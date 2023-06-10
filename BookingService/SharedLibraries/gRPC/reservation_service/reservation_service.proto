@@ -39,10 +39,6 @@ service ReservationService {
             body: "*"
         };
     }
-
-    rpc CheckGuestActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
-
-    rpc CheckHostActiveReservations (CheckUserActiveReservationsRequest) returns (CheckUserActiveReservationsResponse) {}
    
     rpc GetHostPendingReservations(GetHostPendingReservationsRequest) returns (GetHostPendingReservationsResponse) {
         option (google.api.http) = {
@@ -158,15 +154,6 @@ message UpdateReservationRequest {
 
 message UpdateReservationResponse {
     common.RequestResult requestResult = 1;
-}
-
-message CheckUserActiveReservationsRequest {
-    string id = 1;
-}
-
-message CheckUserActiveReservationsResponse {
-    common.RequestResult requestResult = 1;
-    bool hasActiveReservations = 2;
 }
 
 message GetHostPendingReservationsRequest {

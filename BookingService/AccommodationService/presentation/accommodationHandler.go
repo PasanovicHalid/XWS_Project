@@ -56,10 +56,6 @@ func (handler *AccommodationHandler) GetAllAccommodationsByOwner(ctx context.Con
 	return ConvertToGetFilteredAccommodationsResponse(accommodations)
 }
 
-func (handler *AccommodationHandler) DeleteAllAccommodationsByOwner(ctx context.Context, id *accomodancePB.IdentityIdRequest) (*common_pb.RequestResult, error) {
-	return handler.accomodationService.DeleteAllAccommodationsByOwner(id.GetId())
-}
-
 func convertToNewAccommodation(accommodation domain.Accommodation) *accomodancePB.NewAccomodation {
 	return &accomodancePB.NewAccomodation{
 		Id:                accommodation.Id,

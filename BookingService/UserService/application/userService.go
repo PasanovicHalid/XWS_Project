@@ -36,8 +36,14 @@ func (service *UserService) UpdateUser(user *domain.User) error {
 	return service.userRepository.UpdateUser(&ctx, user)
 }
 
-func (service *UserService) DeleteUser(id string) error {
+func (service *UserService) DeleteUser(id string, sagaTimestamp int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	return service.userRepository.DeleteUser(&ctx, id)
+	return service.userRepository.DeleteUser(&ctx, id, sagaTimestamp)
+}
+
+func (service *UserService) RollbackDeleteUser(id string, sagaTimestamp int64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.userRepository.RollbackDeleteUser(&ctx, id, sagaTimestamp)
 }

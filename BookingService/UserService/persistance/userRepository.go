@@ -20,7 +20,7 @@ func NewUserRepository(client *mongo.Client) *UserRepository {
 }
 
 func (repository *UserRepository) FindUserById(ctx *context.Context, id string) (*domain.User, error) {
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{"_id", id}, {"deleted", false}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -44,7 +44,7 @@ func (repository *UserRepository) CreateUser(ctx *context.Context, user *domain.
 }
 
 func (repository *UserRepository) UpdateUser(ctx *context.Context, user *domain.User) error {
-	_, err := repository.users.ReplaceOne(*ctx, bson.M{"_id": user.IdentityId}, user)
+	_, err := repository.users.ReplaceOne(*ctx, bson.M{"_id": user.IdentityId, "deleted": false}, user)
 
 	if err != nil {
 		return err
@@ -53,8 +53,18 @@ func (repository *UserRepository) UpdateUser(ctx *context.Context, user *domain.
 	return nil
 }
 
-func (repository *UserRepository) DeleteUser(ctx *context.Context, id string) error {
-	_, err := repository.users.DeleteOne(*ctx, bson.M{"_id": id})
+func (repository *UserRepository) DeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.users.UpdateOne(*ctx, bson.M{"_id": id, "deleted": false}, bson.M{"$set": bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *UserRepository) RollbackDeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.users.UpdateOne(*ctx, bson.M{"_id": id, "deleted": true, "saga_timestamp": sagaTimestamp}, bson.M{"$set": bson.M{"deleted": false, "saga_timestamp": 0}})
 
 	if err != nil {
 		return err

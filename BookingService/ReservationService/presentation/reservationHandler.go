@@ -149,64 +149,6 @@ func (handler *ReservationHandler) CreateReservationAutomaticly(ctx context.Cont
 	}, nil
 }
 
-func (handler *ReservationHandler) CheckGuestActiveReservations(ctx context.Context, request *reservation_pb.CheckUserActiveReservationsRequest) (response *reservation_pb.CheckUserActiveReservationsResponse, err error) {
-	// Retrieve the guest ID from the request
-	guestID := request.Id
-
-	// Get all reservations for the guest
-	reservations, err := handler.reservationService.GetAllReservations()
-	if err != nil {
-		return nil, err
-	}
-
-	// Check if any active reservations exist for the guest
-	hasActiveReservations := false
-	for _, reservation := range reservations {
-		if reservation.CustomerId == guestID && reservation.ReservationStatus == domain.Accepted {
-			hasActiveReservations = true
-			break
-		}
-	}
-
-	// Prepare the response
-	response = &reservation_pb.CheckUserActiveReservationsResponse{
-		RequestResult: &common_pb.RequestResult{
-			Code: 200,
-		},
-		HasActiveReservations: hasActiveReservations,
-	}
-	return response, nil
-}
-
-func (handler *ReservationHandler) CheckHostActiveReservations(ctx context.Context, request *reservation_pb.CheckUserActiveReservationsRequest) (response *reservation_pb.CheckUserActiveReservationsResponse, err error) {
-	// Retrieve the host ID from the request
-	hostID := request.Id
-
-	// Get all reservations for the host
-	reservations, err := handler.reservationService.GetAllReservations()
-	if err != nil {
-		return nil, err
-	}
-
-	// Check if any active reservations exist for the host
-	hasActiveReservations := false
-	for _, reservation := range reservations {
-		if reservation.HostId == hostID && reservation.ReservationStatus == domain.Accepted {
-			hasActiveReservations = true
-			break
-		}
-	}
-
-	// Prepare the response
-	response = &reservation_pb.CheckUserActiveReservationsResponse{
-		RequestResult: &common_pb.RequestResult{
-			Code: 200,
-		},
-		HasActiveReservations: hasActiveReservations,
-	}
-	return response, nil
-}
-
 func (handler *ReservationHandler) GetHostPendingReservations(ctx context.Context, request *reservation_pb.GetHostPendingReservationsRequest) (response *reservation_pb.GetHostPendingReservationsResponse, err error) {
 	// Retrieve the host ID from the request
 	hostID := request.Id

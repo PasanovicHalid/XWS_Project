@@ -43,10 +43,16 @@ func (service *IdentityService) UpdateIdentity(identity *domain.Identity) error 
 	return service.identityRepository.UpdateIdentity(&ctx, identity)
 }
 
-func (service *IdentityService) DeleteIdentity(id string) error {
+func (service *IdentityService) DeleteIdentity(id string, sagaTimestamp int64) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	return service.identityRepository.DeleteIdentity(&ctx, id)
+	return service.identityRepository.DeleteIdentity(&ctx, id, sagaTimestamp)
+}
+
+func (service *IdentityService) RollbackDeleteIdentity(id string, sagaTimestamp int64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.identityRepository.RollbackDeleteIdentity(&ctx, id, sagaTimestamp)
 }
 
 func (service *IdentityService) RegisterIdentity(identity *domain.Identity) (jwtToken string, err error) {

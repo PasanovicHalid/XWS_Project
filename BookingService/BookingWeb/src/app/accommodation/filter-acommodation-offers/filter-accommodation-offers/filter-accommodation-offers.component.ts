@@ -43,7 +43,6 @@ export class FilterAccommodationOffersComponent {
 }
 
 makeReservation(accommodation :any){
-  this.accommodationService.setId(accommodation.accommodationOfferId)
-  this.router.navigate(['/create-reservation'])
+  this.router.navigate(['/create-reservation', accommodation.accommodationOfferId])
 }
 }

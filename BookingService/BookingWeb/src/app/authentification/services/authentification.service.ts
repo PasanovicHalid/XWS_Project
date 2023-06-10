@@ -64,6 +64,15 @@ export class AuthentificationService {
     ).pipe(catchError(this.handleError))
   }
 
+  public DeleteAccount(identityId : string) : Observable<any> {
+    return this.http.delete(
+      this.basePath + 'remove/' + identityId,
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
+
   public AddTokenWithInfoToLocalStorage(token: string): void | null {
     let tokenContent = this.DecodeToken(token)
 

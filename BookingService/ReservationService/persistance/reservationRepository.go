@@ -21,7 +21,7 @@ func NewReservationRepository(client *mongo.Client) *ReservationRepository {
 }
 
 func (repository *ReservationRepository) FindReservationById(ctx *context.Context, id string) (*domain.Reservation, error) {
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{"_id", id}, {"deleted", false}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -44,7 +44,7 @@ func (repository *ReservationRepository) CreateReservation(ctx *context.Context,
 }
 
 func (repository *ReservationRepository) UpdateReservation(ctx *context.Context, reservation *domain.Reservation) error {
-	_, err := repository.reservations.ReplaceOne(*ctx, bson.M{"_id": reservation.Id}, reservation)
+	_, err := repository.reservations.ReplaceOne(*ctx, bson.M{"_id": reservation.Id, "deleted": false}, reservation)
 
 	if err != nil {
 		return err
@@ -54,7 +54,47 @@ func (repository *ReservationRepository) UpdateReservation(ctx *context.Context,
 }
 
 func (repository *ReservationRepository) DeleteReservation(ctx *context.Context, id string) error {
-	_, err := repository.reservations.DeleteOne(*ctx, bson.M{"_id": id})
+	_, err := repository.reservations.DeleteOne(*ctx, bson.M{"_id": id, "deleted": false})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *ReservationRepository) DeleteReservationOfGuest(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.reservations.UpdateMany(*ctx, bson.M{"customerId": id, "deleted": false}, bson.M{"$set": bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *ReservationRepository) ReverseDeleteReservationOfGuest(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.reservations.UpdateOne(*ctx, bson.M{"customerId": id, "deleted": true}, bson.M{"$set": bson.M{"deleted": false, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *ReservationRepository) DeleteReservationOfHost(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.reservations.UpdateMany(*ctx, bson.M{"hostId": id, "deleted": false}, bson.M{"$set": bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *ReservationRepository) ReverseDeleteReservationOfHost(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.reservations.UpdateOne(*ctx, bson.M{"hostId": id, "deleted": true}, bson.M{"$set": bson.M{"deleted": false, "saga_timestamp": sagaTimestamp}})
 
 	if err != nil {
 		return err
@@ -70,7 +110,7 @@ func (repository *ReservationRepository) filterOne(ctx *context.Context, filter 
 }
 
 func (repository *ReservationRepository) GetAllReservations(ctx *context.Context) ([]*domain.Reservation, error) {
-	filter := bson.D{} // Empty filter to retrieve all documents
+	filter := bson.M{"deleted": false}
 	options := options.Find()
 
 	cur, err := repository.reservations.Find(*ctx, filter, options)
@@ -96,7 +136,7 @@ func (repository *ReservationRepository) GetAllReservations(ctx *context.Context
 	return reservations, nil
 }
 func (repository *ReservationRepository) GetReservationsByAccommodationOfferID(ctx *context.Context, accommodationOfferID string) ([]*domain.Reservation, error) {
-	filter := bson.M{"offerId": accommodationOfferID}
+	filter := bson.M{"offerId": accommodationOfferID, "deleted": false}
 	options := options.Find()
 	cur, err := repository.reservations.Find(*ctx, filter, options)
 	if err != nil {

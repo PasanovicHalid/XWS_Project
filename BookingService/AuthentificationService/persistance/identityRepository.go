@@ -17,6 +17,7 @@ const (
 
 type IdentityRepository struct {
 	identities *mongo.Collection
+	persistance.IIdentityRepository
 }
 
 func NewIdentityRepository(client *mongo.Client) *IdentityRepository {
@@ -26,7 +27,7 @@ func NewIdentityRepository(client *mongo.Client) *IdentityRepository {
 }
 
 func (repository *IdentityRepository) FindIdentityByUsername(ctx *context.Context, username string) (*domain.Identity, error) {
-	filter := bson.D{{"username", username}}
+	filter := bson.D{{"username", username}, {"deleted", false}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -46,7 +47,7 @@ func (repository *IdentityRepository) FindIdentityById(ctx *context.Context, id 
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", objectId}}
+	filter := bson.D{{"_id", objectId}, {"deleted", false}}
 	result, err := repository.filterOne(ctx, filter)
 
 	if err != nil {
@@ -78,20 +79,42 @@ func (repository *IdentityRepository) UpdateIdentity(ctx *context.Context, ident
 	return nil
 }
 
-func (repository *IdentityRepository) DeleteIdentity(ctx *context.Context, id string) error {
+func (repository *IdentityRepository) DeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) (string, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	identity, err := repository.FindIdentityById(ctx, id)
+
+	if err != nil {
+		return "", err
+	}
+
+	result, err := repository.identities.UpdateOne(*ctx, bson.D{{"_id", objectId}, {"deleted", false}}, bson.D{{"$set", bson.D{{"deleted", true}, {"saga_timestamp", sagaTimestamp}}}})
+
+	if err != nil {
+		return "", err
+	}
+
+	if result.ModifiedCount == 0 {
+		return "", persistance.ErrorIdentityNotFound
+	}
+
+	return identity.Role, nil
+}
+
+func (repository *IdentityRepository) RollbackDeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
 		return err
 	}
 
-	result, err := repository.identities.DeleteOne(*ctx, bson.D{{"_id", objectId}})
+	result, err := repository.identities.UpdateOne(*ctx, bson.D{{"_id", objectId}, {"deleted", true}, {"saga_timestamp", sagaTimestamp}}, bson.D{{"$set", bson.D{{"deleted", false}, {"saga_timestamp", 0}}}})
 
 	if err != nil {
 		return err
 	}
 
-	if result.DeletedCount == 0 {
+	if result.ModifiedCount == 0 {
 		return persistance.ErrorIdentityNotFound
 	}
 
@@ -99,7 +122,7 @@ func (repository *IdentityRepository) DeleteIdentity(ctx *context.Context, id st
 }
 
 func (repository *IdentityRepository) CheckIfUsernameExists(ctx *context.Context, username string) (bool, error) {
-	filter := bson.D{{"username", username}}
+	filter := bson.D{{"username", username}, {"deleted", false}}
 	_, err := repository.filterOne(ctx, filter)
 
 	if err == mongo.ErrNoDocuments {

@@ -2,11 +2,13 @@ package presentation
 
 import (
 	"context"
+	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/domain"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/AuthentificationService/infrastructure/message_queues"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/delete_user"
 	auth_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 )
@@ -178,26 +180,32 @@ func (handler *IdentityHandler) GetIdentityByUsername(ctx context.Context, reque
 }
 
 func (handler *IdentityHandler) Remove(ctx context.Context, request *auth_pb.RemoveRequest) (*auth_pb.RemoveResponse, error) {
-	// err := handler.identityService.DeleteIdentity(request.IdentityId)
+	currentTime := time.Now()
 
-	// if err != nil {
-	// 	if err == persistance.ErrorIdentityNotFound {
-	// 		return &auth_pb.RemoveResponse{
-	// 			RequestResult: &common_pb.RequestResult{
-	// 				Code:    400,
-	// 				Message: "Invalid identity id",
-	// 			},
-	// 		}, nil
-	// 	}
-	// 	return nil, err
-	// }
+	role, err := handler.identityService.DeleteIdentity(request.IdentityId, currentTime.Unix())
 
-	err := handler.deleteUserOrchestrator.Start()
+	if err != nil {
+		if err == persistance.ErrorIdentityNotFound {
+			return &auth_pb.RemoveResponse{
+				RequestResult: &common_pb.RequestResult{
+					Code:    400,
+					Message: "Invalid identity id",
+				},
+			}, nil
+		}
+		return nil, err
+	}
+
+	err = handler.deleteUserOrchestrator.Start(delete_user.DeleteUserEventInfo{
+		UserId:        request.IdentityId,
+		SagaTimestamp: currentTime.Unix(),
+		Role:          role,
+	})
 
 	if err != nil {
 		return &auth_pb.RemoveResponse{
 			RequestResult: &common_pb.RequestResult{
-				Code:    400,
+				Code:    500,
 				Message: "Something failed with orchestrator",
 			},
 		}, nil

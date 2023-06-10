@@ -17,6 +17,7 @@ type IIdentityRepository interface {
 	FindIdentityById(ctx *context.Context, id string) (*domain.Identity, error)
 	InsertIdentity(ctx *context.Context, identity *domain.Identity) error
 	UpdateIdentity(ctx *context.Context, identity *domain.Identity) error
-	DeleteIdentity(ctx *context.Context, id string) error
+	DeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) (string, error)
+	RollbackDeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) error
 	CheckIfUsernameExists(ctx *context.Context, username string) (bool, error)
 }

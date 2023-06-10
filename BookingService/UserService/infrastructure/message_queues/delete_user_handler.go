@@ -33,10 +33,21 @@ func NewDeleteUserCommandHandler(userService *application.UserService, replyPubl
 func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserCommand) {
 
 	reply := &events.DeleteUserReply{}
+	reply.UserInfo = command.UserInfo
 
 	switch command.Type {
 	case events.DeleteUserInfo:
 		log.Println("DeleteUserInfo")
+
+		err := handler.userService.DeleteUser(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)
+
+		if err != nil {
+			log.Println("Error deleting user info")
+
+			reply.Type = events.UserInfoNotDeleted
+			break
+		}
+
 		reply.Type = events.DeletedUserInfo
 	case events.RollbackHostLocations:
 		fallthrough
@@ -44,6 +55,13 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 		fallthrough
 	case events.RollbackHostLocationsPreviousReservations:
 		log.Println("Rollback")
+
+		err := handler.userService.RollbackDeleteUser(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)
+
+		if err != nil {
+			log.Println("Error rolling back delete user")
+		}
+
 		reply.Type = events.UnknownReply
 	default:
 		reply.Type = events.UnknownReply

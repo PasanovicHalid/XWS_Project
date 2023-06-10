@@ -57,13 +57,7 @@ service AccommodationService {
     }
        
 
-    rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {
-
-    }
-
-    rpc DeleteAllAccommodationsByOwner(IdentityIdRequest) returns (common.RequestResult) {
-
-    }
+    rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {}
 }
 
 message newAccomodation {

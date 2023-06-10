@@ -52,7 +52,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   public Delete() {
-    this.userService.DeleteUser(this.identityId).subscribe({
+    this.authService.DeleteAccount(this.identityId).subscribe({
       next: (response) => {
         this.toastr.success("Successfully deleted user")
         this.authService.Logout()
