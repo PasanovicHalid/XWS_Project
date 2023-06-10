@@ -149,6 +149,26 @@ func (repository *AccommodationRepository) DeleteAccommodation(ctx *context.Cont
 	return nil
 }
 
+func (repository *AccommodationRepository) DeleteAccommodationOffers(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.accommodationsOffers.UpdateMany(*ctx, bson.M{"accommodationId": id, "deleted": false}, bson.M{"$set": bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *AccommodationRepository) ReverseDeleteAccommodationOffers(ctx *context.Context, id string, sagaTimestamp int64) error {
+	_, err := repository.accommodationsOffers.UpdateMany(*ctx, bson.M{"accommodationId": id, "deleted": true, "saga_timestamp": sagaTimestamp}, bson.M{"$set": bson.M{"deleted": false, "saga_timestamp": 0}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (repository *AccommodationRepository) ReverseDeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error {
 	objId, _ := primitive.ObjectIDFromHex(id)
 

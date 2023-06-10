@@ -248,6 +248,11 @@ func (service *AccommodationService) DeleteAllAccommodationsByOwner(identityId s
 		if err != nil {
 			return err
 		}
+
+		err = service.accomodationRepository.DeleteAccommodationOffers(&ctx, accommodation.Id, sagaTimestamp)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -257,6 +262,12 @@ func (service *AccommodationService) ReverseDeleteAllAccommodationsByOwner(ident
 	defer cancel()
 	for _, accommodation := range service.GetAllAccommodationsByOwnerSaga(identityId, sagaTimestamp) {
 		err := service.accomodationRepository.ReverseDeleteAccommodation(&ctx, accommodation.Id, sagaTimestamp)
+		if err != nil {
+			return err
+		}
+
+		err = service.accomodationRepository.ReverseDeleteAccommodationOffers(&ctx, accommodation.Id, sagaTimestamp)
+
 		if err != nil {
 			return err
 		}

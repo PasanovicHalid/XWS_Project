@@ -15,6 +15,8 @@ type IAccommodationRepository interface {
 	UpdateAccommodationOffer(ctx *context.Context, reservation *domain.AccommodationOffer) error
 	DeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error
 	ReverseDeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error
+	DeleteAccommodationOffers(ctx *context.Context, id string, sagaTimestamp int64) error
+	ReverseDeleteAccommodationOffers(ctx *context.Context, id string, sagaTimestamp int64) error
 	GetAccommodationById(ctx *context.Context, id string) (*domain.Accommodation, error)
 	GetAccommodationOfferById(ctx *context.Context, id string) (*domain.AccommodationOffer, error)
 }
