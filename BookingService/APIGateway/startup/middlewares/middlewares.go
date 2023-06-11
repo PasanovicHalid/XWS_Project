@@ -14,6 +14,7 @@ import (
 )
 
 type JwtContent struct{}
+type RequestDecoded struct{}
 
 func MiddlewareAuthentification(next http.Handler, jwtService *authentification.JwtService, keyService *application.KeyService) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
@@ -93,6 +94,24 @@ func MiddlewareAuthorization(next http.Handler, roles []string) http.Handler {
 			http.Error(rw, "You are not authorized", http.StatusBadRequest)
 			return
 		}
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func MiddlewareDecodeRequestBody(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		request := &RequestDecoded{}
+
+		err := json.NewDecoder(h.Body).Decode(request)
+
+		if err != nil {
+			http.Error(rw, "Something went wrong. Unable to decode json", http.StatusBadRequest)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), RequestDecoded{}, request)
+		h = h.WithContext(ctx)
 
 		next.ServeHTTP(rw, h)
 	})

@@ -165,7 +165,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile
+      dockerfile: ./APIGateway/Dockerfile.debug
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}

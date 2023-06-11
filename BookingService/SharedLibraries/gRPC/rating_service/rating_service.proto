@@ -48,6 +48,11 @@ service RatingService {
             body: "*"
         };
     }
+
+    rpc GetAverageRatingForHost (GetAverageRatingForHostRequest) returns (GetAverageRatingForHostResponse) {}
+
+    rpc GetRatingForAccommodation (GetRatingForAccommodationRequest) returns (GetRatingForAccommodationResponse) {}
+
 }
 
 message GetAllRatingsMadeByCustomerRequest {
@@ -92,4 +97,20 @@ message DeleteRatingRequest {
     string id = 1;
 }
 
+message GetAverageRatingForHostRequest {
+    string id = 1;
+}
 
+message GetAverageRatingForHostResponse {
+    common.RequestResult requestResult = 1;
+    double rating = 2;
+}
+
+message GetRatingForAccommodationRequest {
+    string id = 1;
+}
+
+message GetRatingForAccommodationResponse {
+    common.RequestResult requestResult = 1;
+    double rating = 2;
+}

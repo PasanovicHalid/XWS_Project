@@ -290,6 +290,15 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 				guestNumberMin := accommodation.MinNumberOfGuest <= int(message.GuestNumber)
 				guestNumberMax := accommodation.MaxNumberOfGuest >= int(message.GuestNumber)
 				if dateBefore && dateAfter && locationEqual && guestNumberMin && guestNumberMax {
+					if message.FilterByBenefits {
+						filterWifi := message.Wifi == accommodation.Wifi
+						filterKitchen := message.Kitchen == accommodation.Kitchen
+						filterAirConditioner := message.AirConditioner == accommodation.AirConditioner
+						filterParking := message.Parking == accommodation.Parking
+						if !(filterWifi && filterKitchen && filterAirConditioner && filterParking) {
+							continue
+						}
+					}
 					filteredAccommodations = append(filteredAccommodations, convertToNewAccomodation(*accommodation, offer.Id))
 					break
 				}

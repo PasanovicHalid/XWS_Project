@@ -69,6 +69,11 @@ func (repository *RatingRepository) DeleteRating(ctx *context.Context, id string
 	return nil
 }
 
+func (repository *RatingRepository) GetAllRatingsForAccommodation(ctx *context.Context, id string) ([]*domain.Rating, error) {
+	filter := bson.M{"accommodationId": id}
+	return repository.filter(ctx, filter)
+}
+
 func (repository *RatingRepository) filter(ctx *context.Context, filter interface{}) ([]*domain.Rating, error) {
 	cursor, err := repository.ratings.Find(*ctx, filter)
 	defer cursor.Close(*ctx)

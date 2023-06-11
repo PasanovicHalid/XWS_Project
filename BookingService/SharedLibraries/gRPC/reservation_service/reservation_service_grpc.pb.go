@@ -30,6 +30,7 @@ const (
 	ReservationService_AcceptReservation_FullMethodName            = "/reservation.ReservationService/AcceptReservation"
 	ReservationService_RejectReservation_FullMethodName            = "/reservation.ReservationService/RejectReservation"
 	ReservationService_CancelReservation_FullMethodName            = "/reservation.ReservationService/CancelReservation"
+	ReservationService_CheckHostIsDistinguished_FullMethodName     = "/reservation.ReservationService/CheckHostIsDistinguished"
 )
 
 // ReservationServiceClient is the client API for ReservationService service.
@@ -47,6 +48,7 @@ type ReservationServiceClient interface {
 	AcceptReservation(ctx context.Context, in *AcceptReservationRequest, opts ...grpc.CallOption) (*AcceptReservationResponse, error)
 	RejectReservation(ctx context.Context, in *RejectReservationRequest, opts ...grpc.CallOption) (*RejectReservationResponse, error)
 	CancelReservation(ctx context.Context, in *CancelReservationRequest, opts ...grpc.CallOption) (*CancelReservationResponse, error)
+	CheckHostIsDistinguished(ctx context.Context, in *CheckHostIsDistinguishedRequest, opts ...grpc.CallOption) (*CheckHostIsDistinguishedResponse, error)
 }
 
 type reservationServiceClient struct {
@@ -156,6 +158,15 @@ func (c *reservationServiceClient) CancelReservation(ctx context.Context, in *Ca
 	return out, nil
 }
 
+func (c *reservationServiceClient) CheckHostIsDistinguished(ctx context.Context, in *CheckHostIsDistinguishedRequest, opts ...grpc.CallOption) (*CheckHostIsDistinguishedResponse, error) {
+	out := new(CheckHostIsDistinguishedResponse)
+	err := c.cc.Invoke(ctx, ReservationService_CheckHostIsDistinguished_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReservationServiceServer is the server API for ReservationService service.
 // All implementations must embed UnimplementedReservationServiceServer
 // for forward compatibility
@@ -171,6 +182,7 @@ type ReservationServiceServer interface {
 	AcceptReservation(context.Context, *AcceptReservationRequest) (*AcceptReservationResponse, error)
 	RejectReservation(context.Context, *RejectReservationRequest) (*RejectReservationResponse, error)
 	CancelReservation(context.Context, *CancelReservationRequest) (*CancelReservationResponse, error)
+	CheckHostIsDistinguished(context.Context, *CheckHostIsDistinguishedRequest) (*CheckHostIsDistinguishedResponse, error)
 	mustEmbedUnimplementedReservationServiceServer()
 }
 
@@ -210,6 +222,9 @@ func (UnimplementedReservationServiceServer) RejectReservation(context.Context, 
 }
 func (UnimplementedReservationServiceServer) CancelReservation(context.Context, *CancelReservationRequest) (*CancelReservationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelReservation not implemented")
+}
+func (UnimplementedReservationServiceServer) CheckHostIsDistinguished(context.Context, *CheckHostIsDistinguishedRequest) (*CheckHostIsDistinguishedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckHostIsDistinguished not implemented")
 }
 func (UnimplementedReservationServiceServer) mustEmbedUnimplementedReservationServiceServer() {}
 
@@ -422,6 +437,24 @@ func _ReservationService_CancelReservation_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_CheckHostIsDistinguished_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckHostIsDistinguishedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).CheckHostIsDistinguished(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReservationService_CheckHostIsDistinguished_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).CheckHostIsDistinguished(ctx, req.(*CheckHostIsDistinguishedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReservationService_ServiceDesc is the grpc.ServiceDesc for ReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -472,6 +505,10 @@ var ReservationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CancelReservation",
 			Handler:    _ReservationService_CancelReservation_Handler,
+		},
+		{
+			MethodName: "CheckHostIsDistinguished",
+			Handler:    _ReservationService_CheckHostIsDistinguished_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -251,8 +251,8 @@ func (handler *ReservationHandler) CancelReservation(ctx context.Context, reques
 		return nil, err
 	}
 
-	// Set the reservation's status to "Rejected"
-	reservation.ReservationStatus = domain.Rejected
+	// Set the reservation's status to "Canceled"
+	reservation.ReservationStatus = domain.Canceled
 
 	// Update the reservation
 	err = handler.reservationService.UpdateReservation(reservation)
@@ -381,4 +381,66 @@ func (handler *ReservationHandler) GetGuestAcceptedReservations(ctx context.Cont
 		Reservations: pbReservations,
 	}
 	return response, nil
+}
+
+func (handler *ReservationHandler) CheckHostIsDistinguished(ctx context.Context, request *reservation_pb.CheckHostIsDistinguishedRequest) (response *reservation_pb.CheckHostIsDistinguishedResponse, err error) {
+	hostID := request.Id
+
+	reservations, err := handler.reservationService.GetAllReservations()
+	if err != nil {
+		return nil, err
+	}
+
+	acceptedReservations := []*domain.Reservation{}
+	canceledReservations := []*domain.Reservation{}
+	allOfHostReservations := []*domain.Reservation{}
+	for _, reservation := range reservations {
+		if reservation.HostId == hostID {
+			allOfHostReservations = append(allOfHostReservations, reservation)
+			if reservation.ReservationStatus == domain.Accepted {
+				acceptedReservations = append(acceptedReservations, reservation)
+			}
+			if reservation.ReservationStatus == domain.Canceled {
+				canceledReservations = append(canceledReservations, reservation)
+			}
+		}
+	}
+
+	response = &reservation_pb.CheckHostIsDistinguishedResponse{
+		IsDistinguished: false,
+		RequestResult: &common_pb.RequestResult{
+			Code:    200,
+			Message: "OK",
+		},
+	}
+
+	if len(allOfHostReservations) == 0 {
+		response.RequestResult = &common_pb.RequestResult{
+			Code:    404,
+			Message: "Host not found",
+		}
+		return
+	}
+
+	if len(acceptedReservations) < 5 {
+		return
+	}
+
+	var durationDays int64 = 0
+	for _, reservation := range acceptedReservations {
+		durationDays += int64(reservation.EndDateTimeUTC.Sub(reservation.StartDateTimeUTC).Hours()) / 24
+	}
+
+	if durationDays < 50 {
+		return
+	}
+
+	cancelationRate := float64(len(canceledReservations)) / float64(len(allOfHostReservations))
+
+	if cancelationRate > 0.05 {
+		return
+	}
+
+	response.IsDistinguished = true
+	return
 }

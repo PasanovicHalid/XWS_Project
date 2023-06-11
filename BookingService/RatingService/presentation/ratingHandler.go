@@ -161,3 +161,47 @@ func (h *RatingHandler) DeleteRating(ctx context.Context, request *rating_pb.Del
 		Message: "Successfully deleted rating.",
 	}, nil
 }
+
+func (h *RatingHandler) GetAverageRatingForHost(ctx context.Context, request *rating_pb.GetAverageRatingForHostRequest) (*rating_pb.GetAverageRatingForHostResponse, error) {
+	averageRating, err := h.ratingService.GetAverageRatingForHost(request.Id)
+
+	if err != nil {
+		return &rating_pb.GetAverageRatingForHostResponse{
+			Rating: 0,
+			RequestResult: &common_pb.RequestResult{
+				Code:    500,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+
+	return &rating_pb.GetAverageRatingForHostResponse{
+		Rating: averageRating,
+		RequestResult: &common_pb.RequestResult{
+			Code:    200,
+			Message: "Successfully retrieved average rating for host.",
+		},
+	}, nil
+}
+
+func (h *RatingHandler) GetRatingForAccommodation(ctx context.Context, request *rating_pb.GetRatingForAccommodationRequest) (*rating_pb.GetRatingForAccommodationResponse, error) {
+	rating, err := h.ratingService.GetRatingForAccommodation(request.Id)
+
+	if err != nil {
+		return &rating_pb.GetRatingForAccommodationResponse{
+			Rating: 0,
+			RequestResult: &common_pb.RequestResult{
+				Code:    500,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+
+	return &rating_pb.GetRatingForAccommodationResponse{
+		Rating: rating,
+		RequestResult: &common_pb.RequestResult{
+			Code:    200,
+			Message: "Successfully retrieved rating for accommodation.",
+		},
+	}, nil
+}

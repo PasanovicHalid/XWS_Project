@@ -30,12 +30,7 @@ service AccommodationService {
         };
     }
 
-    rpc FilterAccommodations(AccommodationSearch) returns (GetFilteredAccommodationsResponse) {
-        option (google.api.http) = {
-            post: "/api/accommodation/get-filtered-accommodations"
-            body: "*"
-        };
-    }
+    rpc FilterAccommodations(AccommodationSearch) returns (GetFilteredAccommodationsResponse) {}
 
     rpc GetOwnerIdByAccommodationId(GetOwnerIdRequest) returns (GetOwnerIdResponse) {
         option (google.api.http) = {
@@ -105,6 +100,13 @@ message AccommodationSearch {
     google.protobuf.Timestamp start_date_time_utc = 2;
     google.protobuf.Timestamp end_date_time_utc = 3;
     int32 guest_number = 4;
+    int32 min_price = 5;
+    int32 max_price = 6;
+    bool filterByBenefits = 7;
+    bool wifi = 8;
+    bool kitchen = 9;
+    bool air_conditioner = 10;
+    bool parking = 11;
 }
 
 message GetOwnerIdRequest{

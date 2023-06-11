@@ -5,6 +5,7 @@ import (
 
 	accommodationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
+	ratingPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
 	"google.golang.org/grpc"
@@ -17,7 +18,6 @@ func NewUserClient(address string) userPB.UserServiceClient {
 		log.Fatal("Failed to start gRPC connection to User service: %v", err)
 	}
 	return userPB.NewUserServiceClient(conn)
-
 }
 
 func NewAuthenticateClient(address string) authenticatePB.AuthenticateServiceClient {
@@ -26,7 +26,6 @@ func NewAuthenticateClient(address string) authenticatePB.AuthenticateServiceCli
 		log.Fatal("Failed to start gRPC connection to Authentification service: %v", err)
 	}
 	return authenticatePB.NewAuthenticateServiceClient(conn)
-
 }
 
 func NewReservationClient(address string) reservationPB.ReservationServiceClient {
@@ -35,16 +34,22 @@ func NewReservationClient(address string) reservationPB.ReservationServiceClient
 		log.Fatal("Failed to start gRPC connection to Reservation service: %v", err)
 	}
 	return reservationPB.NewReservationServiceClient(conn)
-
 }
 
-func NewAccomodationClient(address string) accommodationPB.AccommodationServiceClient {
+func NewAccommodationClient(address string) accommodationPB.AccommodationServiceClient {
 	conn, err := getConnection(address)
 	if err != nil {
 		log.Fatal("Failed to start gRPC connection to Reservation service: %v", err)
 	}
 	return accommodationPB.NewAccommodationServiceClient(conn)
+}
 
+func NewRatingClient(address string) ratingPB.RatingServiceClient {
+	conn, err := getConnection(address)
+	if err != nil {
+		log.Fatal("Failed to start gRPC connection to Rating service: %v", err)
+	}
+	return ratingPB.NewRatingServiceClient(conn)
 }
 
 func getConnection(address string) (*grpc.ClientConn, error) {

@@ -78,6 +78,8 @@ service ReservationService {
             body: "*"
         };
     }
+
+    rpc CheckHostIsDistinguished(CheckHostIsDistinguishedRequest) returns (CheckHostIsDistinguishedResponse) {}
 }
 
 enum ReservationStatus{
@@ -210,6 +212,11 @@ message CancelReservationResponse {
     common.RequestResult requestResult = 1;
 }
 
+message CheckHostIsDistinguishedRequest {
+    string id = 1;
+}
 
-
-
+message CheckHostIsDistinguishedResponse {
+    common.RequestResult requestResult = 1;
+    bool isDistinguished = 2;
+}

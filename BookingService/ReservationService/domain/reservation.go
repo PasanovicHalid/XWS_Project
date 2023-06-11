@@ -23,4 +23,5 @@ const (
 	Pending ReservationStatus = iota
 	Accepted
 	Rejected
+	Canceled
 )

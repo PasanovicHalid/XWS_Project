@@ -78,6 +78,8 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/reservation/cancelReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getGuestAcceptedReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
 
+	final_mux.Handle("/api/user/host/distinguished", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Host"}), jwtService, server.keyService)))
+
 	server.final_mux = final_mux
 
 	return server
@@ -127,12 +129,13 @@ func (server *Server) initHandlers() {
 }
 
 func (server *Server) initCustomHandlers() {
-	authentificationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthentificationHost, server.config.AuthentificationPort)
-	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	//authentificationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthentificationHost, server.config.AuthentificationPort)
+	//userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
-	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
-	userHandler := presentation.NewUserHandler(authentificationEndpoint, userEndpoint, acommodanceEndpoint, reservationEndpoint)
-	userHandler.Init(server.mux)
+	//acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
+	ratingEndpoint := fmt.Sprintf("%s:%s", server.config.RatingHost, server.config.RatingPort)
+	hostHandler := presentation.NewHostHandler(reservationEndpoint, ratingEndpoint)
+	hostHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

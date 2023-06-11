@@ -45,3 +45,45 @@ func (service *RatingService) DeleteRating(id string) error {
 	defer cancel()
 	return service.ratingRepository.DeleteRating(&ctx, id)
 }
+
+func (service *RatingService) GetAverageRatingForHost(id string) (float64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	ratings, err := service.ratingRepository.GetAllRatingsForHost(&ctx, id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	var sum float64 = 0
+	for _, rating := range ratings {
+		sum += rating.Rating
+	}
+
+	if len(ratings) == 0 {
+		return 0, nil
+	}
+
+	return sum / float64(len(ratings)), nil
+}
+
+func (service *RatingService) GetRatingForAccommodation(id string) (float64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	ratings, err := service.ratingRepository.GetAllRatingsForAccommodation(&ctx, id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	var sum float64 = 0
+	for _, rating := range ratings {
+		sum += rating.Rating
+	}
+
+	if len(ratings) == 0 {
+		return 0, nil
+	}
+
+	return sum / float64(len(ratings)), nil
+}
