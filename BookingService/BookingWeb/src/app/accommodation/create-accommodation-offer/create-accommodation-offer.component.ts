@@ -3,6 +3,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import { AccomodationService } from 'src/app/authentification/services/accommodation.service';
 import { CreateOfferRequest } from './model/accommodationOffer.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-accommodation-offer',
@@ -15,7 +16,8 @@ export class CreateAccommodationOfferComponent {
   startDate: Date = new Date();
   endDate: Date = new Date();
   automatic:boolean = false;
-  constructor(private accommodationService: AccomodationService) {}
+  constructor(private accommodationService: AccomodationService,
+    private toastr: ToastrService) {}
 
   CreateOffer() : void {
     this.startDate.setHours(12);
@@ -28,7 +30,18 @@ export class CreateAccommodationOfferComponent {
     console.log(this.endDate)
     this.newOffer.start_date_time_utc = temps + "T12:00:00.000Z";
     this.newOffer.end_date_time_utc = tempe + "T12:00:00.000Z";
-    this.accommodationService.CreateOffer(this.newOffer).subscribe()
+    this.accommodationService.CreateOffer(this.newOffer).subscribe({
+      next: (response) => {
+        if (response.code != 200) {
+          this.toastr.error(response.message)
+          return
+        }
+        this.toastr.success("Successfully added offer")
+      },
+      error: () => {
+        this.toastr.error("Something went wrong.");
+      }
+    });
   }
   
 }
