@@ -53,7 +53,22 @@ func (handler *AccommodationHandler) GetAutomaticAcception(ctx context.Context, 
 
 func (handler *AccommodationHandler) GetAllAccommodationsByOwner(ctx context.Context, id *accomodancePB.IdentityIdRequest) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
 	accommodations := handler.accomodationService.GetAllAccommodationsByOwner(id.GetId())
-	return ConvertToGetFilteredAccommodationsResponse(accommodations)
+	return ConvertToGetFilteredAccommodationsResponse(&accommodations)
+}
+
+func (handler *AccommodationHandler) GetAllAccommodationsByIdList(ctx context.Context, request *accomodancePB.IdListRequest) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
+	accommodations, err := handler.accomodationService.GetAllAccommodationsByIdList(request.Ids)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := &accomodancePB.GetFilteredAccommodationsResponse{}
+	for _, accommodation := range accommodations {
+		newAccommodation := convertToNewAccommodation(*accommodation)
+		response.FilteredAccommodations = append(response.FilteredAccommodations, newAccommodation)
+	}
+	return response, nil
 }
 
 func convertToNewAccommodation(accommodation domain.Accommodation) *accomodancePB.NewAccomodation {
@@ -72,9 +87,9 @@ func convertToNewAccommodation(accommodation domain.Accommodation) *accomodanceP
 	}
 }
 
-func ConvertToGetFilteredAccommodationsResponse(accommodations []domain.Accommodation) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
+func ConvertToGetFilteredAccommodationsResponse(accommodations *[]domain.Accommodation) (*accomodancePB.GetFilteredAccommodationsResponse, error) {
 	response := &accomodancePB.GetFilteredAccommodationsResponse{}
-	for _, accommodation := range accommodations {
+	for _, accommodation := range *accommodations {
 		newAccommodation := convertToNewAccommodation(accommodation)
 		response.FilteredAccommodations = append(response.FilteredAccommodations, newAccommodation)
 	}

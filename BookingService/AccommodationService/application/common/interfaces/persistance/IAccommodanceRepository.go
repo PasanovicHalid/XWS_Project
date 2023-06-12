@@ -11,6 +11,7 @@ type IAccommodationRepository interface {
 	CreateAccomodationOffer(ctx *context.Context, reservation *domain.AccommodationOffer) error
 	GetAllAccommodationOffers(ctx *context.Context) ([]*domain.AccommodationOffer, error)
 	GetAllAccommodations(ctx *context.Context) ([]*domain.Accommodation, error)
+	GetAllAccommodationsByIdList(ctx *context.Context, idList []string) ([]*domain.Accommodation, error)
 	GetAllAccommodationsSaga(ctx *context.Context, sagaTimestamp int64) ([]*domain.Accommodation, error)
 	UpdateAccommodationOffer(ctx *context.Context, reservation *domain.AccommodationOffer) error
 	DeleteAccommodation(ctx *context.Context, id string, sagaTimestamp int64) error

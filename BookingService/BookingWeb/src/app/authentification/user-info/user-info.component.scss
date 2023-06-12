@@ -29,6 +29,26 @@
         }
     }
 
+    .card-container {
+        display: flex;
+        justify-content: center;
+        height: 10vh;
+        margin-top: 1%;
+
+        .card{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-color: #FFD95A;
+            border-radius: 20px;
+            box-shadow: 4px 4px 4px rgba(78, 78, 78, 0.5);
+            height: 100%;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+    }
+
     .buttons {
         height: 100%;
         display: flex;

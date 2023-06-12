@@ -21,6 +21,12 @@ import { ReservationModule } from './reservation/reservation.module';
 import { FilterAccommodationOffersComponent } from './accommodation/filter-acommodation-offers/filter-accommodation-offers/filter-accommodation-offers.component';
 import { UpdateAccommodationOfferComponent } from './accommodation/update-accommodation-offer/update-accommodation-offer/update-accommodation-offer.component';
 import { CancelReservationComponent } from './reservation/cancel-reservation/cancel-reservation.component';
+import { RatingDashboardComponent } from './rating/rating-dashboard/rating-dashboard.component';
+import { HostRatingsComponent } from './rating/host-ratings/host-ratings.component';
+import { AccommodationRatingsComponent } from './rating/accommodation-ratings/accommodation-ratings.component';
+import { AllRatingsComponent } from './rating/all-ratings/all-ratings.component';
+import { RateDialogComponent } from './rating/rate-dialog/rate-dialog.component';
+import { CommonCodeModule } from './common-code/common-code.module';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt")
@@ -37,6 +43,11 @@ export function tokenGetter() {
     CreateAccommodationOfferComponent,
     FilterAccommodationOffersComponent,
     UpdateAccommodationOfferComponent,
+    RatingDashboardComponent,
+    HostRatingsComponent,
+    AccommodationRatingsComponent,
+    AllRatingsComponent,
+    RateDialogComponent,
 
   ],
   imports: [
@@ -47,6 +58,7 @@ export function tokenGetter() {
     AuthentificationModule,
     FormsModule,
     NavsModule,
+    CommonCodeModule,
     ReservationModule,
     JwtModule.forRoot({
       config: {

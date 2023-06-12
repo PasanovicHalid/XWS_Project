@@ -5,6 +5,14 @@ import { Accommodation } from '../../create-accommodation/model/accommodation.mo
 import { MatTableDataSource } from '@angular/material/table';
 import { AccommodationTemp } from '../../create-accommodation/model/accommodation.temp.model';
 import { Router } from '@angular/router';
+import { ThemePalette } from '@angular/material/core';
+
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-filter-accommodation-offers',
@@ -12,6 +20,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./filter-accommodation-offers.component.scss']
 })
 export class FilterAccommodationOffersComponent {
+  task: Task = {
+    name: 'All Benefits',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      {name: 'Wifi', completed: false, color: 'primary'},
+      {name: 'Kitchen', completed: false, color: 'primary'},
+      {name: 'Air-Conditioning', completed: false, color: 'primary'},
+      {name: 'Parking', completed: false, color: 'primary'},
+    ],
+  };
 
   visible: boolean = false;
   filter: AccommodationFilterOffer = new AccommodationFilterOffer()
@@ -20,6 +39,29 @@ export class FilterAccommodationOffersComponent {
   startDate: Date = new Date();
   endDate: Date = new Date();
   constructor(private accommodationService: AccomodationService, private router:Router) {}
+
+  
+
+  allComplete: boolean = false;
+
+  updateAllComplete() {
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  }
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    if (this.task.subtasks == null) {
+      return;
+    }
+    this.task.subtasks.forEach(t => (t.completed = completed));
+  }
 
   CreateOffer() : void {
     const temps = this.startDate.toISOString().slice(0, 10);

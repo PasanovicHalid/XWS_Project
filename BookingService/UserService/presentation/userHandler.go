@@ -106,3 +106,31 @@ func (handler *UserHandler) GetUserById(ctx context.Context, request *user_pb.Ge
 		},
 	}, nil
 }
+
+func (handler *UserHandler) GetAllUsers(ctx context.Context, request *user_pb.GetAllUsersRequest) (response *user_pb.GetAllUsersResponse, err error) {
+	users, err := handler.userService.GetAllUsersByIdList(request.Ids)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var usersResponse []*user_pb.User
+
+	for _, user := range users {
+		usersResponse = append(usersResponse, &user_pb.User{
+			IdentityId:  user.IdentityId,
+			FirstName:   user.FirstName,
+			LastName:    user.LastName,
+			Email:       user.Email,
+			PhoneNumber: user.PhoneNumber,
+			Address:     user.Address,
+		})
+	}
+
+	return &user_pb.GetAllUsersResponse{
+		Users: usersResponse,
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}

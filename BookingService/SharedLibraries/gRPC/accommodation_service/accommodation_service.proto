@@ -53,6 +53,8 @@ service AccommodationService {
        
 
     rpc GetAllAccommodationsByOwner(IdentityIdRequest) returns (GetFilteredAccommodationsResponse) {}
+
+    rpc GetAllAccommodationsByIdList(IdListRequest) returns (GetFilteredAccommodationsResponse) {}
 }
 
 message newAccomodation {
@@ -141,5 +143,8 @@ message IdentityIdRequest {
 message DeleteAllAccommodationsByOwnerResponse{
     common.RequestResult requestResult = 1;
     string error = 2;
+}
 
+message IdListRequest {
+    repeated string Ids = 1;
 }

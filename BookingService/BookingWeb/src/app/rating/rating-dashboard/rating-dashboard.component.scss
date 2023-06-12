@@ -1,0 +1,97 @@
+.content {
+    height: 100%;
+    margin: 20px;
+
+    .basic-info-stickers {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 5vw;
+        min-height: 200px;
+        margin-bottom: 3vh;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-radius: 20px;
+        background-color: var(--secondary-bg-color);
+        box-shadow: 4px 4px 4px rgba(78, 78, 78, 0.5);
+
+        .card {
+            width: 20%;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 4px 4px 4px rgba(78, 78, 78, 0.5);
+
+            .info {
+                padding: 10px;
+            }
+
+            .employee-type {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                mat-icon {
+                    margin-left: 20px;
+                    transform: scale(3);
+                }
+            }
+
+            .card-buttons {
+                button {
+                    width: 100%;
+                    border-radius: 0;
+                    background-color: #9DC08B;
+                }
+            }
+
+            .select-table-button {
+                button {
+                    width: 100%;
+                    border-radius: 0;
+                    background-color: var(--primary-color);
+                    color: var(--secondary-bg-color);
+                }
+
+            }
+
+            .active-button {
+                background-color: var(--accent-color) !important;
+                color: var(--primary-color) !important;
+            }
+        }
+
+        .employee-number {
+            background-color: #C07F00;
+        }
+
+        .driver-number {
+            background-color: #FFD95A;
+
+        }
+
+        .admin-number {
+            background-color: #FFF7D4;
+        }
+    }
+
+    .displayed-employees {
+        border-radius: 20px;
+        background-color: var(--secondary-bg-color);
+        box-shadow: 4px 4px 4px rgba(78, 78, 78, 0.5);
+
+        .mat-mdc-table {
+            height: inherit !important;
+            border-radius: inherit;
+            overflow: hidden !important;
+            background: inherit;
+        }
+
+        .mat-mdc-paginator {
+            border-top: 1px rgba(0, 0, 0, 0.12) solid;
+            background-color: inherit;
+            border-bottom-left-radius: inherit;
+            border-bottom-right-radius: inherit;
+        }
+    }
+}

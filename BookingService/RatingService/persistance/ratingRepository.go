@@ -2,6 +2,7 @@ package persistance
 
 import (
 	"context"
+	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/domain"
@@ -32,6 +33,8 @@ func (repository *RatingRepository) GetAllRatingsForHost(ctx *context.Context, i
 }
 
 func (repository *RatingRepository) CreateRating(ctx *context.Context, rating *domain.Rating) error {
+	rating.TimeIssued = time.Now()
+
 	_, err := repository.ratings.InsertOne(*ctx, rating)
 
 	if err != nil {
@@ -42,7 +45,9 @@ func (repository *RatingRepository) CreateRating(ctx *context.Context, rating *d
 }
 
 func (repository *RatingRepository) UpdateRating(ctx *context.Context, id string, rating float64) error {
-	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"rating": rating}})
+	objId, _ := primitive.ObjectIDFromHex(id)
+
+	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": objId}, bson.M{"$set": bson.M{"rating": rating}})
 	if err != nil {
 		return err
 	}

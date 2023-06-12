@@ -56,6 +56,15 @@ export class UserService {
     ).pipe(catchError(this.handleError))
   }
 
+  public IsDistiguishedHost(): Observable<any> {
+    return this.http.get(
+      this.basePath + 'host/distinguished',
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
+
   private handleError(error: HttpErrorResponse) {
     return throwError(() => new Error(error.status + '\n' + error.error));
   }

@@ -110,6 +110,68 @@ func (repository *AccommodationRepository) GetAllAccommodations(ctx *context.Con
 	return offers, nil
 }
 
+func (repository *AccommodationRepository) GetAllAccommodationsByIdList(ctx *context.Context, idList []string) ([]*domain.Accommodation, error) {
+	ids := make([]primitive.ObjectID, 0, len(idList))
+	for _, id := range idList {
+		temp, _ := primitive.ObjectIDFromHex(id)
+		ids = append(ids, temp)
+	}
+
+	filter := bson.M{"deleted": false, "_id": bson.M{"$in": ids}}
+	options := options.Find()
+
+	cur, err := repository.accommodationsOffers.Find(*ctx, filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(*ctx)
+
+	offers := []*domain.AccommodationOffer{}
+	for cur.Next(*ctx) {
+		reservation := &domain.AccommodationOffer{}
+		err := cur.Decode(&reservation)
+		if err != nil {
+			return nil, err
+		}
+		offers = append(offers, reservation)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	accomodationIds := make([]primitive.ObjectID, 0, len(offers))
+
+	for _, offer := range offers {
+		temp, _ := primitive.ObjectIDFromHex(offer.AccommodationId)
+		accomodationIds = append(accomodationIds, temp)
+	}
+
+	filter = bson.M{"deleted": false, "_id": bson.M{"$in": accomodationIds}}
+
+	cur, err = repository.accomodations.Find(*ctx, filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(*ctx)
+
+	accomodations := []*domain.Accommodation{}
+	for cur.Next(*ctx) {
+		reservation := &domain.Accommodation{}
+		err := cur.Decode(&reservation)
+		if err != nil {
+			return nil, err
+		}
+		accomodations = append(accomodations, reservation)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return accomodations, nil
+}
+
 func (repository *AccommodationRepository) GetAllAccommodationsSaga(ctx *context.Context, sagaTimestamp int64) ([]*domain.Accommodation, error) {
 	filter := bson.M{"deleted": true, "saga_timestamp": sagaTimestamp}
 	options := options.Find()

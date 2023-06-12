@@ -6,6 +6,7 @@ package rating;
 
 import "google/api/annotations.proto";
 import "common/common.proto";
+import "google/protobuf/timestamp.proto";
 
 service RatingService {
     rpc GetAllRatingsMadeByCustomer (GetAllRatingsMadeByCustomerRequest) returns (GetAllRatingsResponse) {
@@ -81,6 +82,7 @@ message Rating {
     string hostId = 3;
     string accommodationId = 4;
     double rating = 5;
+    google.protobuf.Timestamp timeIssued = 6;
 }
 
 message GetAllRatingsResponse {

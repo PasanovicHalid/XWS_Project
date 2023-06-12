@@ -1,18 +1,25 @@
 <div>
     <form>
         <mat-form-field appearance="outline">
-            <mat-label>Select start</mat-label>
-            <input [(ngModel)]="this.reservation.startDateTimeUtc" matInput placeholder="Start" name="start">
+            <mat-label>Start date/time (UTC)</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="this.reservation.startDateTimeUtc"
+                name="startDate" placeholder="Start date/time (UTC)">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
         </mat-form-field>
-        
+
         <mat-form-field appearance="outline">
-            <mat-label>Select end</mat-label>
-            <input [(ngModel)]="this.reservation.endDateTimeUtc" matInput placeholder="End" name="end">
+            <mat-label>End date/time (UTC)</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="this.reservation.endDateTimeUtc" name="endDate"
+                placeholder="End date/time (UTC)">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Number of guests</mat-label>
-            <input [(ngModel)]="this.reservation.numberOfGuests" matInput placeholder="Number of guests" name="number" type="number">
+            <input [(ngModel)]="this.reservation.numberOfGuests" matInput placeholder="Number of guests" name="number"
+                type="number">
         </mat-form-field>
 
         <button mat-button color="primary" (click)="createReservation()">Create reservation</button>

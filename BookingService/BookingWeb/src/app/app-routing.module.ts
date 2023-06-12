@@ -17,6 +17,10 @@ import { PendingHostReservationsComponent } from './reservation/pending-host-res
 import { UpdateAccommodationOfferComponent } from './accommodation/update-accommodation-offer/update-accommodation-offer/update-accommodation-offer.component';
 import { PendingGuestReservationsComponent } from './reservation/pending-guest-reservations/pending-guest-reservations.component';
 import { CancelReservationComponent } from './reservation/cancel-reservation/cancel-reservation.component';
+import { RatingDashboardComponent } from './rating/rating-dashboard/rating-dashboard.component';
+import { HostRatingsComponent } from './rating/host-ratings/host-ratings.component';
+import { AccommodationRatingsComponent } from './rating/accommodation-ratings/accommodation-ratings.component';
+import { AllRatingsComponent } from './rating/all-ratings/all-ratings.component';
 
 
 const routes: Routes = [
@@ -46,6 +50,16 @@ const routes: Routes = [
       { path: 'pending-guest-reservation', component: PendingGuestReservationsComponent, canActivate: [AuthGuard] },
 
       { path: 'cancel-reservation', component: CancelReservationComponent, canActivate: [AuthGuard] },
+      { 
+        path: 'rating-dashboard', 
+        component: RatingDashboardComponent,
+        children: [
+          { path: 'hosts', component: HostRatingsComponent },
+          { path: 'accommodations', component: AccommodationRatingsComponent },
+          { path: 'all', component: AllRatingsComponent },
+        ], 
+        canActivate: [AuthGuard]
+      },
     ]
   },
 ];

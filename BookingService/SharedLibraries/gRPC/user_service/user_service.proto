@@ -79,8 +79,7 @@ message GetUserByPhoneNumberResponse {
 }
 
 message GetAllUsersRequest {
-    int32 page = 1;
-    int32 size = 2;
+    repeated string ids = 1;
 }
 
 message GetAllUsersResponse {

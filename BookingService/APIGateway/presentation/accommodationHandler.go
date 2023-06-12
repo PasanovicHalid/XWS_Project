@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation/contracts"
 	grpcservices "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation/gRPCServices"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
@@ -34,6 +35,81 @@ func (handler *AccommodationHandler) Init(mux *runtime.ServeMux) {
 	if err != nil {
 		panic(err)
 	}
+	err = mux.HandlePath("GET", "/api/rating/get-accommodations-for-rating", handler.GetAccommodationsForRating)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (handler *AccommodationHandler) GetAccommodationsForRating(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	jwt_claims := r.Context().Value(mw.JwtContent{}).(*authentification.SignedDetails)
+	id := jwt_claims.Id
+
+	reservations, err := handler.getGuestAcceptedReservations(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	ratings, err := handler.getRatingsOfCustomer(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	accommodations := make(map[string]float64, len(ratings.Ratings))
+	accommodationIds := make([]string, 0, len(reservations.Reservations))
+	ratingMap := make(map[string]string, len(ratings.Ratings))
+
+	for _, reservation := range reservations.Reservations {
+		accommodationIds = append(accommodationIds, reservation.AccommodationOfferId)
+	}
+
+	for _, rating := range ratings.Ratings {
+		if accommodations[rating.AccommodationId] == 0 {
+			accommodations[rating.AccommodationId] = rating.Rating
+			ratingMap[rating.AccommodationId] = rating.Id
+		}
+	}
+
+	accommodationResponse, err := handler.getAccomodationsFromIdList(&accommodationIds)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	response := &contracts.AccommodationsForRatingResponse{
+		Accommodations: make([]contracts.AccommodationForRating, 0, len(accommodationResponse.FilteredAccommodations)),
+	}
+
+	for _, accommodation := range accommodationResponse.FilteredAccommodations {
+		averageRating, err := handler.getRatingForAccommodation(accommodation.Id)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(err.Error())
+			return
+		}
+
+		response.Accommodations = append(response.Accommodations, contracts.AccommodationForRating{
+			Id:            accommodation.Id,
+			Name:          accommodation.Name,
+			Address:       accommodation.Location,
+			Rating:        accommodations[accommodation.Id],
+			OwnerId:       accommodation.OwnerId,
+			AverageRating: averageRating.Rating,
+			RatingId:      ratingMap[accommodation.Id],
+		})
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (handler *AccommodationHandler) FilterAccomodations(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -185,4 +261,28 @@ func (handler *AccommodationHandler) getAccommodationsForInitialFilter(filter *a
 	accommodationClient := grpcservices.NewAccommodationClient(handler.AccommodationAddress)
 
 	return accommodationClient.FilterAccommodations(context.TODO(), filter)
+}
+
+func (handler *AccommodationHandler) getRatingsOfCustomer(id string) (*ratingPB.GetAllRatingsResponse, error) {
+	ratingClient := grpcservices.NewRatingClient(handler.RatingAddress)
+
+	return ratingClient.GetAllRatingsMadeByCustomer(context.TODO(), &ratingPB.GetAllRatingsMadeByCustomerRequest{
+		Id: id,
+	})
+}
+
+func (handler *AccommodationHandler) getAccomodationsFromIdList(idList *[]string) (*accommodationPB.GetFilteredAccommodationsResponse, error) {
+	accommodationClient := grpcservices.NewAccommodationClient(handler.AccommodationAddress)
+
+	return accommodationClient.GetAllAccommodationsByIdList(context.TODO(), &accommodationPB.IdListRequest{
+		Ids: *idList,
+	})
+}
+
+func (handler *AccommodationHandler) getGuestAcceptedReservations(id string) (*reservationPB.GetGuestAcceptedReservationsResponse, error) {
+	reservationClient := grpcservices.NewReservationClient(handler.ReservationAddress)
+
+	return reservationClient.GetGuestAcceptedReservations(context.TODO(), &reservationPB.GetGuestAcceptedReservationsRequest{
+		Id: id,
+	})
 }

@@ -227,6 +227,12 @@ func (service *AccommodationService) GetAllAccommodationsByOwner(identityId stri
 	return filteredAccommodations
 }
 
+func (service *AccommodationService) GetAllAccommodationsByIdList(idList []string) ([]*domain.Accommodation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	return service.accomodationRepository.GetAllAccommodationsByIdList(&ctx, idList)
+}
+
 func (service *AccommodationService) GetAllAccommodationsByOwnerSaga(identityId string, sagaTimestamp int64) []domain.Accommodation {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
 	defer cancel()

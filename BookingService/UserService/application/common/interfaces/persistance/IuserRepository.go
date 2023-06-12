@@ -15,4 +15,5 @@ type IUserRepository interface {
 	UpdateUser(ctx *context.Context, user *domain.User) error
 	DeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error
 	RollbackDeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error
+	GetAllUsersByIdList(ctx *context.Context, idList []string) ([]*domain.User, error)
 }

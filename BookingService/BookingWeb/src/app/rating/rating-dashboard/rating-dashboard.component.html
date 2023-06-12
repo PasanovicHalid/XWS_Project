@@ -1,0 +1,40 @@
+<div class="content">
+    <div class="basic-info-stickers">
+        <div class="card driver-number">
+            <div class="select-table-button">
+                <button mat-raised-button routerLink="/rating-dashboard/hosts" routerLinkActive="active-button">Show</button>
+            </div>
+            <div class="info">
+                <div class="employee-type">
+                    <mat-icon>local_shipping</mat-icon>
+                    <h1>Hosts</h1>
+                </div>
+            </div>
+        </div>
+        <div class="card admin-number">
+            <div class="select-table-button">
+                <button mat-raised-button routerLink="/rating-dashboard/all" routerLinkActive="active-button">Show</button>
+            </div>
+            <div class="info">
+                <div class="employee-type">
+                    <mat-icon>badge</mat-icon>
+                    <h1>All Ratings</h1>
+                </div>
+            </div>
+        </div>
+        <div class="card employee-number">
+            <div class="select-table-button">
+                <button mat-raised-button routerLink="/rating-dashboard/accommodations" routerLinkActive="active-button">Show</button>
+            </div>
+            <div class="info">
+                <div class="employee-type">
+                    <mat-icon>badge</mat-icon>
+                    <h1>Locations</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+</div>

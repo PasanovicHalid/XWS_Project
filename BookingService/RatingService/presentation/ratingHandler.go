@@ -7,6 +7,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/domain"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 	rating_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type RatingHandler struct {
@@ -40,6 +41,7 @@ func (h *RatingHandler) GetAllRatingsMadeByCustomer(ctx context.Context, request
 			UserId:          rating.UserId,
 			Rating:          rating.Rating,
 			HostId:          rating.HostId,
+			TimeIssued:      timestamppb.New(rating.TimeIssued),
 		})
 	}
 
@@ -74,6 +76,7 @@ func (h *RatingHandler) GetAllRatingsForHost(ctx context.Context, request *ratin
 			UserId:          rating.UserId,
 			Rating:          rating.Rating,
 			HostId:          rating.HostId,
+			TimeIssued:      timestamppb.New(rating.TimeIssued),
 		})
 	}
 

@@ -47,3 +47,9 @@ func (service *UserService) RollbackDeleteUser(id string, sagaTimestamp int64) e
 	defer cancel()
 	return service.userRepository.RollbackDeleteUser(&ctx, id, sagaTimestamp)
 }
+
+func (service *UserService) GetAllUsersByIdList(idList []string) ([]*domain.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.userRepository.GetAllUsersByIdList(&ctx, idList)
+}

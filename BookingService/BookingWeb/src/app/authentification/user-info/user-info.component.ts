@@ -14,6 +14,7 @@ export class UserInfoComponent implements OnInit {
 
   userInfo : UpdateUserRequest = new UpdateUserRequest();
   identityId : string = "";
+  distinguishedHost : boolean = false;
 
   constructor(private userService : UserService,
               private authService : AuthentificationService,
@@ -34,6 +35,17 @@ export class UserInfoComponent implements OnInit {
         this.toastr.error("Something went wrong.")
       }
     });
+
+    if(this.authService.IsHost()){
+      this.userService.IsDistiguishedHost().subscribe({
+        next: (response) => {
+          this.distinguishedHost = response.distinguished
+        },
+        error: () => {
+          this.toastr.error("Something went wrong.")
+        }
+      });
+    }
   }
 
   public Save() {
