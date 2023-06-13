@@ -58,7 +58,7 @@ services:
     container_name: accommodation_service
     build:
       context: .
-      dockerfile: ./AccommodationService/Dockerfile.debug
+      dockerfile: ./AccommodationService/Dockerfile
     restart: on-failure
     ports:
       - ${ACCOMMODATION_SERVICE_PORT}:${ACCOMMODATION_SERVICE_PORT}
@@ -165,7 +165,7 @@ services:
     container_name: api_gateway
     build:
       context: .
-      dockerfile: ./APIGateway/Dockerfile
+      dockerfile: ./APIGateway/Dockerfile.debug
     restart: on-failure
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}

@@ -65,7 +65,6 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/accommodation/create-offer", mw.MiddlewareContentTypeSetWithCORS(server.mux))
 	final_mux.Handle("/api/accommodation/update-offer", mw.MiddlewareContentTypeSetWithCORS(server.mux))
 	final_mux.Handle("/api/accommodation/get-all-offers", mw.MiddlewareContentTypeSetWithCORS(server.mux))
-	final_mux.Handle("/api/accommodation/get-filtered-accommodations", mw.MiddlewareContentTypeSetWithCORS(server.mux))
 	//final_mux.Handle("/api/accommodation/create", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/accommodation/getOwnerId/{id}", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/accommodation/setAutomaticAcception", mw.MiddlewareContentTypeSet(server.mux))
@@ -81,6 +80,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/user/host/distinguished", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Host"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/rating/get-accommodations-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/rating/get-hosts-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
+	final_mux.Handle("/api/accommodation/get-filtered-accommodations", mw.MiddlewareContentTypeSet(mw.MiddlewareDecodeRequestBody(server.mux)))
 
 	server.final_mux = final_mux
 

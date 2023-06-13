@@ -78,13 +78,7 @@ export class FilterAccommodationOffersComponent {
     console.log(this.filter);
     this.accommodationService.Filter(this.filter).subscribe({
       next: (response) => {
-        console.log(response.filteredAccommodations);
-        if (response.hasOwnProperty('filteredAccommodations')) { // Check if 'reservations' property exists
-          this.dataSource = new MatTableDataSource<AccommodationTemp>(response.filteredAccommodations);
-        } else {
-          // Handle error if 'reservations' property is missing
-        }
-       
+          this.dataSource = new MatTableDataSource<AccommodationTemp>(response.filtered_accommodations);
       },
       error: () => {
         // Handle error if needed

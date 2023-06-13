@@ -72,7 +72,7 @@ export class AccomodationService {
     ).pipe(catchError(this.handleError))
   }
 
-  Filter(filter: AccommodationFilterOffer): Observable<Accommodations> {
+  Filter(filter: AccommodationFilterOffer): Observable<any> {
     return this.http.post<Accommodations>(
       this.basePathTemp + 'get-filtered-accommodations',
       filter,

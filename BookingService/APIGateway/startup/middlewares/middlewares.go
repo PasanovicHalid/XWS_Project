@@ -10,6 +10,7 @@ import (
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation/contracts"
 	"golang.org/x/exp/slices"
 )
 
@@ -101,7 +102,7 @@ func MiddlewareAuthorization(next http.Handler, roles []string) http.Handler {
 
 func MiddlewareDecodeRequestBody(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		request := &RequestDecoded{}
+		request := &contracts.FilterAccomodationRequest{}
 
 		err := json.NewDecoder(h.Body).Decode(request)
 

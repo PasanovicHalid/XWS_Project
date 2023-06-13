@@ -145,7 +145,9 @@ func (handler *AccommodationHandler) FilterAccomodations(w http.ResponseWriter, 
 		handler.filterByDistinguishedHost(filteredAccommodations, w)
 	} else {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(filteredAccommodations)
+		json.NewEncoder(w).Encode(&accommodationPB.GetFilteredAccommodationsResponse{
+			FilteredAccommodations: filteredAccommodations,
+		})
 		return
 	}
 
@@ -154,7 +156,7 @@ func (handler *AccommodationHandler) FilterAccomodations(w http.ResponseWriter, 
 func (handler *AccommodationHandler) filterByDistinguishedHost(filteredAccommodations []*accommodationPB.NewAccomodation, w http.ResponseWriter) {
 	checkedHosts := map[string]bool{}
 
-	accomodations := make([]*accommodationPB.NewAccomodation, len(filteredAccommodations))
+	accomodations := make([]*accommodationPB.NewAccomodation, 0, len(filteredAccommodations))
 
 	for _, accommodation := range filteredAccommodations {
 		if val, exists := checkedHosts[accommodation.OwnerId]; exists {
@@ -175,12 +177,14 @@ func (handler *AccommodationHandler) filterByDistinguishedHost(filteredAccommoda
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(accomodations)
+	json.NewEncoder(w).Encode(&accommodationPB.GetFilteredAccommodationsResponse{
+		FilteredAccommodations: accomodations,
+	})
 }
 
 func (handler *AccommodationHandler) filterByRating(request *contracts.FilterAccomodationRequest, filteredAccommodations []*accommodationPB.NewAccomodation, w http.ResponseWriter) ([]*accommodationPB.NewAccomodation, bool) {
 	if request.FilterByRating {
-		filteredByRating := make([]*accommodationPB.NewAccomodation, 5)
+		filteredByRating := make([]*accommodationPB.NewAccomodation, 0, 5)
 
 		for _, accommodation := range filteredAccommodations {
 			rating, err := handler.getRatingForAccommodation(accommodation.Id)
