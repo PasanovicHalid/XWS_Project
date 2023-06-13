@@ -295,16 +295,11 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 				locationEqual := accommodation.Location == message.Location
 				guestNumberMin := accommodation.MinNumberOfGuest <= int(message.GuestNumber)
 				guestNumberMax := accommodation.MaxNumberOfGuest >= int(message.GuestNumber)
-				if dateBefore && dateAfter && locationEqual && guestNumberMin && guestNumberMax {
-					if message.FilterByBenefits {
-						filterWifi := message.Wifi == accommodation.Wifi
-						filterKitchen := message.Kitchen == accommodation.Kitchen
-						filterAirConditioner := message.AirConditioner == accommodation.AirConditioner
-						filterParking := message.Parking == accommodation.Parking
-						if !(filterWifi && filterKitchen && filterAirConditioner && filterParking) {
-							continue
-						}
-					}
+				filterWifi := getBooleanFilter(message.Wifi, accommodation.Wifi)
+				filterKitchen := getBooleanFilter(message.Kitchen, accommodation.Kitchen)
+				filterAirConditioner := getBooleanFilter(message.AirConditioner, accommodation.AirConditioner)
+				filterParking := getBooleanFilter(message.Parking, accommodation.Parking)
+				if dateBefore && dateAfter && locationEqual && guestNumberMin && guestNumberMax && filterWifi && filterKitchen && filterAirConditioner && filterParking {
 					filteredAccommodations = append(filteredAccommodations, convertToNewAccomodation(*accommodation, offer.Id))
 					break
 				}
@@ -316,6 +311,13 @@ func (service *AccommodationService) FilterAccommodations(message *accomodancePB
 	}
 
 	return response, nil
+}
+
+func getBooleanFilter(filterValue bool, accommodationProperty bool) bool {
+	if filterValue {
+		return filterValue == accommodationProperty
+	}
+	return true
 }
 
 func convertToNewAccomodation(accommodation domain.Accommodation, offer string) *accomodancePB.NewAccomodation {

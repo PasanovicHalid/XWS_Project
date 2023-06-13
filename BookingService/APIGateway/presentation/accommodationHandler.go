@@ -31,7 +31,7 @@ func NewAccommodationHandler(accommodationAddress string, reservationAddress str
 }
 
 func (handler *AccommodationHandler) Init(mux *runtime.ServeMux) {
-	err := mux.HandlePath("POST", "/api/accomodation/get-filtered-accommodations", handler.FilterAccomodations)
+	err := mux.HandlePath("POST", "/api/accommodation/get-filtered-accommodations", handler.FilterAccomodations)
 	if err != nil {
 		panic(err)
 	}
@@ -122,7 +122,6 @@ func (handler *AccommodationHandler) FilterAccomodations(w http.ResponseWriter, 
 		GuestNumber:      request.GuestNumber,
 		MinPrice:         request.MinPrice,
 		MaxPrice:         request.MaxPrice,
-		FilterByBenefits: request.FilterByBenefits,
 		Wifi:             request.Wifi,
 		Parking:          request.Parking,
 		Kitchen:          request.Kitchen,

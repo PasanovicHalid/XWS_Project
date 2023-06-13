@@ -104,7 +104,6 @@ message AccommodationSearch {
     int32 guest_number = 4;
     int32 min_price = 5;
     int32 max_price = 6;
-    bool filterByBenefits = 7;
     bool wifi = 8;
     bool kitchen = 9;
     bool air_conditioner = 10;

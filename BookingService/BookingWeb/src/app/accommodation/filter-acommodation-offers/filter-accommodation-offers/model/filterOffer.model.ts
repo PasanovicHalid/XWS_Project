@@ -1,8 +1,18 @@
 export class AccommodationFilterOffer {
     location: string = "";
-    start_date_time_utc: string = "";
-    end_date_time_utc: string = "";
-    guest_number: number = 0;
+    from: string = "";
+    to: string = "";
+    guestNumber: number = 0;
+    minPrice: number = 0;
+    maxPrice: number = 0;
+    filterByRating: boolean = false;
+    ratingBottom: number = 0;
+    ratingTop: number = 0;
+    hostIsDistinguished : boolean = false;
+    wifi: boolean = false;
+    kitchen: boolean = false;
+    airConditioner: boolean = false;
+    parking: boolean = false;
 
     public constructor(obj?: any) {
         if (obj) { 

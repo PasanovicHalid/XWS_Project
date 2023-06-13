@@ -66,8 +66,16 @@ export class FilterAccommodationOffersComponent {
   CreateOffer() : void {
     const temps = this.startDate.toISOString().slice(0, 10);
     const tempe = this.endDate.toISOString().slice(0, 10);
-    this.filter.start_date_time_utc = temps + "T00:00:00.000Z";
-    this.filter.end_date_time_utc = tempe + "T00:00:00.000Z";
+    this.filter.from = temps + "T00:00:00.000Z";
+    this.filter.to = tempe + "T00:00:00.000Z";
+    this.filter.wifi = this.task.subtasks![0].completed;
+    this.filter.kitchen = this.task.subtasks![1].completed;
+    this.filter.airConditioner = this.task.subtasks![2].completed;
+    this.filter.parking = this.task.subtasks![3].completed;
+    if(this.filter.ratingBottom != 0 || this.filter.ratingTop != 0){
+      this.filter.filterByRating = true;
+    }
+    console.log(this.filter);
     this.accommodationService.Filter(this.filter).subscribe({
       next: (response) => {
         console.log(response.filteredAccommodations);
