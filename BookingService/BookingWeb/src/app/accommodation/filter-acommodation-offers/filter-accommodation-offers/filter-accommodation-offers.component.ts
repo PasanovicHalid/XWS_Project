@@ -66,8 +66,8 @@ export class FilterAccommodationOffersComponent {
   CreateOffer() : void {
     const temps = this.startDate.toISOString().slice(0, 10);
     const tempe = this.endDate.toISOString().slice(0, 10);
-    this.filter.from = temps + "T00:00:00.000Z";
-    this.filter.to = tempe + "T00:00:00.000Z";
+    this.filter.from = this.startDate.toISOString();
+    this.filter.to = this.endDate.toISOString();
     this.filter.wifi = this.task.subtasks![0].completed;
     this.filter.kitchen = this.task.subtasks![1].completed;
     this.filter.airConditioner = this.task.subtasks![2].completed;
