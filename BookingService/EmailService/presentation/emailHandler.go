@@ -2,7 +2,6 @@ package presentation
 
 import (
 	"context"
-	"fmt"
 
 	"net/smtp"
 
@@ -23,6 +22,9 @@ func NewEmailHandler(emailService *application.EmailService) *EmailHandler {
 	}
 }
 
+/*
+https://www.courier.com/guides/golang-send-email/
+*/
 func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.EmailRequest) (*common_pb.RequestResult, error) {
 
 	from := "bezbednost.projekat.2023@gmail.com"
@@ -31,7 +33,6 @@ func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.Em
 	//change address
 	toEmailAddress := "bezbednost.projekat.2023@gmail.com"
 	to := []string{toEmailAddress}
-	fmt.Print("\ngggggg\n\n")
 	host := "smtp.gmail.com"
 	port := "587"
 	address := host + ":" + port
@@ -40,10 +41,8 @@ func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.Em
 	subject := "Subject: This is the subject of the mail\n"
 	body := "This is the body of the mail"
 	message := []byte(subject + body)
-	fmt.Print("123\n\n")
 	auth := smtp.PlainAuth("", from, password, host)
 
-	fmt.Print("AAAAAA\n\n")
 	err := smtp.SendMail(address, auth, from, to, message)
 	if err != nil {
 		panic(err)
