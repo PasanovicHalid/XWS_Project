@@ -107,6 +107,11 @@ services:
     restart: on-failure
     environment:
       EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+      EMAIL_DB_HOST: ${EMAIL_DB_HOST}
+      EMAIL_DB_PORT: ${EMAIL_DB_PORT}
+    depends_on:
+        email_db:
+          condition: service_healthy
     networks:
       - network
 
@@ -169,6 +174,8 @@ services:
       RECOMMENDATION_SERVICE_HOST: ${RECOMMENDATION_SERVICE_HOST}
       RATING_SERVICE_PORT: ${RATING_SERVICE_PORT}
       RATING_SERVICE_HOST: ${RATING_SERVICE_HOST}
+      EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+      EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
     depends_on:
         api_gateway_db:
           condition: service_healthy
@@ -238,6 +245,22 @@ services:
       retries: 10
     volumes:
       - reservation_db:/data/db
+    networks:
+      - network
+
+  email_db:
+    image: mongo
+    container_name: email_db
+    restart: on-failure
+    ports:
+      - "${EMAIL_DB_EXTERNAL_PORT}:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - email_db:/data/db
     networks:
       - network
 
@@ -311,5 +334,6 @@ volumes:
   reservation_db:
   api_gateway_db:
   rating_db:
+  email_db:
   recommendation_db_data:
   recommendation_db_conf:

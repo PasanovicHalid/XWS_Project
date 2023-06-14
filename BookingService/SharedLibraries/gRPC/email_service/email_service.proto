@@ -9,7 +9,19 @@ import "common/common.proto";
 import "google/protobuf/timestamp.proto";
 
 service EmailService {
-    rpc SendEmail(EmailRequest) returns (common.RequestResult) {}
+    rpc SendEmail(EmailRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/notification/sendEmail"
+            body: "*"
+        };
+    }
+
+    rpc UpdateWantedNotifications (UpdateWantedNotificationsRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            put: "/api/notification/updateWantedNotifications"
+            body: "*"
+        };
+    }
 }
 
 message EmailRequest {
@@ -19,3 +31,13 @@ message EmailRequest {
 }
 
 
+
+message UpdateWantedNotificationsRequest {
+    string id = 1;
+    bool createdRequest = 2;
+    bool canceledReservation = 3;
+    bool hostRatingGiven = 4;
+    bool accommodationRatingGiven = 5;
+    bool prominentHost = 6;
+    bool hostResponded = 7;
+}
