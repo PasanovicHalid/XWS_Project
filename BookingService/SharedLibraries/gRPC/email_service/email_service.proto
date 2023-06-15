@@ -25,13 +25,13 @@ service EmailService {
     }
 
 
-    rpc CreatedReservationNotification (google.protobuf.Empty) returns (common.RequestResult) {}
-    rpc CanceledReservationNotification (google.protobuf.Empty) returns (common.RequestResult) {}
-    rpc HostRatingGivenNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc CreatedReservationNotification (Empty) returns (common.RequestResult) {}
+    rpc CanceledReservationNotification (Empty) returns (common.RequestResult) {}
+    rpc HostRatingGivenNotification (Empty) returns (common.RequestResult) {}
 
-    rpc AccommodationRatingGivenNotification (google.protobuf.Empty) returns (common.RequestResult) {}
-    rpc ProminentHostStatusNotification (google.protobuf.Empty) returns (common.RequestResult) {}
-    rpc HostResponseOnAccommodationRequestNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc AccommodationRatingGivenNotification (Empty) returns (common.RequestResult) {}
+    rpc ProminentHostStatusNotification (Empty) returns (common.RequestResult) {}
+    rpc HostResponseOnAccommodationRequestNotification (Empty) returns (common.RequestResult) {}
 
 }
 
@@ -52,3 +52,5 @@ message UpdateWantedNotificationsRequest {
     bool prominentHost = 6;
     bool hostResponded = 7;
 }
+
+message Empty{}
