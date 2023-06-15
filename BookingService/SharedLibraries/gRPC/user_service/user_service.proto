@@ -40,6 +40,8 @@ service UserService {
             body: "*"
         };
     }
+
+    rpc ChangeDistinguishedStatus(ChangeDistinguishedStatusRequest) returns (ChangeDistinguishedStatusResponse) {}
 }
 
 message User {
@@ -49,6 +51,7 @@ message User {
     string email = 4;
     string phoneNumber = 5;
     string address = 6;
+    bool isDistinguished = 7;
 }
 
 message GetUserByIdRequest {
@@ -118,5 +121,14 @@ message DeleteUserRequest {
 }
 
 message DeleteUserResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message ChangeDistinguishedStatusRequest {
+    string identityId = 1;
+    bool isDistinguished = 2;
+}
+
+message ChangeDistinguishedStatusResponse {
     common.RequestResult requestResult = 1;
 }

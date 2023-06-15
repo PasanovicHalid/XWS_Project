@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 	reservation_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
@@ -17,11 +18,13 @@ import (
 type ReservationHandler struct {
 	reservation_pb.UnimplementedReservationServiceServer
 	reservationService *application.ReservationService
+	notificationSender message_queues.INotificationSender
 }
 
-func NewReservationHandler(reservationService *application.ReservationService) *ReservationHandler {
+func NewReservationHandler(reservationService *application.ReservationService, notificationSender message_queues.INotificationSender) *ReservationHandler {
 	return &ReservationHandler{
 		reservationService: reservationService,
+		notificationSender: notificationSender,
 	}
 }
 

@@ -11,9 +11,12 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/domain"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
+	mq "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
+	saga "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/messaging"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/messaging/nats"
 	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
 	emailPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/email_service"
@@ -144,7 +147,12 @@ func (server *Server) initCustomHandlers() {
 	reservationEndpoint := fmt.Sprintf("%s:%s", server.config.ReservationHost, server.config.ReservationPort)
 	acommodanceEndpoint := fmt.Sprintf("%s:%s", server.config.AccommodationHost, server.config.AccommodationPort)
 	ratingEndpoint := fmt.Sprintf("%s:%s", server.config.RatingHost, server.config.RatingPort)
-	hostHandler := presentation.NewHostHandler(reservationEndpoint, ratingEndpoint, userEndpoint)
+
+	notificationPublisher := server.initPublisher(server.config.NotificationSubject)
+
+	notificationSender := mq.NewNotificationSender(notificationPublisher)
+
+	hostHandler := presentation.NewHostHandler(reservationEndpoint, ratingEndpoint, userEndpoint, notificationSender)
 	hostHandler.Init(server.mux)
 	accommodationHandler := presentation.NewAccommodationHandler(acommodanceEndpoint, reservationEndpoint, ratingEndpoint)
 	accommodationHandler.Init(server.mux)
@@ -191,4 +199,14 @@ func (server *Server) GetPublicKeyHttp() http.Handler {
 
 		rw.WriteHeader(http.StatusOK)
 	})
+}
+
+func (server *Server) initPublisher(subject string) saga.Publisher {
+	publisher, err := nats.NewNATSPublisher(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return publisher
 }

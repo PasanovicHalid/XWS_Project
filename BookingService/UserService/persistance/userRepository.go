@@ -84,6 +84,11 @@ func (repository *UserRepository) GetAllUsersByIdList(ctx *context.Context, idLi
 	return result, nil
 }
 
+func (repository *UserRepository) ChangeDistinguishedStatus(ctx *context.Context, id string, status bool) error {
+	_, err := repository.users.UpdateOne(*ctx, bson.M{"_id": id, "deleted": false}, bson.M{"$set": bson.M{"distinguished": status}})
+	return err
+}
+
 func (repository *UserRepository) filter(ctx *context.Context, filter interface{}) (users []*domain.User, err error) {
 	cursor, err := repository.users.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())

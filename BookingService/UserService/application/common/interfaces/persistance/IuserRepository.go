@@ -16,4 +16,5 @@ type IUserRepository interface {
 	DeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error
 	RollbackDeleteUser(ctx *context.Context, id string, sagaTimestamp int64) error
 	GetAllUsersByIdList(ctx *context.Context, idList []string) ([]*domain.User, error)
+	ChangeDistinguishedStatus(ctx *context.Context, id string, status bool) error
 }

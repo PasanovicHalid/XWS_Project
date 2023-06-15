@@ -6,8 +6,11 @@ import (
 	"net"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/presentation"
+	saga "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/messaging"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/messaging/nats"
 	rating_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -32,7 +35,11 @@ func NewServer(config *Configurations) *Server {
 
 	ratingRepository := persistance.NewRatingRepository(mongo)
 
-	ratingService := application.NewRatingService(ratingRepository)
+	notificationPublisher := server.initPublisher(server.config.NotificationSubject)
+
+	notificationSender := message_queues.NewNotificationSender(notificationPublisher)
+
+	ratingService := application.NewRatingService(ratingRepository, notificationSender)
 
 	server.ratingHandler = presentation.NewRatingHandler(ratingService)
 
@@ -53,4 +60,14 @@ func (server *Server) Start() {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+func (server *Server) initPublisher(subject string) saga.Publisher {
+	publisher, err := nats.NewNATSPublisher(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return publisher
 }

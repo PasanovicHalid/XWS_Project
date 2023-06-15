@@ -2,19 +2,25 @@ package application
 
 import (
 	"context"
+	"log"
 	"time"
 
+	email_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/email_service"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/UserService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/UserService/domain"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type UserService struct {
-	userRepository persistance.IUserRepository
+	userRepository      persistance.IUserRepository
+	emailServiceAddress string
 }
 
-func NewUserService(userRepository persistance.IUserRepository) *UserService {
+func NewUserService(userRepository persistance.IUserRepository, emailServiceAddress string) *UserService {
 	return &UserService{
-		userRepository: userRepository,
+		userRepository:      userRepository,
+		emailServiceAddress: emailServiceAddress,
 	}
 }
 
@@ -52,4 +58,22 @@ func (service *UserService) GetAllUsersByIdList(idList []string) ([]*domain.User
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	return service.userRepository.GetAllUsersByIdList(&ctx, idList)
+}
+
+func (service *UserService) ChangeDistinguishedStatus(id string, status bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.userRepository.ChangeDistinguishedStatus(&ctx, id, status)
+}
+
+func (service *UserService) initEmailServiceClient() email_pb.EmailServiceClient {
+	conn, err := getConnection(service.emailServiceAddress)
+	if err != nil {
+		log.Fatal("Failed to start gRPC connection to Email service: %v", err)
+	}
+	return email_pb.NewEmailServiceClient(conn)
+}
+
+func getConnection(address string) (*grpc.ClientConn, error) {
+	return grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 }

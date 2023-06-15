@@ -94,12 +94,13 @@ func (handler *UserHandler) GetUserById(ctx context.Context, request *user_pb.Ge
 
 	return &user_pb.GetUserByIdResponse{
 		User: &user_pb.User{
-			IdentityId:  user.IdentityId,
-			FirstName:   user.FirstName,
-			LastName:    user.LastName,
-			Email:       user.Email,
-			PhoneNumber: user.PhoneNumber,
-			Address:     user.Address,
+			IdentityId:      user.IdentityId,
+			FirstName:       user.FirstName,
+			LastName:        user.LastName,
+			Email:           user.Email,
+			PhoneNumber:     user.PhoneNumber,
+			Address:         user.Address,
+			IsDistinguished: user.Distinguished,
 		},
 		RequestResult: &common_pb.RequestResult{
 			Code: 200,
@@ -118,17 +119,41 @@ func (handler *UserHandler) GetAllUsers(ctx context.Context, request *user_pb.Ge
 
 	for _, user := range users {
 		usersResponse = append(usersResponse, &user_pb.User{
-			IdentityId:  user.IdentityId,
-			FirstName:   user.FirstName,
-			LastName:    user.LastName,
-			Email:       user.Email,
-			PhoneNumber: user.PhoneNumber,
-			Address:     user.Address,
+			IdentityId:      user.IdentityId,
+			FirstName:       user.FirstName,
+			LastName:        user.LastName,
+			Email:           user.Email,
+			PhoneNumber:     user.PhoneNumber,
+			Address:         user.Address,
+			IsDistinguished: user.Distinguished,
 		})
 	}
 
 	return &user_pb.GetAllUsersResponse{
 		Users: usersResponse,
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}
+
+func (handler *UserHandler) ChangeDistinguishedStatus(ctx context.Context, request *user_pb.ChangeDistinguishedStatusRequest) (response *user_pb.ChangeDistinguishedStatusResponse, err error) {
+	err = handler.userService.ChangeDistinguishedStatus(request.IdentityId, request.IsDistinguished)
+
+	if err != nil {
+		if err == persistance.ErrorUserNotFound {
+			return &user_pb.ChangeDistinguishedStatusResponse{
+				RequestResult: &common_pb.RequestResult{
+					Code:    400,
+					Message: err.Error(),
+				},
+			}, nil
+		}
+
+		return nil, err
+	}
+
+	return &user_pb.ChangeDistinguishedStatusResponse{
 		RequestResult: &common_pb.RequestResult{
 			Code: 200,
 		},

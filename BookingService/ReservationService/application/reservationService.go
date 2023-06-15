@@ -4,12 +4,14 @@ import (
 	"context"
 	"time"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
 )
 
 type ReservationService struct {
 	reservationRepository persistance.IReservationRepository
+	notificationSender    message_queues.INotificationSender
 }
 
 func NewReservationService(reservationRepository persistance.IReservationRepository) *ReservationService {
@@ -82,7 +84,6 @@ func (service *ReservationService) CheckHostActiveReservaton(id string) (bool, e
 			break
 		}
 	}
-
 	return hasActiveReservations, nil
 }
 

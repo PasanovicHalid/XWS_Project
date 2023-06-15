@@ -41,13 +41,19 @@ func NewServer(config *Configurations) *Server {
 
 	reservationRepository := persistance.NewReservationRepository(mongo)
 
+	notificationPublisher := server.initPublisher(server.config.NotificationSubject)
+
+	notificationSender := message_queues.NewNotificationSender(notificationPublisher)
+
 	reservationService := application.NewReservationService(reservationRepository)
 
 	deleteUserCommandSubscriber := server.initSubscriber(server.config.DeleteUserCommandSubject, QueueGroup)
+
 	deleteUserReplyPublisher := server.initPublisher(server.config.DeleteUserReplySubject)
+
 	server.deleteUserHandler = server.initDeleteUserHandler(deleteUserReplyPublisher, deleteUserCommandSubscriber, reservationService)
 
-	server.reservationHandler = presentation.NewReservationHandler(reservationService)
+	server.reservationHandler = presentation.NewReservationHandler(reservationService, notificationSender)
 
 	return server
 }

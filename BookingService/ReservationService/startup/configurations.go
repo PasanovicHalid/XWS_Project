@@ -12,6 +12,7 @@ type Configurations struct {
 	NatsPass                 string
 	DeleteUserCommandSubject string
 	DeleteUserReplySubject   string
+	NotificationSubject      string
 }
 
 func NewConfigurations() *Configurations {
@@ -25,6 +26,7 @@ func NewConfigurations() *Configurations {
 		NatsPass:                 os.Getenv("NATS_PASS"),
 		DeleteUserCommandSubject: os.Getenv("DELETE_USER_COMMAND_SUBJECT"),
 		DeleteUserReplySubject:   os.Getenv("DELETE_USER_REPLY_SUBJECT"),
+		NotificationSubject:      os.Getenv("NOTIFICATION_SUBJECT"),
 	}
 
 	configurations.initializeEnvironmentVariables()
@@ -59,5 +61,8 @@ func (configurations *Configurations) initializeEnvironmentVariables() {
 	}
 	if configurations.DeleteUserReplySubject == "" {
 		configurations.DeleteUserReplySubject = "delete.user.reply"
+	}
+	if configurations.NotificationSubject == "" {
+		configurations.NotificationSubject = "notification"
 	}
 }

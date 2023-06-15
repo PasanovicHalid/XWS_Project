@@ -24,6 +24,8 @@ service EmailService {
         };
     }
 
+    rpc CreateNotificationSettings (CreateNotificationSettingsRequest) returns (common.RequestResult) {}
+
 
     rpc CreatedReservationNotification (Empty) returns (common.RequestResult) {}
     rpc CanceledReservationNotification (Empty) returns (common.RequestResult) {}
@@ -54,3 +56,13 @@ message UpdateWantedNotificationsRequest {
 }
 
 message Empty{}
+
+message CreateNotificationSettingsRequest {
+    string id = 1;
+    bool createdRequest = 2;
+    bool canceledReservation = 3;
+    bool hostRatingGiven = 4;
+    bool accommodationRatingGiven = 5;
+    bool prominentHost = 6;
+    bool hostResponded = 7;
+}

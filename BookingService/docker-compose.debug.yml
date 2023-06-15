@@ -41,6 +41,8 @@ services:
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
       USER_DB_HOST: ${USER_DB_HOST}
       USER_DB_PORT: ${USER_DB_PORT}
+      EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+      EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
       NATS_HOST: ${NATS_HOST}
       NATS_PORT: ${NATS_PORT}
       NATS_USER: ${NATS_USER}
@@ -99,6 +101,7 @@ services:
       NATS_PASS: ${NATS_PASS}
       DELETE_USER_COMMAND_SUBJECT: ${DELETE_USER_COMMAND_SUBJECT}
       DELETE_USER_REPLY_SUBJECT: ${DELETE_USER_REPLY_SUBJECT}
+      NOTIFICATION_SUBJECT: ${NOTIFICATION_SUBJECT}
     depends_on:
       reservation_db:
         condition: service_healthy
@@ -117,6 +120,13 @@ services:
       - 11005:11005
     environment:
       EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+      EMAIL_DB_HOST: ${EMAIL_DB_HOST}
+      EMAIL_DB_PORT: ${EMAIL_DB_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      NOTIFICATION_SUBJECT: ${NOTIFICATION_SUBJECT}
     networks:
       - network
 
@@ -154,6 +164,11 @@ services:
       RATING_SERVICE_PORT: ${RATING_SERVICE_PORT}
       RATING_DB_HOST: ${RATING_DB_HOST}
       RATING_DB_PORT: ${RATING_DB_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      NOTIFICATION_SUBJECT: ${NOTIFICATION_SUBJECT}
     depends_on:
       rating_db:
         condition: service_healthy
@@ -186,6 +201,13 @@ services:
       RECOMMENDATION_SERVICE_HOST: ${RECOMMENDATION_SERVICE_HOST}
       RATING_SERVICE_PORT: ${RATING_SERVICE_PORT}
       RATING_SERVICE_HOST: ${RATING_SERVICE_HOST}
+      EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+      EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      NOTIFICATION_SUBJECT: ${NOTIFICATION_SUBJECT}
     depends_on:
         api_gateway_db:
           condition: service_healthy
@@ -291,6 +313,22 @@ services:
       - recommendation_db_conf:/conf/
     networks:
       - network
+
+  email_db:
+    image: mongo
+    container_name: email_db
+    restart: on-failure
+    ports:
+      - "${EMAIL_DB_EXTERNAL_PORT}:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - email_db:/data/db
+    networks:
+      - network
       
   api_gateway_db:
     image: mongo
@@ -328,5 +366,6 @@ volumes:
   reservation_db:
   api_gateway_db:
   rating_db:
+  email_db:
   recommendation_db_data:
   recommendation_db_conf:

@@ -40,7 +40,9 @@ func NewServer(config *Configurations) *Server {
 
 	userRepository := persistance.NewUserRepository(mongo)
 
-	userService := application.NewUserService(userRepository)
+	emailServiceEndpoint := fmt.Sprintf("%s:%s", server.config.EmailServiceHost, server.config.EmailServicePort)
+
+	userService := application.NewUserService(userRepository, emailServiceEndpoint)
 
 	deleteUserCommandSubscriber := server.initSubscriber(server.config.DeleteUserCommandSubject, QueueGroup)
 	deleteUserReplyPublisher := server.initPublisher(server.config.DeleteUserReplySubject)

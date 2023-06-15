@@ -20,6 +20,11 @@ type Configurations struct {
 	RecommendationPort   string
 	EmailHost            string
 	EmailPort            string
+	NatsHost             string
+	NatsPort             string
+	NatsUser             string
+	NatsPass             string
+	NotificationSubject  string
 }
 
 func NewConfigurations() *Configurations {
@@ -41,6 +46,11 @@ func NewConfigurations() *Configurations {
 		RecommendationPort:   os.Getenv("RECOMMENDATION_SERVICE_PORT"),
 		EmailHost:            os.Getenv("EMAIL_SERVICE_HOST"),
 		EmailPort:            os.Getenv("EMAIL_SERVICE_PORT"),
+		NatsHost:             os.Getenv("NATS_HOST"),
+		NatsPort:             os.Getenv("NATS_PORT"),
+		NatsUser:             os.Getenv("NATS_USER"),
+		NatsPass:             os.Getenv("NATS_PASS"),
+		NotificationSubject:  os.Getenv("NOTIFICATION_SUBJECT"),
 	}
 
 	configurations.initializeEnvironmentVariables()
@@ -99,5 +109,20 @@ func (configurations *Configurations) initializeEnvironmentVariables() {
 	}
 	if configurations.RatingPort == "" {
 		configurations.RatingPort = "9107"
+	}
+	if configurations.NatsHost == "" {
+		configurations.NatsHost = "localhost"
+	}
+	if configurations.NatsPort == "" {
+		configurations.NatsPort = "4222"
+	}
+	if configurations.NatsUser == "" {
+		configurations.NatsUser = "xws_project"
+	}
+	if configurations.NatsPass == "" {
+		configurations.NatsPass = "xws_project"
+	}
+	if configurations.NotificationSubject == "" {
+		configurations.NotificationSubject = "notification"
 	}
 }

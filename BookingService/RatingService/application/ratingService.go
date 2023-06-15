@@ -4,16 +4,21 @@ import (
 	"context"
 	"time"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/domain"
 )
 
 type RatingService struct {
-	ratingRepository persistance.IRatingRepository
+	ratingRepository   persistance.IRatingRepository
+	notificationSender message_queues.INotificationSender
 }
 
-func NewRatingService(ratingRepository persistance.IRatingRepository) *RatingService {
-	return &RatingService{ratingRepository: ratingRepository}
+func NewRatingService(ratingRepository persistance.IRatingRepository, notificationSender message_queues.INotificationSender) *RatingService {
+	return &RatingService{
+		ratingRepository:   ratingRepository,
+		notificationSender: notificationSender,
+	}
 }
 
 func (service *RatingService) GetAllRatingsMadeByCustomer(id string) ([]*domain.Rating, error) {

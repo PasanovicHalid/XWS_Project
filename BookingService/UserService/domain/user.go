@@ -9,4 +9,5 @@ type User struct {
 	Email         string `bson:"email,omitempty"`
 	PhoneNumber   string `bson:"phoneNumber,omitempty"`
 	Address       string `bson:"address,omitempty"`
+	Distinguished bool   `bson:"distinguished,omitempty"`
 }

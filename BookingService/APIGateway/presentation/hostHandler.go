@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/infrastructure/authentification"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation/contracts"
 	grpcservices "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/presentation/gRPCServices"
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/notifications"
 	ratingPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 	userPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/user_service"
@@ -19,13 +21,15 @@ type HostHandler struct {
 	ReservationAddress string
 	RatingAddress      string
 	UserAddress        string
+	NotificationSender message_queues.INotificationSender
 }
 
-func NewHostHandler(reservationAddress string, ratingAddress string, userAddress string) Handler {
+func NewHostHandler(reservationAddress string, ratingAddress string, userAddress string, notificationSender message_queues.INotificationSender) Handler {
 	return &HostHandler{
 		ReservationAddress: reservationAddress,
 		RatingAddress:      ratingAddress,
 		UserAddress:        userAddress,
+		NotificationSender: notificationSender,
 	}
 }
 
@@ -113,6 +117,20 @@ func (handler *HostHandler) DistinguishedHost(w http.ResponseWriter, r *http.Req
 	jwt_claims := r.Context().Value(mw.JwtContent{}).(*authentification.SignedDetails)
 	id := jwt_claims.Id
 
+	user, err := handler.getUserById(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	if user.RequestResult.Code != 200 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(user.RequestResult)
+		return
+	}
+
 	distinguisehdResponse, err := handler.checkIfHostHasDistinguishedReservationQualities(id)
 
 	if err != nil {
@@ -142,6 +160,31 @@ func (handler *HostHandler) DistinguishedHost(w http.ResponseWriter, r *http.Req
 	}
 
 	isDistinguished := distinguisehdResponse.IsDistinguished && averageRatingResponse.Rating >= 4.7
+
+	if user.User.IsDistinguished != isDistinguished {
+		resp, err := handler.changeHostDistinguishedStatus(id, isDistinguished)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(err.Error())
+			return
+		}
+
+		if resp.RequestResult.Code != 200 {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(resp.RequestResult)
+			return
+		}
+
+		handler.NotificationSender.SendNotification(&notifications.NotifyUserNotification{
+			UserInfo: notifications.NotifyUserEventInfo{
+				UserId:        id,
+				Distinguished: isDistinguished,
+				Role:          "Host",
+			},
+			Type: notifications.DistinguishedChanged,
+		})
+
+	}
 
 	w.WriteHeader(http.StatusOK)
 	response := map[string]interface{}{"distinguished": isDistinguished}
@@ -185,5 +228,22 @@ func (handler *HostHandler) getGuestAcceptedReservations(id string) (*reservatio
 
 	return reservationClient.GetGuestAcceptedReservations(context.TODO(), &reservationPB.GetGuestAcceptedReservationsRequest{
 		Id: id,
+	})
+}
+
+func (handler *HostHandler) getUserById(id string) (*userPB.GetUserByIdResponse, error) {
+	userClient := grpcservices.NewUserClient(handler.UserAddress)
+
+	return userClient.GetUserById(context.TODO(), &userPB.GetUserByIdRequest{
+		Id: id,
+	})
+}
+
+func (handler *HostHandler) changeHostDistinguishedStatus(id string, distinguished bool) (*userPB.ChangeDistinguishedStatusResponse, error) {
+	userClient := grpcservices.NewUserClient(handler.UserAddress)
+
+	return userClient.ChangeDistinguishedStatus(context.TODO(), &userPB.ChangeDistinguishedStatusRequest{
+		IdentityId:      id,
+		IsDistinguished: distinguished,
 	})
 }

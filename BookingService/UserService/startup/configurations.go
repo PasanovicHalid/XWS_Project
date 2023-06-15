@@ -6,6 +6,8 @@ type Configurations struct {
 	Port                     string
 	UserDBHost               string
 	UserDBPort               string
+	EmailServiceHost         string
+	EmailServicePort         string
 	NatsHost                 string
 	NatsPort                 string
 	NatsUser                 string
@@ -19,6 +21,8 @@ func NewConfigurations() *Configurations {
 		Port:                     os.Getenv("USER_SERVICE_PORT"),
 		UserDBHost:               os.Getenv("USER_DB_HOST"),
 		UserDBPort:               os.Getenv("USER_DB_PORT"),
+		EmailServiceHost:         os.Getenv("EMAIL_SERVICE_HOST"),
+		EmailServicePort:         os.Getenv("EMAIL_SERVICE_PORT"),
 		NatsHost:                 os.Getenv("NATS_HOST"),
 		NatsPort:                 os.Getenv("NATS_PORT"),
 		NatsUser:                 os.Getenv("NATS_USER"),
@@ -41,6 +45,12 @@ func (configurations *Configurations) initializeEnvironmentVariables() {
 	}
 	if configurations.UserDBPort == "" {
 		configurations.UserDBPort = "27017"
+	}
+	if configurations.EmailServiceHost == "" {
+		configurations.EmailServiceHost = "localhost"
+	}
+	if configurations.EmailServicePort == "" {
+		configurations.EmailServicePort = "9105"
 	}
 	if configurations.NatsHost == "" {
 		configurations.NatsHost = "localhost"
