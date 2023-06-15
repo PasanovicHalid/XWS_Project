@@ -7,6 +7,7 @@ package email;
 import "google/api/annotations.proto";
 import "common/common.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service EmailService {
     rpc SendEmail(EmailRequest) returns (common.RequestResult) {
@@ -22,6 +23,10 @@ service EmailService {
             body: "*"
         };
     }
+
+    rpc AccommodationRatingGivenNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc ProminentHostStatusNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc HostResponseOnAccommodationRequestNotification (google.protobuf.Empty) returns (common.RequestResult) {}
 }
 
 message EmailRequest {

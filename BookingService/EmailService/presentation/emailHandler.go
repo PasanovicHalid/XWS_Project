@@ -67,3 +67,33 @@ func (handler *EmailHandler) UpdateWantedNotifications(ctx context.Context, requ
 		Message: "Email sent successfully",
 	}, nil
 }
+
+func (handler *EmailHandler) AccommodationRatingGivenNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Accommodation rating given",
+		Body:    "Someone rated your accommodation.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
+func (handler *EmailHandler) ProminentHostStatusNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Prominent host status changed",
+		Body:    "Your host status is changed.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
+func (handler *EmailHandler) HostResponseOnAccommodationRequestNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Host response on accommodaton request",
+		Body:    "Host gave response on your accomodation request.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
