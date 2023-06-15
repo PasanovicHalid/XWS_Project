@@ -18,6 +18,8 @@ type Configurations struct {
 	RatingPort           string
 	RecommendationHost   string
 	RecommendationPort   string
+	EmailHost            string
+	EmailPort            string
 }
 
 func NewConfigurations() *Configurations {
@@ -37,6 +39,8 @@ func NewConfigurations() *Configurations {
 		RatingPort:           os.Getenv("RATING_SERVICE_PORT"),
 		RecommendationHost:   os.Getenv("RECOMMENDATION_SERVICE_HOST"),
 		RecommendationPort:   os.Getenv("RECOMMENDATION_SERVICE_PORT"),
+		EmailHost:            os.Getenv("EMAIL_SERVICE_HOST"),
+		EmailPort:            os.Getenv("EMAIL_SERVICE_PORT"),
 	}
 
 	configurations.initializeEnvironmentVariables()
@@ -71,6 +75,12 @@ func (configurations *Configurations) initializeEnvironmentVariables() {
 	}
 	if configurations.ReservationPort == "" {
 		configurations.ReservationPort = "9104"
+	}
+	if configurations.EmailHost == "" {
+		configurations.EmailHost = "localhost"
+	}
+	if configurations.EmailPort == "" {
+		configurations.EmailPort = "9105"
 	}
 	if configurations.ApiGatewayDbHost == "" {
 		configurations.ApiGatewayDbHost = "localhost"

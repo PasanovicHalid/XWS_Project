@@ -16,6 +16,7 @@ import (
 	mw "github.com/PasanovicHalid/XWS_Project/BookingService/APIGateway/startup/middlewares"
 	accomodancePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/accommodation_service"
 	authenticatePB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/authentification_service"
+	emailPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/email_service"
 	ratingPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/rating_service"
 	recommendationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/recommendation_service"
 	reservationPB "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
@@ -82,6 +83,8 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/rating/get-hosts-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/accommodation/get-filtered-accommodations", mw.MiddlewareContentTypeSet(mw.MiddlewareDecodeRequestBody(server.mux)))
 
+	final_mux.Handle("/api/notification/updateWantedNotifications", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/notification/sendEmail", mw.MiddlewareContentTypeSet(server.mux))
 	server.final_mux = final_mux
 
 	return server
@@ -125,6 +128,12 @@ func (server *Server) initHandlers() {
 	ratingEndpoint := fmt.Sprintf("%s:%s", server.config.RatingHost, server.config.RatingPort)
 	err = ratingPB.RegisterRatingServiceHandlerFromEndpoint(context.TODO(), server.mux, ratingEndpoint, opts)
 
+	if err != nil {
+		panic(err)
+	}
+
+	emailEndpoint := fmt.Sprintf("%s:%s", server.config.EmailHost, server.config.EmailPort)
+	err = emailPB.RegisterEmailServiceHandlerFromEndpoint(context.TODO(), server.mux, emailEndpoint, opts)
 	if err != nil {
 		panic(err)
 	}

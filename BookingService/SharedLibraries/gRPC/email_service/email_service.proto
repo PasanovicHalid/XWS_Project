@@ -7,9 +7,32 @@ package email;
 import "google/api/annotations.proto";
 import "common/common.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service EmailService {
-    rpc SendEmail(EmailRequest) returns (common.RequestResult) {}
+    rpc SendEmail(EmailRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            post: "/api/notification/sendEmail"
+            body: "*"
+        };
+    }
+
+    rpc UpdateWantedNotifications (UpdateWantedNotificationsRequest) returns (common.RequestResult) {
+        option (google.api.http) = {
+            put: "/api/notification/updateWantedNotifications"
+            body: "*"
+        };
+    }
+
+
+    rpc CreatedReservationNotification (Empty) returns (common.RequestResult) {}
+    rpc CanceledReservationNotification (Empty) returns (common.RequestResult) {}
+    rpc HostRatingGivenNotification (Empty) returns (common.RequestResult) {}
+
+    rpc AccommodationRatingGivenNotification (Empty) returns (common.RequestResult) {}
+    rpc ProminentHostStatusNotification (Empty) returns (common.RequestResult) {}
+    rpc HostResponseOnAccommodationRequestNotification (Empty) returns (common.RequestResult) {}
+
 }
 
 message EmailRequest {
@@ -19,3 +42,15 @@ message EmailRequest {
 }
 
 
+
+message UpdateWantedNotificationsRequest {
+    string id = 1;
+    bool createdRequest = 2;
+    bool canceledReservation = 3;
+    bool hostRatingGiven = 4;
+    bool accommodationRatingGiven = 5;
+    bool prominentHost = 6;
+    bool hostResponded = 7;
+}
+
+message Empty{}

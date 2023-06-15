@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/application"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/presentation"
 	email_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/email_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -23,7 +25,16 @@ func NewServer(config *Configurations) *Server {
 		mux:    runtime.NewServeMux(),
 	}
 
-	server.emailHandler = presentation.NewEmailHandler()
+	mongo, err := persistance.NewMongoClient(config.EmailDBHost, config.EmailDBPort)
+	if err != nil {
+		log.Fatalf("Failed to connect to mongo: %v", err)
+	}
+
+	emailRepository := persistance.NewEmailRepository(mongo)
+
+	emailService := application.NewEmailService(emailRepository)
+
+	server.emailHandler = presentation.NewEmailHandler(emailService)
 
 	return server
 }
