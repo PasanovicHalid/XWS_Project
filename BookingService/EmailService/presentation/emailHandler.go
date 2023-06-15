@@ -78,6 +78,16 @@ func (handler *EmailHandler) CreatedReservationNotification() (*common_pb.Reques
 	return handler.SendEmail(context.Background(), emailReq)
 }
 
+func (handler *EmailHandler) AccommodationRatingGivenNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Accommodation rating given",
+		Body:    "Someone rated your accommodation.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
 func (handler *EmailHandler) CanceledReservationNotification() (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   "bezbednost.projekat.2023@gmail.com",
@@ -88,11 +98,31 @@ func (handler *EmailHandler) CanceledReservationNotification() (*common_pb.Reque
 	return handler.SendEmail(context.Background(), emailReq)
 }
 
+func (handler *EmailHandler) ProminentHostStatusNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Prominent host status changed",
+		Body:    "Your host status is changed.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
 func (handler *EmailHandler) HostRatingGivenNotification() (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   "bezbednost.projekat.2023@gmail.com",
 		Subject: "Host Rating Given",
 		Body:    "Someone gave you rating. Please check your application.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
+func (handler *EmailHandler) HostResponseOnAccommodationRequestNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Host response on accommodaton request",
+		Body:    "Host gave response on your accomodation request.",
 	}
 
 	return handler.SendEmail(context.Background(), emailReq)

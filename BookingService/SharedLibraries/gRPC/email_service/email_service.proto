@@ -24,9 +24,15 @@ service EmailService {
         };
     }
 
+
     rpc CreatedReservationNotification (google.protobuf.Empty) returns (common.RequestResult) {}
     rpc CanceledReservationNotification (google.protobuf.Empty) returns (common.RequestResult) {}
     rpc HostRatingGivenNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+
+    rpc AccommodationRatingGivenNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc ProminentHostStatusNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+    rpc HostResponseOnAccommodationRequestNotification (google.protobuf.Empty) returns (common.RequestResult) {}
+
 }
 
 message EmailRequest {
