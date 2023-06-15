@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,6 +26,9 @@ const _ = grpc.SupportPackageIsVersion7
 type EmailServiceClient interface {
 	SendEmail(ctx context.Context, in *EmailRequest, opts ...grpc.CallOption) (*common.RequestResult, error)
 	UpdateWantedNotifications(ctx context.Context, in *UpdateWantedNotificationsRequest, opts ...grpc.CallOption) (*common.RequestResult, error)
+	CreatedReservationNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error)
+	CanceledReservationNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error)
+	HostRatingGivenNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error)
 }
 
 type emailServiceClient struct {
@@ -53,12 +57,42 @@ func (c *emailServiceClient) UpdateWantedNotifications(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *emailServiceClient) CreatedReservationNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, "/email.EmailService/CreatedReservationNotification", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailServiceClient) CanceledReservationNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, "/email.EmailService/CanceledReservationNotification", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailServiceClient) HostRatingGivenNotification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*common.RequestResult, error) {
+	out := new(common.RequestResult)
+	err := c.cc.Invoke(ctx, "/email.EmailService/HostRatingGivenNotification", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EmailServiceServer is the server API for EmailService service.
 // All implementations must embed UnimplementedEmailServiceServer
 // for forward compatibility
 type EmailServiceServer interface {
 	SendEmail(context.Context, *EmailRequest) (*common.RequestResult, error)
 	UpdateWantedNotifications(context.Context, *UpdateWantedNotificationsRequest) (*common.RequestResult, error)
+	CreatedReservationNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error)
+	CanceledReservationNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error)
+	HostRatingGivenNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error)
 	mustEmbedUnimplementedEmailServiceServer()
 }
 
@@ -71,6 +105,15 @@ func (UnimplementedEmailServiceServer) SendEmail(context.Context, *EmailRequest)
 }
 func (UnimplementedEmailServiceServer) UpdateWantedNotifications(context.Context, *UpdateWantedNotificationsRequest) (*common.RequestResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateWantedNotifications not implemented")
+}
+func (UnimplementedEmailServiceServer) CreatedReservationNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatedReservationNotification not implemented")
+}
+func (UnimplementedEmailServiceServer) CanceledReservationNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CanceledReservationNotification not implemented")
+}
+func (UnimplementedEmailServiceServer) HostRatingGivenNotification(context.Context, *emptypb.Empty) (*common.RequestResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HostRatingGivenNotification not implemented")
 }
 func (UnimplementedEmailServiceServer) mustEmbedUnimplementedEmailServiceServer() {}
 
@@ -121,6 +164,60 @@ func _EmailService_UpdateWantedNotifications_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EmailService_CreatedReservationNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServiceServer).CreatedReservationNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/email.EmailService/CreatedReservationNotification",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServiceServer).CreatedReservationNotification(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailService_CanceledReservationNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServiceServer).CanceledReservationNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/email.EmailService/CanceledReservationNotification",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServiceServer).CanceledReservationNotification(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailService_HostRatingGivenNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServiceServer).HostRatingGivenNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/email.EmailService/HostRatingGivenNotification",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServiceServer).HostRatingGivenNotification(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EmailService_ServiceDesc is the grpc.ServiceDesc for EmailService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -135,6 +232,18 @@ var EmailService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateWantedNotifications",
 			Handler:    _EmailService_UpdateWantedNotifications_Handler,
+		},
+		{
+			MethodName: "CreatedReservationNotification",
+			Handler:    _EmailService_CreatedReservationNotification_Handler,
+		},
+		{
+			MethodName: "CanceledReservationNotification",
+			Handler:    _EmailService_CanceledReservationNotification_Handler,
+		},
+		{
+			MethodName: "HostRatingGivenNotification",
+			Handler:    _EmailService_HostRatingGivenNotification_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

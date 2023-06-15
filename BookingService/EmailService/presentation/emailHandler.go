@@ -38,8 +38,8 @@ func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.Em
 	address := host + ":" + port
 
 	//change
-	subject := "Subject: This is the subject of the mail\n"
-	body := "This is the body of the mail"
+	subject := request.Subject
+	body := request.Body
 	message := []byte(subject + body)
 	auth := smtp.PlainAuth("", from, password, host)
 
@@ -66,4 +66,34 @@ func (handler *EmailHandler) UpdateWantedNotifications(ctx context.Context, requ
 		Code:    200,
 		Message: "Email sent successfully",
 	}, nil
+}
+
+func (handler *EmailHandler) CreatedReservationNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Reservation Created",
+		Body:    "Someone created reservation. Please check your application.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
+func (handler *EmailHandler) CanceledReservationNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Reservation Canceled",
+		Body:    "Someone canceled reservation. Please check your application.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
+}
+
+func (handler *EmailHandler) HostRatingGivenNotification() (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   "bezbednost.projekat.2023@gmail.com",
+		Subject: "Host Rating Given",
+		Body:    "Someone gave you rating. Please check your application.",
+	}
+
+	return handler.SendEmail(context.Background(), emailReq)
 }
