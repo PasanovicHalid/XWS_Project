@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"context"
+	"fmt"
 
 	"net/smtp"
 
@@ -55,7 +56,23 @@ func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.Em
 }
 
 func (handler *EmailHandler) UpdateWantedNotifications(ctx context.Context, request *email_pb.UpdateWantedNotificationsRequest) (*common_pb.RequestResult, error) {
+	fmt.Print("BBBBB\n\n")
 	_, err := handler.emailService.UpdateWantedNotifications(request)
+	if err != nil {
+		return &common_pb.RequestResult{
+			Code:    500,
+			Message: "Error",
+		}, nil
+	}
+	return &common_pb.RequestResult{
+		Code:    200,
+		Message: "Email sent successfully",
+	}, nil
+}
+
+func (handler *EmailHandler) SetWantedNotifications(ctx context.Context, request *email_pb.UpdateWantedNotificationsRequest) (*common_pb.RequestResult, error) {
+	fmt.Print("DDDD\n\n")
+	_, err := handler.emailService.SetWantedNotifications(request)
 	if err != nil {
 		return &common_pb.RequestResult{
 			Code:    500,

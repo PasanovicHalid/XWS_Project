@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/application/common/interfaces/persistance"
@@ -57,5 +58,34 @@ func convert(req *email_pb.UpdateWantedNotificationsRequest) (*domain.WantedNoti
 		AccommodationRatingGiven: req.AccommodationRatingGiven,
 		ProminentHost:            req.ProminentHost,
 		HostResponded:            req.HostResponded,
+	}, nil
+}
+
+func (service *EmailService) SetWantedNotifications(request *email_pb.UpdateWantedNotificationsRequest) (*common_pb.RequestResult, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+
+	wantedNotifications, err := convert(request)
+
+	fmt.Print("PPPPPP\n\n")
+	if err != nil {
+		return &common_pb.RequestResult{
+			Code:    500,
+			Message: "NEUSPESNO UNETI PODACI",
+		}, nil
+	}
+	err2 := service.emailRepository.SetWantedNotifications(&ctx, wantedNotifications)
+	fmt.Print("LLLLLL\n")
+	if err2 != nil {
+		return &common_pb.RequestResult{
+			Code:    500,
+			Message: err2.Error(),
+		}, nil
+	}
+
+	return &common_pb.RequestResult{
+		Code:    200,
+		Message: "USPESNO",
 	}, nil
 }

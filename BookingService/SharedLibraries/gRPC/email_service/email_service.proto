@@ -4,25 +4,14 @@ option go_package = "github.com/PasanovicHalid/XWS_Project/BookingService/Shared
 
 package email;
 
-import "google/api/annotations.proto";
 import "common/common.proto";
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
+
 
 service EmailService {
-    rpc SendEmail(EmailRequest) returns (common.RequestResult) {
-        option (google.api.http) = {
-            post: "/api/notification/sendEmail"
-            body: "*"
-        };
-    }
+    rpc SendEmail(EmailRequest) returns (common.RequestResult) {}
 
-    rpc UpdateWantedNotifications (UpdateWantedNotificationsRequest) returns (common.RequestResult) {
-        option (google.api.http) = {
-            put: "/api/notification/updateWantedNotifications"
-            body: "*"
-        };
-    }
+    rpc UpdateWantedNotifications (UpdateWantedNotificationsRequest) returns (common.RequestResult) {}
+    rpc SetWantedNotifications (UpdateWantedNotificationsRequest) returns (common.RequestResult) {}
 
     rpc CreateNotificationSettings (CreateNotificationSettingsRequest) returns (common.RequestResult) {}
 

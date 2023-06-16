@@ -2,11 +2,11 @@ package persistance
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type EmailRepository struct {
@@ -20,12 +20,20 @@ func NewEmailRepository(client *mongo.Client) *EmailRepository {
 }
 
 func (repository *EmailRepository) UpdateWantedNotifications(ctx *context.Context, notifications *domain.WantedNotification) error {
-	filter := bson.M{"_id": notifications.UserId, "deleted": false}
-	update := bson.M{"$set": notifications, "$setOnInsert": bson.M{"_id": notifications.UserId, "deleted": false}}
+	_, err := repository.emails.ReplaceOne(*ctx, bson.M{"_id": notifications.UserId, "deleted": false}, notifications)
 
-	opts := options.Update().SetUpsert(true)
-	_, err := repository.emails.UpdateOne(*ctx, filter, update, opts)
+	if err != nil {
+		return err
+	}
 
+	return nil
+}
+
+func (repository *EmailRepository) SetWantedNotifications(ctx *context.Context, notifications *domain.WantedNotification) error {
+	fmt.Print("OOOOO\n")
+	_, err := repository.emails.InsertOne(*ctx, notifications)
+	fmt.Print(err)
+	fmt.Print("OLOLOL\n\n")
 	if err != nil {
 		return err
 	}
