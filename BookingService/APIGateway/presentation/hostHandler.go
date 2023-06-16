@@ -64,6 +64,14 @@ func (handler *HostHandler) GetHostsForRating(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	if len(reservations.Reservations) == 0 {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(contracts.HostsForRatingResponse{
+			Hosts: make([]contracts.HostForRating, 0),
+		})
+		return
+	}
+
 	hosts := make(map[string]float64, len(ratings.Ratings))
 	hostIds := make([]string, 0, len(ratings.Ratings))
 	ratingMap := make(map[string]string, len(ratings.Ratings))

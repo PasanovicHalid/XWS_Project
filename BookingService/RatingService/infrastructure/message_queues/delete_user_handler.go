@@ -34,7 +34,6 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 	reply := &events.DeleteUserReply{}
 	reply.UserInfo = command.UserInfo
 	log.Println(command.Type)
-	log.Println("DeleteUserCommandHandler")
 
 	switch command.Type {
 	case events.DeleteGuestRatings:
@@ -42,11 +41,13 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 		err := handler.ratingService.DeleteAllRatingsMadeByCustomer(command.UserInfo.UserId)
 
 		if err != nil {
+			log.Println("Error deleting guest ratings")
+
 			reply.Type = events.GuestRatingsNotDeleted
 			break
 		}
 
-		reply.Type = events.DeletedGuestPreviousReservations
+		reply.Type = events.UnknownReply
 	default:
 		reply.Type = events.UnknownReply
 	}

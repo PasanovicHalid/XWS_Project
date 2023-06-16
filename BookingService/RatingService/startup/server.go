@@ -38,8 +38,8 @@ func NewServer(config *Configurations) *Server {
 		log.Fatal(err)
 	}
 
-	deleteUserCommandPublisher := server.initPublisher(server.config.DeleteUserCommandSubject)
-	deleteUserReplySubscriber := server.initSubscriber(server.config.DeleteUserReplySubject, QueueGroup)
+	deleteUserCommandSubscriber := server.initSubscriber(server.config.DeleteUserCommandSubject, QueueGroup)
+	deleteUserReplyPublisher := server.initPublisher(server.config.DeleteUserReplySubject)
 
 	ratingRepository := persistance.NewRatingRepository(mongo)
 
@@ -49,7 +49,7 @@ func NewServer(config *Configurations) *Server {
 
 	ratingService := application.NewRatingService(ratingRepository, notificationSender)
 
-	server.deleteUserHandler = server.initDeleteUserHandler(deleteUserCommandPublisher, deleteUserReplySubscriber, ratingService)
+	server.deleteUserHandler = server.initDeleteUserHandler(deleteUserReplyPublisher, deleteUserCommandSubscriber, ratingService)
 
 	server.ratingHandler = presentation.NewRatingHandler(ratingService)
 
