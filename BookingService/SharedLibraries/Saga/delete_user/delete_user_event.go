@@ -11,6 +11,8 @@ const (
 	RollbackGuestPreviousReservations
 	DeleteHostLocationsPreviousReservations
 	RollbackHostLocationsPreviousReservations
+	DeleteGuestRatings
+	RollbackGuestRatings
 	UnknownCommand
 )
 
@@ -30,6 +32,8 @@ const (
 	GuestPreviousReservationsNotDeleted
 	DeletedHostLocationsPreviousReservations
 	HostLocationsPreviousReservationsNotDeleted
+	DeletedGuestRatings
+	GuestRatingsNotDeleted
 	UnknownReply
 )
 
@@ -42,4 +46,5 @@ type DeleteUserEventInfo struct {
 	UserId        string
 	SagaTimestamp int64
 	Role          string
+	Test          bool
 }

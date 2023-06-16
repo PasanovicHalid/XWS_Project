@@ -35,6 +35,8 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 	reply := &events.DeleteUserReply{}
 	reply.UserInfo = command.UserInfo
 
+	log.Println(command.Type)
+
 	switch command.Type {
 	case events.DeleteUserInfo:
 		log.Println("DeleteUserInfo")
@@ -52,6 +54,8 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 	case events.RollbackHostLocations:
 		fallthrough
 	case events.RollbackGuestPreviousReservations:
+		fallthrough
+	case events.RollbackGuestRatings:
 		fallthrough
 	case events.RollbackHostLocationsPreviousReservations:
 		log.Println("Rollback")

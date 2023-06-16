@@ -8,7 +8,7 @@ services:
     container_name: authentification_service
     build:
       context: .
-      dockerfile: ./AuthentificationService/Dockerfile
+      dockerfile: ./AuthentificationService/Dockerfile.debug
     restart: on-failure
     ports:
       - 11001:11001
@@ -169,6 +169,8 @@ services:
       NATS_USER: ${NATS_USER}
       NATS_PASS: ${NATS_PASS}
       NOTIFICATION_SUBJECT: ${NOTIFICATION_SUBJECT}
+      DELETE_USER_COMMAND_SUBJECT: ${DELETE_USER_COMMAND_SUBJECT}
+      DELETE_USER_REPLY_SUBJECT: ${DELETE_USER_REPLY_SUBJECT}
     depends_on:
       rating_db:
         condition: service_healthy

@@ -1,0 +1,203 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    animation: 2s ease-out 0s 1 fadeIn;
+    margin-top: 20px;
+}
+
+.contentTemp {
+    display: flex;
+    height: 90vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    animation: 2s ease-out 0s 1 fadeIn;
+    margin-bottom: 320px;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2vh;
+
+    .image {
+        max-width: 200px;
+        background-color: var(--secondary-bg-color);
+        box-shadow: 4px 4px 4px var(--primary-color);
+        border-radius: 10%;
+
+        img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+        }
+    }
+
+}
+
+.checkboxes-container {
+    display: flex;
+
+}
+
+.example-section {
+    margin: 12px 0;
+}
+
+.example-margin {
+    margin: 0 12px;
+}
+
+ul {
+    list-style-type: none;
+    margin-top: 4px;
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50vw;
+    background-color: var(--secondary-bg-color);
+    box-shadow: 4px 4px 4px var(--primary-color);
+    border-radius: 30px;
+    padding: 10px;
+    padding-bottom: 40px;
+
+    h5 {
+        font-size: 3.5vh;
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 4vh;
+    }
+
+    .inputs {
+        padding-left: 10%;
+        padding-right: 10%;
+
+        mat-form-field {
+            padding-top: 3%;
+            width: 100%;
+
+            input {
+                color: var(--primary-color);
+                font-size: 1.2rem;
+                font-weight: 400;
+            }
+
+            &::ng-deep {
+                .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                    background-color: transparent;
+                }
+            }
+        }
+
+        .inline-items {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+
+        button {
+            width: 100%;
+            background-color: var(--accent-color);
+        }
+    }
+}
+
+::ng-deep {
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+        color: var(--primary-color);
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: var(--primary-color);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.custom-tab .mat-tab-label {
+    color: rgb(66, 54, 54);
+    /* Change label color */
+    border-bottom: none;
+    /* Remove line below label */
+}
+
+.tab-group {
+    background-color: transparent;
+    color: transparent;
+    border-bottom: transparent;
+}
+
+.remove-border-bottom ::ng-deep .mat-tab-header {
+    border-bottom: none;
+}
+
+.table-container {
+    height: 70vh;
+    overflow-y: auto;
+}
+
+.container {
+    border-radius: 20px;
+    background-color: var(--secondary-bg-color);
+    box-shadow: 4px 4px 4px rgba(78, 78, 78, 0.5);
+    margin-bottom: 50px;
+}
+
+.mat-mdc-table {
+    height: inherit !important;
+    border-radius: inherit;
+    overflow: hidden !important;
+    background: inherit;
+}
+
+tr.mat-mdc-row:hover {
+    cursor: pointer !important;
+    background-color: var(--accent-color) !important;
+    transition: 0.5s;
+}
+
+.mat-mdc-paginator {
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+    background-color: inherit;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+.spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+::ng-deep {
+    .mat-mdc-progress-spinner {
+        --mdc-circular-progress-active-indicator-color: var(--accent-color) !important;
+    }
+}

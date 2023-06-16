@@ -60,10 +60,14 @@ func (o *DeleteUserOrchestrator) nextCommandType(reply *events.DeleteUserReply) 
 		return events.DeleteHostLocationsPreviousReservations
 	case events.HostLocationsNotDeleted:
 		return events.RollbackHostLocations
-	case events.GuestPreviousReservationsNotDeleted:
-		return events.RollbackGuestPreviousReservations
 	case events.HostLocationsPreviousReservationsNotDeleted:
 		return events.RollbackHostLocationsPreviousReservations
+	case events.DeletedGuestPreviousReservations:
+		return events.DeleteGuestRatings
+	case events.GuestPreviousReservationsNotDeleted:
+		return events.RollbackGuestPreviousReservations
+	case events.GuestRatingsNotDeleted:
+		return events.RollbackGuestRatings
 	default:
 		return events.UnknownCommand
 	}

@@ -208,3 +208,38 @@ func (h *RatingHandler) GetRatingForAccommodation(ctx context.Context, request *
 		},
 	}, nil
 }
+
+func (h *RatingHandler) GetAllRatingsForAccommodation(ctx context.Context, request *rating_pb.GetAllRatingsForAccommodationRequest) (*rating_pb.GetAllRatingsResponse, error) {
+	ratings, err := h.ratingService.GetAllRatingsForAccommodation(request.Id)
+
+	if err != nil {
+		return &rating_pb.GetAllRatingsResponse{
+			Ratings: nil,
+			RequestResult: &common_pb.RequestResult{
+				Code:    500,
+				Message: err.Error(),
+			},
+		}, nil
+	}
+
+	ratingsResponse := make([]*rating_pb.Rating, 0, len(ratings))
+
+	for _, rating := range ratings {
+		ratingsResponse = append(ratingsResponse, &rating_pb.Rating{
+			Id:              rating.Id,
+			AccommodationId: rating.AccommodationId,
+			UserId:          rating.UserId,
+			Rating:          rating.Rating,
+			HostId:          rating.HostId,
+			TimeIssued:      timestamppb.New(rating.TimeIssued),
+		})
+	}
+
+	return &rating_pb.GetAllRatingsResponse{
+		Ratings: ratingsResponse,
+		RequestResult: &common_pb.RequestResult{
+			Code:    200,
+			Message: "Successfully retrieved all ratings for accommodation.",
+		},
+	}, nil
+}

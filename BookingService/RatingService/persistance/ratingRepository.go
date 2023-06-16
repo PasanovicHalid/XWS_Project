@@ -23,12 +23,12 @@ func NewRatingRepository(client *mongo.Client) *RatingRepository {
 }
 
 func (repository *RatingRepository) GetAllRatingsMadeByCustomer(ctx *context.Context, id string) ([]*domain.Rating, error) {
-	filter := bson.M{"userId": id}
+	filter := bson.M{"userId": id, "deleted": false}
 	return repository.filter(ctx, filter)
 }
 
 func (repository *RatingRepository) GetAllRatingsForHost(ctx *context.Context, id string) ([]*domain.Rating, error) {
-	filter := bson.M{"hostId": id}
+	filter := bson.M{"hostId": id, "deleted": false}
 	return repository.filter(ctx, filter)
 }
 
@@ -47,7 +47,7 @@ func (repository *RatingRepository) CreateRating(ctx *context.Context, rating *d
 func (repository *RatingRepository) UpdateRating(ctx *context.Context, id string, rating float64) error {
 	objId, _ := primitive.ObjectIDFromHex(id)
 
-	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": objId}, bson.M{"$set": bson.M{"rating": rating}})
+	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": objId, "deleted": false}, bson.M{"$set": bson.M{"rating": rating}})
 	if err != nil {
 		return err
 	}
@@ -62,20 +62,32 @@ func (repository *RatingRepository) UpdateRating(ctx *context.Context, id string
 func (repository *RatingRepository) DeleteRating(ctx *context.Context, id string) error {
 	objId, _ := primitive.ObjectIDFromHex(id)
 
-	result, err := repository.ratings.DeleteOne(*ctx, bson.M{"_id": objId})
+	result, err := repository.ratings.UpdateOne(*ctx, bson.M{"_id": objId, "deleted": false}, bson.M{"$set": bson.M{"deleted": true}})
 	if err != nil {
 		return err
 	}
 
-	if result.DeletedCount == 0 {
+	if result.MatchedCount == 0 {
 		return mongo.ErrNoDocuments
 	}
 
 	return nil
 }
 
+func (repository *RatingRepository) DeleteAllRatingsMadeByCustomer(ctx *context.Context, id string) error {
+	filter := bson.M{"userId": id, "deleted": false}
+	update := bson.M{"$set": bson.M{"deleted": true}}
+
+	_, err := repository.ratings.UpdateMany(*ctx, filter, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (repository *RatingRepository) GetAllRatingsForAccommodation(ctx *context.Context, id string) ([]*domain.Rating, error) {
-	filter := bson.M{"accommodationId": id}
+	filter := bson.M{"accommodationId": id, "deleted": false}
 	return repository.filter(ctx, filter)
 }
 

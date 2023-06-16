@@ -154,8 +154,12 @@ func (server *Server) initCustomHandlers() {
 
 	hostHandler := presentation.NewHostHandler(reservationEndpoint, ratingEndpoint, userEndpoint, notificationSender)
 	hostHandler.Init(server.mux)
+
 	accommodationHandler := presentation.NewAccommodationHandler(acommodanceEndpoint, reservationEndpoint, ratingEndpoint)
 	accommodationHandler.Init(server.mux)
+
+	ratingHandler := presentation.NewRatingHandler(ratingEndpoint, userEndpoint)
+	ratingHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

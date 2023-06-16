@@ -7,6 +7,7 @@ import { AuthentificationService } from 'src/app/authentification/services/authe
 import { UpdateUserRequest } from 'src/app/authentification/contracts/requests/update-user-request';
 import { ToastrService } from 'ngx-toastr';
 import { AccomodationService } from 'src/app/authentification/services/accommodation.service';
+import { RatingService } from '../services/rating.service';
 
 @Component({
   selector: 'app-create-reservation',
@@ -18,6 +19,9 @@ export class CreateReservationComponent implements OnInit {
 
   offerId: any;
 
+  dataSource: any;
+  displayedColumns: string[] = ['name', 'rating', 'timeStamp'];
+
 
   userInfo: UpdateUserRequest = new UpdateUserRequest();
   constructor(private reservationService: ReservationsService,
@@ -26,13 +30,23 @@ export class CreateReservationComponent implements OnInit {
     private userService: UserService,
     private authService: AuthentificationService,
     private toastr: ToastrService,
-    private accommodationService: AccomodationService) { }
+    private accommodationService: AccomodationService,
+    private ratingService: RatingService) { }
 
   ngOnInit(): void {
     this.authService.GetIdentityId()
 
     this.offerId = this.route.snapshot.paramMap.get('id');
+    let accommodationId = this.route.snapshot.queryParamMap.get('id');
 
+    this.ratingService.GetAllRatingsForAccommodation(accommodationId).subscribe({
+      next: (response) => {
+        this.dataSource = response.ratings
+      },
+      error: (err) => {
+        this.toastr.error("Something went wrong.")
+      }
+    })
     this.userService.GetUser(this.authService.GetIdentityId()).subscribe({
       next: (response) => {
         if (response.requestResult.code != 200) {
@@ -43,6 +57,7 @@ export class CreateReservationComponent implements OnInit {
       }
     });
   }
+
   createReservation() {
     this.reservation.accommodationOfferId = this.offerId;
     this.reservation.customerId = this.userInfo.identityId;

@@ -35,6 +35,8 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 	reply := &events.DeleteUserReply{}
 	reply.UserInfo = command.UserInfo
 
+	log.Println(command.Type)
+
 	switch command.Type {
 	case events.DeleteGuestPreviousReservations:
 		log.Println("DeleteGuestPreviousReservations")
@@ -80,6 +82,16 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 		}
 
 		reply.Type = events.DeletedHostLocationsPreviousReservations
+	case events.RollbackGuestRatings:
+		log.Println("RollbackGuestRatings")
+
+		err := handler.reservationService.ReverseDeleteReservationOfGuest(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)
+
+		if err != nil {
+			log.Println("Error rolling back guest ratings")
+		}
+
+		reply.Type = events.UnknownReply
 	default:
 		reply.Type = events.UnknownReply
 	}

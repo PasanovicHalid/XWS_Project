@@ -17,10 +17,15 @@ import (
 )
 
 type Server struct {
-	config        *Configurations
-	mux           *runtime.ServeMux
-	ratingHandler *presentation.RatingHandler
+	config            *Configurations
+	mux               *runtime.ServeMux
+	ratingHandler     *presentation.RatingHandler
+	deleteUserHandler *message_queues.DeleteUserCommandHandler
 }
+
+const (
+	QueueGroup = "rating_service"
+)
 
 func NewServer(config *Configurations) *Server {
 	server := &Server{
@@ -33,6 +38,9 @@ func NewServer(config *Configurations) *Server {
 		log.Fatal(err)
 	}
 
+	deleteUserCommandPublisher := server.initPublisher(server.config.DeleteUserCommandSubject)
+	deleteUserReplySubscriber := server.initSubscriber(server.config.DeleteUserReplySubject, QueueGroup)
+
 	ratingRepository := persistance.NewRatingRepository(mongo)
 
 	notificationPublisher := server.initPublisher(server.config.NotificationSubject)
@@ -40,6 +48,8 @@ func NewServer(config *Configurations) *Server {
 	notificationSender := message_queues.NewNotificationSender(notificationPublisher)
 
 	ratingService := application.NewRatingService(ratingRepository, notificationSender)
+
+	server.deleteUserHandler = server.initDeleteUserHandler(deleteUserCommandPublisher, deleteUserReplySubscriber, ratingService)
 
 	server.ratingHandler = presentation.NewRatingHandler(ratingService)
 
@@ -70,4 +80,22 @@ func (server *Server) initPublisher(subject string) saga.Publisher {
 		log.Fatal(err)
 	}
 	return publisher
+}
+
+func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber {
+	subscriber, err := nats.NewNATSSubscriber(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return subscriber
+}
+
+func (server *Server) initDeleteUserHandler(publisher saga.Publisher, subscriber saga.Subscriber, ratingService *application.RatingService) *message_queues.DeleteUserCommandHandler {
+	handler, err := message_queues.NewDeleteUserCommandHandler(ratingService, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return handler
 }

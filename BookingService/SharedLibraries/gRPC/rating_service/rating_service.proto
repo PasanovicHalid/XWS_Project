@@ -54,6 +54,8 @@ service RatingService {
 
     rpc GetRatingForAccommodation (GetRatingForAccommodationRequest) returns (GetRatingForAccommodationResponse) {}
 
+    rpc GetAllRatingsForAccommodation (GetAllRatingsForAccommodationRequest) returns (GetAllRatingsResponse) {}
+
 }
 
 message GetAllRatingsMadeByCustomerRequest {
@@ -115,4 +117,8 @@ message GetRatingForAccommodationRequest {
 message GetRatingForAccommodationResponse {
     common.RequestResult requestResult = 1;
     double rating = 2;
+}
+
+message GetAllRatingsForAccommodationRequest {
+    string id = 1;
 }

@@ -51,6 +51,18 @@ func (service *RatingService) DeleteRating(id string) error {
 	return service.ratingRepository.DeleteRating(&ctx, id)
 }
 
+func (service *RatingService) DeleteAllRatingsMadeByCustomer(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.ratingRepository.DeleteAllRatingsMadeByCustomer(&ctx, id)
+}
+
+func (service *RatingService) GetAllRatingsForAccommodation(id string) ([]*domain.Rating, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.ratingRepository.GetAllRatingsForAccommodation(&ctx, id)
+}
+
 func (service *RatingService) GetAverageRatingForHost(id string) (float64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()

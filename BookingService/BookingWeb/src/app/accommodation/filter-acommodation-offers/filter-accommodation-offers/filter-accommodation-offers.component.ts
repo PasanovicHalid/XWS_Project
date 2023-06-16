@@ -87,6 +87,6 @@ export class FilterAccommodationOffersComponent {
 }
 
 makeReservation(accommodation :any){
-  this.router.navigate(['/create-reservation', accommodation.accommodationOfferId])
+  this.router.navigate(['/create-reservation', accommodation.accommodationOfferId], { queryParams: { id: accommodation.id }})
 }
 }

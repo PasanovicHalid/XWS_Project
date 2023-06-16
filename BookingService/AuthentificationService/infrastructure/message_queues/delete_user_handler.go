@@ -31,6 +31,8 @@ func NewDeleteUserCommandHandler(identityService *application.IdentityService, r
 }
 
 func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserCommand) {
+	log.Println(command.Type)
+
 	switch command.Type {
 	case events.RollbackUserInfo:
 		fallthrough
@@ -39,6 +41,8 @@ func (handler *DeleteUserCommandHandler) handle(command *events.DeleteUserComman
 	case events.RollbackGuestPreviousReservations:
 		fallthrough
 	case events.RollbackHostLocationsPreviousReservations:
+		fallthrough
+	case events.RollbackGuestRatings:
 		log.Println("Rollback")
 
 		err := handler.identityService.RollbackDeleteIdentity(command.UserInfo.UserId, command.UserInfo.SagaTimestamp)

@@ -13,4 +13,5 @@ type IRatingRepository interface {
 	CreateRating(ctx *context.Context, rating *domain.Rating) error
 	UpdateRating(ctx *context.Context, id string, rating float64) error
 	DeleteRating(ctx *context.Context, id string) error
+	DeleteAllRatingsMadeByCustomer(ctx *context.Context, id string) error
 }
