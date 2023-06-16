@@ -83,6 +83,16 @@ func (service *UserService) GetAllUsersByIdList(idList []string) ([]*domain.User
 func (service *UserService) ChangeDistinguishedStatus(id string, status bool) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+	emailService := service.initEmailServiceClient()
+	request := email_pb.Empty{
+		Id: "bezbednost.projekat.2023@gmail.com",
+	}
+	_, err := emailService.ProminentHostStatusNotification(ctx, &request)
+	fmt.Print(err)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
 	return service.userRepository.ChangeDistinguishedStatus(&ctx, id, status)
 }
 

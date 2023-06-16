@@ -11,6 +11,7 @@ import (
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/notifications"
 	common_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/common"
 	reservation_pb "github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/gRPC/reservation_service"
 )
@@ -89,6 +90,17 @@ func (handler *ReservationHandler) CreateReservation(ctx context.Context, reques
 		return nil, err
 	}
 
+	notificationInfo := notifications.NotifyUserEventInfo{
+		UserId: "bezbednost.projekat2023@gmail.com",
+		Role:   "Host",
+	}
+
+	notification := notifications.NotifyUserNotification{
+		Type:     0,
+		UserInfo: notificationInfo,
+	}
+	handler.notificationSender.SendNotification(&notification)
+
 	return &reservation_pb.CreateReservationResponse{
 		RequestResult: &common_pb.RequestResult{
 			Code: 200,
@@ -144,6 +156,16 @@ func (handler *ReservationHandler) CreateReservationAutomaticly(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+	notificationInfo := notifications.NotifyUserEventInfo{
+		UserId: "bezbednost.projekat2023@gmail.com",
+		Role:   "Host",
+	}
+
+	notification := notifications.NotifyUserNotification{
+		Type:     0,
+		UserInfo: notificationInfo,
+	}
+	handler.notificationSender.SendNotification(&notification)
 
 	return &reservation_pb.CreateReservationResponse{
 		RequestResult: &common_pb.RequestResult{
@@ -223,6 +245,17 @@ func (handler *ReservationHandler) AcceptReservation(ctx context.Context, reques
 		},
 	}
 
+	notificationInfo := notifications.NotifyUserEventInfo{
+		UserId: "bezbednost.projekat2023@gmail.com",
+		Role:   "Host",
+	}
+
+	notification := notifications.NotifyUserNotification{
+		Type:     5,
+		UserInfo: notificationInfo,
+	}
+	handler.notificationSender.SendNotification(&notification)
+
 	return response, nil
 }
 
@@ -243,6 +276,17 @@ func (handler *ReservationHandler) RejectReservation(ctx context.Context, reques
 			Code: 200,
 		},
 	}
+
+	notificationInfo := notifications.NotifyUserEventInfo{
+		UserId: "bezbednost.projekat2023@gmail.com",
+		Role:   "Host",
+	}
+
+	notification := notifications.NotifyUserNotification{
+		Type:     5,
+		UserInfo: notificationInfo,
+	}
+	handler.notificationSender.SendNotification(&notification)
 
 	return response, nil
 }
@@ -279,6 +323,17 @@ func (handler *ReservationHandler) CancelReservation(ctx context.Context, reques
 			}
 		}
 	}
+
+	notificationInfo := notifications.NotifyUserEventInfo{
+		UserId: "bezbednost.projekat2023@gmail.com",
+		Role:   "Host",
+	}
+
+	notification := notifications.NotifyUserNotification{
+		Type:     1,
+		UserInfo: notificationInfo,
+	}
+	handler.notificationSender.SendNotification(&notification)
 
 	// Prepare the response
 	response := &reservation_pb.CancelReservationResponse{

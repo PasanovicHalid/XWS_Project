@@ -3,6 +3,7 @@ package application
 import (
 	"context"
 	"fmt"
+	"net/smtp"
 	"time"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/EmailService/application/common/interfaces/persistance"
@@ -88,4 +89,96 @@ func (service *EmailService) SetWantedNotifications(request *email_pb.UpdateWant
 		Code:    200,
 		Message: "USPESNO",
 	}, nil
+}
+
+/*
+https://www.courier.com/guides/golang-send-email/
+*/
+func (service *EmailService) SendEmail(ctx context.Context, request *email_pb.EmailRequest) (*common_pb.RequestResult, error) {
+
+	from := "bezbednost.projekat.2023@gmail.com"
+	password := "oyyucjesoapbgwlv"
+
+	//change address
+	toEmailAddress := request.Email
+	to := []string{toEmailAddress}
+	host := "smtp.gmail.com"
+	port := "587"
+	address := host + ":" + port
+
+	//change
+	subject := request.Subject
+	body := request.Body
+	message := []byte(subject + body)
+	auth := smtp.PlainAuth("", from, password, host)
+
+	err := smtp.SendMail(address, auth, from, to, message)
+	if err != nil {
+		panic(err)
+	}
+
+	return &common_pb.RequestResult{
+		Code:    200,
+		Message: "Email sent successfully",
+	}, nil
+}
+
+func (service *EmailService) CreatedReservationNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Reservation Created\n",
+		Body:    "Someone created reservation. Please check your application.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
+}
+
+func (service *EmailService) AccommodationRatingGivenNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Accommodation rating given\n",
+		Body:    "Someone rated your accommodation.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
+}
+
+func (service *EmailService) CanceledReservationNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Reservation Canceled\n",
+		Body:    "Someone canceled reservation. Please check your application.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
+}
+
+func (service *EmailService) ProminentHostStatusNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Prominent host status changed\n",
+		Body:    "Your host status is changed.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
+}
+
+func (service *EmailService) HostRatingGivenNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Host Rating Given\n",
+		Body:    "Someone gave you rating. Please check your application.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
+}
+
+func (service *EmailService) HostResponseOnAccommodationRequestNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
+	emailReq := &email_pb.EmailRequest{
+		Email:   request.Id,
+		Subject: "Host response on accommodaton request\n",
+		Body:    "Host gave response on your accomodation request.",
+	}
+
+	return service.SendEmail(context.Background(), emailReq)
 }

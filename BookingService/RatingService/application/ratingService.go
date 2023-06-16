@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/PasanovicHalid/XWS_Project/BookingService/SharedLibraries/Saga/notifications"
+
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/infrastructure/message_queues"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/application/common/interfaces/persistance"
 	"github.com/PasanovicHalid/XWS_Project/BookingService/RatingService/domain"
@@ -36,6 +38,32 @@ func (service *RatingService) GetAllRatingsForHost(id string) ([]*domain.Rating,
 func (service *RatingService) CreateRating(rating *domain.Rating) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+	//accommodation rated
+	if rating.HostId == "" {
+		notificationInfo := notifications.NotifyUserEventInfo{
+			UserId: "bezbednost.projekat2023@gmail.com",
+			Role:   "Host",
+		}
+
+		notification := notifications.NotifyUserNotification{
+			Type:     3,
+			UserInfo: notificationInfo,
+		}
+		service.notificationSender.SendNotification(&notification)
+	} else {
+		//host rated
+		notificationInfo := notifications.NotifyUserEventInfo{
+			UserId: "bezbednost.projekat2023@gmail.com",
+			Role:   "Host",
+		}
+
+		notification := notifications.NotifyUserNotification{
+			Type:     2,
+			UserInfo: notificationInfo,
+		}
+		service.notificationSender.SendNotification(&notification)
+	}
+
 	return service.ratingRepository.CreateRating(&ctx, rating)
 }
 

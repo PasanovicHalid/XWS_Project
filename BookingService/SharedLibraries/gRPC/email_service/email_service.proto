@@ -44,7 +44,9 @@ message UpdateWantedNotificationsRequest {
     bool hostResponded = 7;
 }
 
-message Empty{}
+message Empty{
+    string id = 1;
+}
 
 message CreateNotificationSettingsRequest {
     string id = 1;
