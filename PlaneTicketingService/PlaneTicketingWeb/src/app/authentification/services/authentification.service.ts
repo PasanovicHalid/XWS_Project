@@ -31,6 +31,30 @@ export class AuthentificationService {
                       .pipe(catchError(this.handleError))
   }
 
+  public GetUserInfo(): Observable<any> {
+    return this.http.get(
+                      '/ticketing-api/users/info',
+                      {
+                        headers: this.headers,
+                      },
+                      )
+                      .pipe(catchError(this.handleError))
+  }
+
+  public GenerateApiKey(duration: any, forever: boolean): Observable<any> {
+    return this.http.post(
+                      '/ticketing-api/users/generate-api-key',
+                      {
+                        duration: duration,
+                        durationForever: forever
+                      },
+                      {
+                        headers: this.headers,
+                      },
+                      )
+                      .pipe(catchError(this.handleError))
+  }
+
   public SignUpCustomer(signUpRequest: SignUpRequest): Observable<unknown> {
     return this.http.post(
                       '/ticketing-api/users/signup/customer',

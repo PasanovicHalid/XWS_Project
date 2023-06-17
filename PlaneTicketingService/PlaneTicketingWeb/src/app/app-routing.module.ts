@@ -7,6 +7,7 @@ import { AdminHomepageComponent } from './home-pages/admin-homepage/admin-homepa
 import { CustomerHomepageComponent } from './home-pages/customer-homepage/customer-homepage.component';
 import { DefaultHomepageComponent } from './home-pages/default-homepage/default-homepage.component';
 import { SearchFlightsComponent } from './flight/search-flights/search-flights.component';
+import { UserInfoComponent } from './authentification/user-info/user-info.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'search-flights', component: SearchFlightsComponent},
   { path: 'admin-homepage', component: AdminHomepageComponent, canActivate: [AdminGuard] },
   { path: 'customer-homepage', component: CustomerHomepageComponent, canActivate: [CustomerGuard] },
+  { path: 'user-info', component: UserInfoComponent, canActivate: [CustomerGuard] },
   { path: '', component: DefaultHomepageComponent },
 ];
 

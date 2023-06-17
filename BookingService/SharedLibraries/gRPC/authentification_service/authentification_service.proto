@@ -53,6 +53,13 @@ service AuthenticateService {
             get: "/api/authenticate/getPublicKey"
         };
     }
+
+    rpc UpdateApiKey(UpdateApiKeyRequest) returns (UpdateApiKeyResponse) {
+        option (google.api.http) = {
+            put: "/api/authenticate/updateApiKey"
+            body: "*"
+        };
+    }
 }
 
 message RequestResult {
@@ -123,5 +130,14 @@ message RemoveRequest {
 }
 
 message RemoveResponse {
+    common.RequestResult requestResult = 1;
+}
+
+message UpdateApiKeyRequest {
+    string identityId = 1;
+    string apiKey = 2;
+}
+
+message UpdateApiKeyResponse {
     common.RequestResult requestResult = 1;
 }

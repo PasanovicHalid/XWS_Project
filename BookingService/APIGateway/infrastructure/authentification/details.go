@@ -6,6 +6,7 @@ type SignedDetails struct {
 	Id       string
 	Username string
 	Role     string
+	ApiKey   string
 	jwt.StandardClaims
 }
 

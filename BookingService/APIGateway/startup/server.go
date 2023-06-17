@@ -85,6 +85,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/rating/get-accommodations-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/rating/get-hosts-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/accommodation/get-filtered-accommodations", mw.MiddlewareContentTypeSet(mw.MiddlewareDecodeRequestBody(server.mux)))
+	final_mux.Handle("/api/authenticate/updateApiKey", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAddIdentityIdToRequest(server.mux, "identityId"), jwtService, server.keyService)))
 
 	final_mux.Handle("/api/notification/updateWantedNotifications", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/notification/sendEmail", mw.MiddlewareContentTypeSet(server.mux))

@@ -1,5 +1,5 @@
 <div class="content">
-    <div>
+    <div class="info-container">
         <div *ngIf="distinguishedHost" class="card-container">
             <div class="card">
                 Distinguished Host
@@ -30,10 +30,18 @@
                     <input [(ngModel)]="this.userInfo.address" matInput placeholder="Address">
                 </mat-form-field>
             </div>
-        </div>
+            <div class="inline-items" *ngIf="isGuest">
+                <mat-form-field appearance="outline">
+                    <mat-label>Api Key</mat-label>
+                    <input [(ngModel)]="this.apiKey" matInput placeholder="Api Key">
+                </mat-form-field>
+                <button class="add-button" mat-raised-button color="primary" (click)="SaveApiKey()">Add</button>
+            </div>
+        </div>    
         <div class="buttons">
-            <button mat-raised-button color="primary" (click)="Save()" >Save</button>
-            <button class="delete-button" mat-raised-button color="primary" (click)="Delete()" >Delete your Account</button>
+            <button mat-raised-button color="primary" (click)="Save()">Save</button>
+            <button class="delete-button" mat-raised-button color="primary" (click)="Delete()">Delete your
+                Account</button>
         </div>
     </div>
 </div>

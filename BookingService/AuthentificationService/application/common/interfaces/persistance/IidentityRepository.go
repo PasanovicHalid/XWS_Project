@@ -20,4 +20,5 @@ type IIdentityRepository interface {
 	DeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) (string, error)
 	RollbackDeleteIdentity(ctx *context.Context, id string, sagaTimestamp int64) error
 	CheckIfUsernameExists(ctx *context.Context, username string) (bool, error)
+	UpdateApiKey(ctx *context.Context, id string, apiKey string) error
 }

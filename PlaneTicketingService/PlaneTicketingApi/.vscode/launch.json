@@ -10,6 +10,14 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}/"
+        },
+        {
+            "name": "Go Containerized Debug",
+            "type": "go",
+            "request": "attach",
+            "mode": "remote",
+            "port": 10000,
+            "host": "localhost"
         }
     ]
 }

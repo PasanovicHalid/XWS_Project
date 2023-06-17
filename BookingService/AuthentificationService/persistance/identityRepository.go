@@ -132,6 +132,28 @@ func (repository *IdentityRepository) CheckIfUsernameExists(ctx *context.Context
 	return true, err
 }
 
+func (repository *IdentityRepository) UpdateApiKey(ctx *context.Context, id string, apiKey string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return err
+	}
+
+	filter := bson.D{{"_id", objectId}, {"deleted", false}}
+	update := bson.D{{"$set", bson.D{{"api_key", apiKey}}}}
+	result, err := repository.identities.UpdateOne(*ctx, filter, update)
+
+	if err != nil {
+		return err
+	}
+
+	if result.ModifiedCount == 0 {
+		return persistance.ErrorIdentityNotFound
+	}
+
+	return nil
+}
+
 func (repository *IdentityRepository) filter(ctx *context.Context, filter interface{}) ([]*domain.Identity, error) {
 	cursor, err := repository.identities.Find(*ctx, filter)
 	defer cursor.Close(*ctx)

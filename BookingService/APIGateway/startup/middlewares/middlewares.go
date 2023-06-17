@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -124,15 +124,50 @@ func MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(next http.Handler, f
 
 		fields := make(map[string]interface{})
 
-		bodyBytes, _ := ioutil.ReadAll(h.Body)
+		bodyBytes, _ := io.ReadAll(h.Body)
 		err := json.Unmarshal(bodyBytes, &fields)
-		h.Body = ioutil.NopCloser(strings.NewReader(string(bodyBytes)))
+		h.Body = io.NopCloser(strings.NewReader(string(bodyBytes)))
 		h.Body.Close()
 
 		if err != nil {
 			http.Error(rw, "Something went wrong", http.StatusInternalServerError)
 			return
 		}
+
+		if jwt_claims.Id != fields[fieldName] {
+			http.Error(rw, "Use id of your profile", http.StatusBadRequest)
+			return
+		}
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func MiddlewareAddIdentityIdToRequest(next http.Handler, fieldName string) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		jwt_claims := h.Context().Value(JwtContent{}).(*authentification.SignedDetails)
+
+		fields := make(map[string]interface{})
+
+		bodyBytes, _ := io.ReadAll(h.Body)
+		err := json.Unmarshal(bodyBytes, &fields)
+
+		if err != nil {
+			http.Error(rw, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+
+		fields[fieldName] = jwt_claims.Id
+
+		fieldsJson, err := json.Marshal(fields)
+
+		if err != nil {
+			http.Error(rw, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+
+		h.Body = io.NopCloser(strings.NewReader(string(fieldsJson)))
+
+		h.Body.Close()
 
 		if jwt_claims.Id != fields[fieldName] {
 			http.Error(rw, "Use id of your profile", http.StatusBadRequest)

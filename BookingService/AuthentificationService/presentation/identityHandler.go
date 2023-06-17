@@ -217,3 +217,25 @@ func (handler *IdentityHandler) Remove(ctx context.Context, request *auth_pb.Rem
 		},
 	}, nil
 }
+
+func (handler *IdentityHandler) UpdateApiKey(ctx context.Context, request *auth_pb.UpdateApiKeyRequest) (*auth_pb.UpdateApiKeyResponse, error) {
+	err := handler.identityService.UpdateApiKey(request.IdentityId, request.ApiKey)
+
+	if err != nil {
+		if err == persistance.ErrorIdentityNotFound {
+			return &auth_pb.UpdateApiKeyResponse{
+				RequestResult: &common_pb.RequestResult{
+					Code:    400,
+					Message: "Invalid identity id",
+				},
+			}, nil
+		}
+		return nil, err
+	}
+
+	return &auth_pb.UpdateApiKeyResponse{
+		RequestResult: &common_pb.RequestResult{
+			Code: 200,
+		},
+	}, nil
+}

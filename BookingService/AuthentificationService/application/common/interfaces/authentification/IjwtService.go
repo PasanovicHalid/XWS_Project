@@ -6,6 +6,7 @@ type SignedDetails struct {
 	Id       string
 	Username string
 	Role     string
+	ApiKey   string
 	jwt.StandardClaims
 }
 
@@ -17,6 +18,6 @@ const (
 )
 
 type IJwtService interface {
-	GenerateToken(id string, username string, role string) (string, error)
+	GenerateToken(id string, username string, role string, apiKey string) (string, error)
 	ValidateToken(token string) (*SignedDetails, int)
 }

@@ -81,7 +81,7 @@ func (service *IdentityService) RegisterIdentity(identity *domain.Identity) (jwt
 		return
 	}
 
-	return service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role)
+	return service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role, identity.ApiKey)
 }
 
 func (service *IdentityService) Login(username string, password string) (jwtToken string, err error) {
@@ -97,7 +97,7 @@ func (service *IdentityService) Login(username string, password string) (jwtToke
 		return jwtToken, persistance.ErrorInvalidPassword
 	}
 
-	jwtToken, err = service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role)
+	jwtToken, err = service.jwtService.GenerateToken(identity.Id.Hex(), identity.Username, identity.Role, identity.ApiKey)
 
 	if err != nil {
 		return jwtToken, err
@@ -160,4 +160,10 @@ func (service *IdentityService) ChangeUsername(oldUsername string, password stri
 	identity.Username = newUsername
 
 	return service.identityRepository.UpdateIdentity(&ctx, identity)
+}
+
+func (service *IdentityService) UpdateApiKey(identityId string, apiKey string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	return service.identityRepository.UpdateApiKey(&ctx, identityId, apiKey)
 }

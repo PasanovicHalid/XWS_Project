@@ -21,7 +21,7 @@ func NewJwtService(keyRepository persistance.IKeyRepository) *JwtService {
 	}
 }
 
-func (jwtService *JwtService) GenerateToken(id string, username string, role string) (string, error) {
+func (jwtService *JwtService) GenerateToken(id string, username string, role string, apiKey string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
@@ -33,6 +33,7 @@ func (jwtService *JwtService) GenerateToken(id string, username string, role str
 			ExpiresAt: time.Now().UTC().Add(time.Hour * time.Duration(24)).Unix(),
 			Issuer:    "test",
 		},
+		ApiKey: apiKey,
 	}
 
 	keyPair, err := jwtService.keyRepository.GetKeyPair(&ctx)

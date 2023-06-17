@@ -1,0 +1,37 @@
+<div class="text-center content">
+    <div class="form-signin w-100 m-auto">
+        <div>
+            <img class="mb-4" src="../../../assets/plane-image.png" alt="" width="70">
+            <h1 class="h3 mb-4 fw-normal">User Info</h1>
+
+            <div class="form-floating">
+                <input type="email" disabled class="form-control" id="floatingInput" [(ngModel)]="userInfo.identity.username" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" id="floatingName" placeholder="Name" [(ngModel)]="userInfo.firstname">
+                <label for="floatingName">Name</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" id="floatingSurname" placeholder="Surname" [(ngModel)]="userInfo.lastname">
+                <label for="floatingSurname">Surname</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" id="floatingApiKey" placeholder="Api Key" [(ngModel)]="userInfo.identity.apiKey">
+                <label for="floatingApiKey">Api key</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" type="datetime-local" id="floatingDate" placeholder="Api Key duration" [(ngModel)]="userInfo.identity.apiKeyDuration">
+                <label for="floatingDate">Api key</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [(ngModel)]="apiKeyForever">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Duration forever
+                </label>
+              </div>
+            <button class="w-100 btn btn-lg btn-primary mt-2" type="submit" (click)="GenerateApiKey()">Generate Key</button>
+            <p class="mt-3 mb-3 text-body-secondary">&copy;Ticketing 2023–2023</p>
+        </div>
+    </div>
+</div>

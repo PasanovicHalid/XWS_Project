@@ -1,12 +1,15 @@
 .content {
     height: 100%;
 
+    .info-container{
+        padding-top: 3%;
+    }
+
     .inputs {
         padding-left: 20px;
         padding-right: 20px;
 
         mat-form-field {
-            padding-top: 3%;
             width: 100%;
 
             input {
@@ -23,10 +26,17 @@
         }
 
         .inline-items {
+            padding-top: 1.5%;
             display: flex;
             justify-content: space-between;
             gap: 20px;
         }
+
+        .add-button {
+            height: 56px;
+            background-color: var(--accent-color);
+        }
+
     }
 
     .card-container {

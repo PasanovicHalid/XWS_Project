@@ -15,6 +15,8 @@ export class UserInfoComponent implements OnInit {
   userInfo : UpdateUserRequest = new UpdateUserRequest();
   identityId : string = "";
   distinguishedHost : boolean = false;
+  apiKey : string = "";
+  isGuest : boolean = false;
 
   constructor(private userService : UserService,
               private authService : AuthentificationService,
@@ -23,6 +25,8 @@ export class UserInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.identityId = this.authService.GetIdentityId()
+    this.isGuest = this.authService.IsGuest()
+    this.apiKey = this.authService.GetApiKey()
 
     this.userService.GetUser(this.identityId).subscribe({
       next: (response) => {
@@ -67,6 +71,23 @@ export class UserInfoComponent implements OnInit {
     this.authService.DeleteAccount(this.identityId).subscribe({
       next: (response) => {
         this.toastr.success("Successfully deleted user")
+        this.authService.Logout()
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.toastr.error("Something went wrong.")
+      }
+    });
+  }
+
+  public SaveApiKey() {
+    this.authService.UpdateApiKey(this.apiKey).subscribe({
+      next: (response) => {
+        if(response.requestResult.code != 200){
+          this.toastr.error(response.requestResult.message)
+          return
+        }
+        this.toastr.success("Successfully updated Api Key")
         this.authService.Logout()
         this.router.navigate(['/']);
       },

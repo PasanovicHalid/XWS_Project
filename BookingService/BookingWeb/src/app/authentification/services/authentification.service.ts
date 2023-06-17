@@ -11,7 +11,6 @@ import { ChangeUsernameRequest } from '../contracts/requests/change-username-req
   providedIn: 'root'
 })
 export class AuthentificationService {
-
   headers: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
   });
@@ -73,6 +72,18 @@ export class AuthentificationService {
     ).pipe(catchError(this.handleError))
   }
 
+  public UpdateApiKey(apiKey: string) : Observable<any> {
+    return this.http.put(
+      this.basePath + 'updateApiKey',
+      {
+        apiKey : apiKey
+      },
+      {
+        headers: this.headers,
+      },
+    ).pipe(catchError(this.handleError))
+  }
+
   public AddTokenWithInfoToLocalStorage(token: string): void | null {
     let tokenContent = this.DecodeToken(token)
 
@@ -84,6 +95,7 @@ export class AuthentificationService {
     localStorage.setItem("identityId", tokenContent.Id)
     localStorage.setItem("role", tokenContent.Role)
     localStorage.setItem("usename", tokenContent.Username)
+    localStorage.setItem("apiKey", tokenContent.ApiKey)
   }
 
   public IsHost(): boolean {
@@ -96,6 +108,10 @@ export class AuthentificationService {
 
   public GetIdentityId(): string {
     return localStorage.getItem("identityId") ?? ""
+  }
+
+  GetApiKey(): string {
+    return localStorage.getItem("apiKey") ?? ""
   }
 
   public IsLoggedIn(): boolean {

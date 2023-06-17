@@ -2,17 +2,23 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"planeTicketing/constants"
 	"planeTicketing/contracts"
 	"planeTicketing/database"
+	"planeTicketing/middleware"
 	"planeTicketing/model"
 	"planeTicketing/services"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+type ApiKeyContent struct{}
 
 type UserControllerDependecies struct {
 	UserCollection *database.DatabaseCollection
@@ -33,10 +39,21 @@ func SetupUserControllerRoutes(router *mux.Router) {
 	loginRouter.HandleFunc("/users/login", Login)
 	loginRouter.Use(MiddlewareLoginDeserialization)
 
+	userInfoRouter := router.Methods(http.MethodGet).Subrouter()
+	userInfoRouter.HandleFunc("/users/info", GetUserInfo)
+	userInfoRouter.Use(middleware.MiddlewareAuthentication)
+	userInfoRouter.Use(MiddlewareUserInfoDeserialization)
+
+	apiKeyRouter := router.Methods(http.MethodPost).Subrouter()
+	apiKeyRouter.HandleFunc("/users/generate-api-key", GenerateApiKey)
+	apiKeyRouter.Use(middleware.MiddlewareAuthentication)
+	apiKeyRouter.Use(MiddlewareApiKeyGenerationDeserialization)
+
 	getRouter := router.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("test"))
 	})
+	getRouter.Use(MiddlewareApiKeyAuthorization)
 }
 
 func SignUpCustomer(rw http.ResponseWriter, h *http.Request) {
@@ -132,7 +149,7 @@ func Login(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	token, err := services.GenerateToken(foundIdentity.Identity.Username, foundIdentity.Firstname, foundIdentity.Lastname, foundIdentity.Identity.Role, foundIdentity.Identity.Id.String())
+	token, err := services.GenerateToken(foundIdentity.Identity.Username, foundIdentity.Firstname, foundIdentity.Lastname, foundIdentity.Identity.Role, foundIdentity.Identity.Id.Hex())
 
 	if err != nil {
 		http.Error(rw, "Something failed when generating token", http.StatusInternalServerError)
@@ -142,6 +159,140 @@ func Login(rw http.ResponseWriter, h *http.Request) {
 
 	rw.WriteHeader(http.StatusOK)
 	rw.Write([]byte(token))
+}
+
+func GetUserInfo(rw http.ResponseWriter, h *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+
+	userInfoContract := h.Context().Value(KeyProduct{}).(*contracts.UserInfoContract)
+
+	userId, _ := primitive.ObjectIDFromHex(userInfoContract.Id)
+
+	var foundIdentity model.User
+
+	err := UserController.UserCollection.Collection.FindOne(ctx, bson.M{"_id": userId}).Decode(&foundIdentity)
+	defer cancel()
+
+	if err != nil {
+		http.Error(rw, "Something failed when getting user info", http.StatusInternalServerError)
+		UserController.UserCollection.Logger.Panic(err)
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	json.NewEncoder(rw).Encode(foundIdentity)
+}
+
+func GenerateApiKey(rw http.ResponseWriter, h *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+
+	apiKeyGeneration := h.Context().Value(KeyProduct{}).(*contracts.ApiKeyGenerationContract)
+
+	apiKey := services.GenerateApiKey(128)
+	var apiKeyDuration time.Time
+
+	if apiKeyGeneration.DurationForever {
+		apiKeyDuration = time.Now().Add(time.Hour * 24 * 100000)
+	} else {
+		var err error
+		apiKeyDuration, err = time.Parse(time.RFC3339, apiKeyGeneration.Duration)
+
+		if err != nil {
+			http.Error(rw, "Something failed when generating Token", http.StatusInternalServerError)
+			UserController.UserCollection.Logger.Panic(err)
+			return
+		}
+	}
+
+	userId, _ := primitive.ObjectIDFromHex(apiKeyGeneration.UserId)
+
+	result, err := UserController.UserCollection.Collection.UpdateOne(ctx, bson.M{"_id": userId}, bson.M{"$set": bson.M{"apiKey": apiKey, "apiKeyDuration": apiKeyDuration}})
+	defer cancel()
+
+	if err != nil {
+		http.Error(rw, "Something failed when generating Token", http.StatusInternalServerError)
+		UserController.UserCollection.Logger.Panic(err)
+		return
+	}
+
+	if result.MatchedCount == 0 {
+		http.Error(rw, "Something failed when generating Token", http.StatusInternalServerError)
+		UserController.UserCollection.Logger.Panic("No user found with this id")
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
+}
+
+func MiddlewareUserInfoDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		userInfoContract := &contracts.UserInfoContract{}
+		jwtContent := h.Context().Value(middleware.JwtContent{}).(*services.SignedDetails)
+
+		userInfoContract.Id = jwtContent.Uid
+
+		ctx := context.WithValue(h.Context(), KeyProduct{}, userInfoContract)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func MiddlewareApiKeyGenerationDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		apiKeyGenerationContract := &contracts.ApiKeyGenerationContract{}
+		jwtContent := h.Context().Value(middleware.JwtContent{}).(*services.SignedDetails)
+
+		err := apiKeyGenerationContract.FromJSON(h.Body)
+
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			UserController.UserCollection.Logger.Panic(err)
+			return
+		}
+
+		apiKeyGenerationContract.UserId = jwtContent.Uid
+
+		ctx := context.WithValue(h.Context(), KeyProduct{}, apiKeyGenerationContract)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func MiddlewareApiKeyAuthorization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		api_bearer := h.Header.Get("APIKey")
+
+		parts := strings.Split(api_bearer, "Bearer ")
+
+		if len(parts) < 2 {
+			http.Error(rw, "Token not present", http.StatusBadRequest)
+			return
+		}
+
+		apiKey := parts[1]
+
+		var foundIdentity model.User
+
+		err := UserController.UserCollection.Collection.FindOne(h.Context(), bson.M{"apiKey": apiKey}).Decode(&foundIdentity)
+
+		if err != nil {
+			http.Error(rw, "Unauthorized", http.StatusInternalServerError)
+			UserController.UserCollection.Logger.Panic(err)
+			return
+		}
+
+		if foundIdentity.Identity.ApiKeyDuration.Before(time.Now().UTC()) {
+			http.Error(rw, "Token Expired", http.StatusUnauthorized)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), ApiKeyContent{}, &foundIdentity)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
 }
 
 func MiddlewareSignUpDeserialization(next http.Handler) http.Handler {

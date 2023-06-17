@@ -33,10 +33,7 @@ export class TicketPurchaseComponent implements OnInit{
   }
 
   purchase(id: any){
-    this.customerId = localStorage.getItem("userId");
-    let id1 = this.customerId.substring(this.customerId.indexOf("(") + 2, this.customerId.indexOf(")") - 1);
-    console.log(id1);
-    this.ticket.CustomerId = id1;
+    this.ticket.CustomerId = localStorage.getItem("userId") ?? ""
     this.ticket.FlightId=this.flightId;
     console.log(this.numOfTickets)
     this.ticket.NumberOfPurchasedTickets=this.numOfTickets;

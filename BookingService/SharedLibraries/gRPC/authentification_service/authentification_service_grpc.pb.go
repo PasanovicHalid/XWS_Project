@@ -26,6 +26,7 @@ const (
 	AuthenticateService_ChangeUsername_FullMethodName        = "/authenticate.AuthenticateService/ChangeUsername"
 	AuthenticateService_GetIdentityByUsername_FullMethodName = "/authenticate.AuthenticateService/GetIdentityByUsername"
 	AuthenticateService_GetPublicKey_FullMethodName          = "/authenticate.AuthenticateService/GetPublicKey"
+	AuthenticateService_UpdateApiKey_FullMethodName          = "/authenticate.AuthenticateService/UpdateApiKey"
 )
 
 // AuthenticateServiceClient is the client API for AuthenticateService service.
@@ -39,6 +40,7 @@ type AuthenticateServiceClient interface {
 	ChangeUsername(ctx context.Context, in *ChangeUsernameRequest, opts ...grpc.CallOption) (*ChangeUsernameResponse, error)
 	GetIdentityByUsername(ctx context.Context, in *GetIdentityByUsernameRequest, opts ...grpc.CallOption) (*GetIdentityByUsernameResponse, error)
 	GetPublicKey(ctx context.Context, in *GetPublicKeyRequest, opts ...grpc.CallOption) (*GetPublicKeyResponse, error)
+	UpdateApiKey(ctx context.Context, in *UpdateApiKeyRequest, opts ...grpc.CallOption) (*UpdateApiKeyResponse, error)
 }
 
 type authenticateServiceClient struct {
@@ -112,6 +114,15 @@ func (c *authenticateServiceClient) GetPublicKey(ctx context.Context, in *GetPub
 	return out, nil
 }
 
+func (c *authenticateServiceClient) UpdateApiKey(ctx context.Context, in *UpdateApiKeyRequest, opts ...grpc.CallOption) (*UpdateApiKeyResponse, error) {
+	out := new(UpdateApiKeyResponse)
+	err := c.cc.Invoke(ctx, AuthenticateService_UpdateApiKey_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticateServiceServer is the server API for AuthenticateService service.
 // All implementations must embed UnimplementedAuthenticateServiceServer
 // for forward compatibility
@@ -123,6 +134,7 @@ type AuthenticateServiceServer interface {
 	ChangeUsername(context.Context, *ChangeUsernameRequest) (*ChangeUsernameResponse, error)
 	GetIdentityByUsername(context.Context, *GetIdentityByUsernameRequest) (*GetIdentityByUsernameResponse, error)
 	GetPublicKey(context.Context, *GetPublicKeyRequest) (*GetPublicKeyResponse, error)
+	UpdateApiKey(context.Context, *UpdateApiKeyRequest) (*UpdateApiKeyResponse, error)
 	mustEmbedUnimplementedAuthenticateServiceServer()
 }
 
@@ -150,6 +162,9 @@ func (UnimplementedAuthenticateServiceServer) GetIdentityByUsername(context.Cont
 }
 func (UnimplementedAuthenticateServiceServer) GetPublicKey(context.Context, *GetPublicKeyRequest) (*GetPublicKeyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublicKey not implemented")
+}
+func (UnimplementedAuthenticateServiceServer) UpdateApiKey(context.Context, *UpdateApiKeyRequest) (*UpdateApiKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApiKey not implemented")
 }
 func (UnimplementedAuthenticateServiceServer) mustEmbedUnimplementedAuthenticateServiceServer() {}
 
@@ -290,6 +305,24 @@ func _AuthenticateService_GetPublicKey_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticateService_UpdateApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticateServiceServer).UpdateApiKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticateService_UpdateApiKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticateServiceServer).UpdateApiKey(ctx, req.(*UpdateApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticateService_ServiceDesc is the grpc.ServiceDesc for AuthenticateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +357,10 @@ var AuthenticateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPublicKey",
 			Handler:    _AuthenticateService_GetPublicKey_Handler,
+		},
+		{
+			MethodName: "UpdateApiKey",
+			Handler:    _AuthenticateService_UpdateApiKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

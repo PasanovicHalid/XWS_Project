@@ -19,9 +19,7 @@ export class TicketsComponent  implements OnInit{
 
   ngOnInit(): void {
     this.customerId = localStorage.getItem("userId");
-    let id1 = this.customerId.substring(this.customerId.indexOf("(") + 2, this.customerId.indexOf(")") - 1);
-    console.log(id1);
-    this.ticketService.getTicketsForCustomer(id1).subscribe(res=>{
+    this.ticketService.getTicketsForCustomer(this.customerId).subscribe(res=>{
       this.tickets = res;
     })
   }
