@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"fmt"
 	"net/smtp"
 	"time"
 
@@ -69,7 +68,6 @@ func (service *EmailService) SetWantedNotifications(request *email_pb.UpdateWant
 
 	wantedNotifications, err := convert(request)
 
-	fmt.Print("PPPPPP\n\n")
 	if err != nil {
 		return &common_pb.RequestResult{
 			Code:    500,
@@ -77,7 +75,6 @@ func (service *EmailService) SetWantedNotifications(request *email_pb.UpdateWant
 		}, nil
 	}
 	err2 := service.emailRepository.SetWantedNotifications(&ctx, wantedNotifications)
-	fmt.Print("LLLLLL\n")
 	if err2 != nil {
 		return &common_pb.RequestResult{
 			Code:    500,
@@ -110,6 +107,7 @@ func (service *EmailService) SendEmail(ctx context.Context, request *email_pb.Em
 	subject := request.Subject
 	body := request.Body
 	message := []byte(subject + body)
+
 	auth := smtp.PlainAuth("", from, password, host)
 
 	err := smtp.SendMail(address, auth, from, to, message)
@@ -126,7 +124,7 @@ func (service *EmailService) SendEmail(ctx context.Context, request *email_pb.Em
 func (service *EmailService) CreatedReservationNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Reservation Created\n",
+		Subject: "Subject: Reservation Created\n",
 		Body:    "Someone created reservation. Please check your application.",
 	}
 
@@ -136,7 +134,7 @@ func (service *EmailService) CreatedReservationNotification(ctx context.Context,
 func (service *EmailService) AccommodationRatingGivenNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Accommodation rating given\n",
+		Subject: "Subject: Accommodation rating given\n",
 		Body:    "Someone rated your accommodation.",
 	}
 
@@ -146,7 +144,7 @@ func (service *EmailService) AccommodationRatingGivenNotification(ctx context.Co
 func (service *EmailService) CanceledReservationNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Reservation Canceled\n",
+		Subject: "Subject: Reservation Canceled\n",
 		Body:    "Someone canceled reservation. Please check your application.",
 	}
 
@@ -156,7 +154,7 @@ func (service *EmailService) CanceledReservationNotification(ctx context.Context
 func (service *EmailService) ProminentHostStatusNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Prominent host status changed\n",
+		Subject: "Subject: Prominent host status changed\n",
 		Body:    "Your host status is changed.",
 	}
 
@@ -166,7 +164,7 @@ func (service *EmailService) ProminentHostStatusNotification(ctx context.Context
 func (service *EmailService) HostRatingGivenNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Host Rating Given\n",
+		Subject: "Subject: Host Rating Given\n",
 		Body:    "Someone gave you rating. Please check your application.",
 	}
 
@@ -176,7 +174,7 @@ func (service *EmailService) HostRatingGivenNotification(ctx context.Context, re
 func (service *EmailService) HostResponseOnAccommodationRequestNotification(ctx context.Context, request *email_pb.Empty) (*common_pb.RequestResult, error) {
 	emailReq := &email_pb.EmailRequest{
 		Email:   request.Id,
-		Subject: "Host response on accommodaton request\n",
+		Subject: "Subject: Host response on accommodaton request\n",
 		Body:    "Host gave response on your accomodation request.",
 	}
 

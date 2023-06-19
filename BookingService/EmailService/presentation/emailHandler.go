@@ -40,8 +40,11 @@ func (handler *EmailHandler) SendEmail(ctx context.Context, request *email_pb.Em
 
 	//change
 	subject := request.Subject
+	fmt.Println(subject)
 	body := request.Body
+	fmt.Println(body)
 	message := []byte(subject + body)
+	fmt.Println(message)
 	auth := smtp.PlainAuth("", from, password, host)
 
 	err := smtp.SendMail(address, auth, from, to, message)
