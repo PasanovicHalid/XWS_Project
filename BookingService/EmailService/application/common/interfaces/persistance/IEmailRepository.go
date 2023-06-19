@@ -8,6 +8,7 @@ import (
 
 type IEmailRepository interface {
 	UpdateWantedNotifications(ctx *context.Context, notifications *domain.WantedNotification) error
+	SetWantedNotifications(ctx *context.Context, notifications *domain.WantedNotification) error
 	// FindReservationById(ctx *context.Context, id string) (*domain.Reservation, error)
 	// CreateReservation(ctx *context.Context, reservation *domain.Reservation) error
 	// UpdateReservation(ctx *context.Context, reservation *domain.Reservation) error

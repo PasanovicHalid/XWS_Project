@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -33,6 +34,25 @@ func (service *UserService) GetUserById(id string) (*domain.User, error) {
 func (service *UserService) CreateUser(user *domain.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+
+	notification := &email_pb.UpdateWantedNotificationsRequest{
+		Id:                       user.Email,
+		CreatedRequest:           true,
+		CanceledReservation:      true,
+		HostRatingGiven:          true,
+		AccommodationRatingGiven: true,
+		ProminentHost:            true,
+		HostResponded:            true,
+	}
+	emailService := service.initEmailServiceClient()
+	fmt.Print("AAAA\n\n")
+	_, err := emailService.SetWantedNotifications(ctx, notification)
+	fmt.Print(err)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+	fmt.Print("SSSSSSSS\n\n")
 	return service.userRepository.CreateUser(&ctx, user)
 }
 
@@ -63,6 +83,16 @@ func (service *UserService) GetAllUsersByIdList(idList []string) ([]*domain.User
 func (service *UserService) ChangeDistinguishedStatus(id string, status bool) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+	emailService := service.initEmailServiceClient()
+	request := email_pb.Empty{
+		Id: "bezbednost.projekat.2023@gmail.com",
+	}
+	_, err := emailService.ProminentHostStatusNotification(ctx, &request)
+	fmt.Print(err)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
 	return service.userRepository.ChangeDistinguishedStatus(&ctx, id, status)
 }
 
