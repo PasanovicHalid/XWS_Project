@@ -41,6 +41,32 @@ func (service *AccommodationService) CreateAccomodation(newAccomodation *accomod
 	}, nil
 }
 
+func (service *AccommodationService) GetLocationById(id string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Second)
+	defer cancel()
+	offers, _ := service.accomodationRepository.GetAllAccommodationOffers(&ctx)
+	fmt.Println(len(offers))
+	for _, offer := range offers {
+		fmt.Println("Offer: " + offer.Id)
+		// Access offer properties and perform operations as needed
+		// For example, if you want to print the offer details:
+		fmt.Println(offer.Id)
+		fmt.Println(id)
+		if offer.Id == id {
+			fmt.Println("TRUE")
+			accommodations, _ := service.accomodationRepository.GetAllAccommodations(&ctx)
+			fmt.Println(len(accommodations))
+			for _, accommodation := range accommodations {
+				fmt.Println("Accommodation: " + accommodation.Id)
+				if accommodation.Id == offer.AccommodationId {
+					return accommodation.Location, nil
+				}
+			}
+		}
+	}
+	return "", nil
+}
+
 func mapNewAccomodationToAccommodation(newAccomodation *accomodancePB.NewAccomodation) *domain.Accommodation {
 	return &domain.Accommodation{
 		Id:               newAccomodation.GetId(),

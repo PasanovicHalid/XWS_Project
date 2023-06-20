@@ -44,6 +44,12 @@ func SetupFlightControllerRoutes(router *mux.Router) {
 
 	getFlightCities := router.Methods(http.MethodGet).Subrouter()
 	getFlightCities.HandleFunc("/flights/cities", getAllCities)
+
+	getFilteredDeparturesRouter := router.Methods(http.MethodPost).Subrouter()
+	getFilteredDeparturesRouter.HandleFunc("/flights/filter/departures", getFilteredDepartures)
+
+	getFilteredDestinationsRouter := router.Methods(http.MethodPost).Subrouter()
+	getFilteredDestinationsRouter.HandleFunc("/flights/filter/destinations", getFilteredDestinations)
 }
 
 func CreateFlight(rw http.ResponseWriter, h *http.Request) {
@@ -130,6 +136,70 @@ func getFlights() ([]contracts.FlightContract, error, error) {
 
 	return flights, nil, nil
 
+}
+
+func getFilteredDepartures(w http.ResponseWriter, r *http.Request) {
+	// Parse the request body
+	filter := &contracts.DepartureFlightFilter{}
+	if err := filter.FromJSON(r.Body); err != nil {
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+
+	// Get all flights
+	flights, err, _ := getFlights()
+	if err != nil {
+		http.Error(w, "Failed to retrieve flights", http.StatusInternalServerError)
+		return
+	}
+
+	// Apply filtering criteria
+	filteredFlights := make([]contracts.FlightContract, 0)
+	for _, flight := range flights {
+		if flight.Start.Format("2006-01-02") == filter.Date &&
+			flight.DepartureLocation == filter.DepartureLocation &&
+			flight.DestinationLocation == filter.DestinationLocation &&
+			flight.AvailableNumberOfTickets >= filter.NumberOfTickets {
+			filteredFlights = append(filteredFlights, flight)
+		}
+	}
+
+	// Return the filtered flights as JSON response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(filteredFlights)
+}
+
+func getFilteredDestinations(w http.ResponseWriter, r *http.Request) {
+	// Parse the request body
+	filter := &contracts.DestinationFlightFilter{}
+	if err := filter.FromJSON(r.Body); err != nil {
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+
+	// Get all flights
+	flights, err, _ := getFlights()
+	if err != nil {
+		http.Error(w, "Failed to retrieve flights", http.StatusInternalServerError)
+		return
+	}
+
+	// Apply filtering criteria
+	filteredFlights := make([]contracts.FlightContract, 0)
+	for _, flight := range flights {
+		if flight.Start.Format("2006-01-02") == filter.Date &&
+			flight.DepartureLocation == filter.DepartureLocation &&
+			flight.DestinationLocation == filter.DestinationLocation &&
+			flight.AvailableNumberOfTickets >= filter.NumberOfTickets {
+			filteredFlights = append(filteredFlights, flight)
+		}
+	}
+
+	// Return the filtered flights as JSON response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(filteredFlights)
 }
 
 func GetFlight(w http.ResponseWriter, r *http.Request) {

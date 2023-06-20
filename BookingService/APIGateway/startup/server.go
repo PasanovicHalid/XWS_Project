@@ -58,6 +58,7 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(server.mux, jwtService, server.keyService)))
 	final_mux.Handle("/api/authenticate/login", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/register", mw.MiddlewareContentTypeSet(server.mux))
+	final_mux.Handle("/api/temp/recommendation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/authenticate/getPublicKey", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/user/updateUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
 	final_mux.Handle("/api/user/createUser", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareCheckIfUserRequestUsesIdentityOfLoggedInUser(server.mux, "identityId"), jwtService, server.keyService)))
@@ -79,7 +80,6 @@ func NewServer(config *Configurations) *Server {
 	final_mux.Handle("/api/reservation/rejectReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/cancelReservation", mw.MiddlewareContentTypeSet(server.mux))
 	final_mux.Handle("/api/reservation/getGuestAcceptedReservations/{id}", mw.MiddlewareContentTypeSet(server.mux))
-
 	final_mux.Handle("/api/user/host/distinguished", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Host"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/rating/get-accommodations-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
 	final_mux.Handle("/api/rating/get-hosts-for-rating", mw.MiddlewareContentTypeSet(mw.MiddlewareAuthentification(mw.MiddlewareAuthorization(server.mux, []string{"Guest"}), jwtService, server.keyService)))
@@ -160,6 +160,10 @@ func (server *Server) initCustomHandlers() {
 
 	ratingHandler := presentation.NewRatingHandler(ratingEndpoint, userEndpoint)
 	ratingHandler.Init(server.mux)
+
+	recommendationHandler := presentation.NewRecommendationHandler("temp")
+	recommendationHandler.Init(server.mux)
+
 }
 
 func (server *Server) Start() {

@@ -21,6 +21,7 @@ import { RatingDashboardComponent } from './rating/rating-dashboard/rating-dashb
 import { HostRatingsComponent } from './rating/host-ratings/host-ratings.component';
 import { AccommodationRatingsComponent } from './rating/accommodation-ratings/accommodation-ratings.component';
 import { AllRatingsComponent } from './rating/all-ratings/all-ratings.component';
+import { ReservationFlightsComponent } from './reservation/reservation-flights/reservation-flights.component';
 
 
 const routes: Routes = [
@@ -48,7 +49,7 @@ const routes: Routes = [
       { path: 'filter-accommodation-offers', component: FilterAccommodationOffersComponent, canActivate: [AuthGuard] },
       { path: 'pending-host-reservation', component: PendingHostReservationsComponent, canActivate: [AuthGuard] },
       { path: 'pending-guest-reservation', component: PendingGuestReservationsComponent, canActivate: [AuthGuard] },
-
+      { path: 'reservation-flights', component: ReservationFlightsComponent, canActivate: [AuthGuard]},
       { path: 'cancel-reservation', component: CancelReservationComponent, canActivate: [AuthGuard] },
       { 
         path: 'rating-dashboard', 

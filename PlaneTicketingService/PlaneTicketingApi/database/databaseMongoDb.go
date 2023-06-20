@@ -90,8 +90,8 @@ func OpenCollection(db *DatabaseMongoDb, collectionName string) *DatabaseCollect
 
 func insertData(db *DatabaseMongoDb, collectionName string) {
 	collection := db.client.Database("TicketingDB").Collection(collectionName)
-	timeStart, _ := time.Parse(time.RFC3339Nano, "2023-04-15T15:45:00Z")
-	timeEnd, _ := time.Parse(time.RFC3339Nano, "2023-04-15T17:00:00Z")
+	timeStart, _ := time.Parse(time.RFC3339Nano, "2023-06-25T15:45:00Z")
+	timeEnd, _ := time.Parse(time.RFC3339Nano, "2023-06-25T17:00:00Z")
 	flight := model.Flight{
 		DepartureLocation:   "Belgrade",
 		AvailableTickets:    180,
@@ -109,6 +109,26 @@ func insertData(db *DatabaseMongoDb, collectionName string) {
 	}
 
 	fmt.Printf("Inserted document with _id: %v\n", result.InsertedID)
+
+	timeStart2, _ := time.Parse(time.RFC3339Nano, "2023-06-25T15:45:00Z")
+	timeEnd2, _ := time.Parse(time.RFC3339Nano, "2023-06-25T17:00:00Z")
+	flight2 := model.Flight{
+		DepartureLocation:   "Belgrade",
+		AvailableTickets:    180,
+		DestinationLocation: "Istanbul",
+		MaxNumberOfTickets:  189,
+		Price:               59999,
+		StartDateTimeUTC:    timeStart2,
+		EndDateTimeUTC:      timeEnd2,
+	}
+
+	result2, err2 := collection.InsertOne(context.TODO(), flight2)
+
+	if err2 != nil {
+		fmt.Printf("Error inserting to collection")
+	}
+
+	fmt.Printf("Inserted document with _id: %v\n", result2.InsertedID)
 }
 
 func SetupDb(timeoutContext context.Context, storeLogger *log.Logger, logger *log.Logger) *DatabaseMongoDb {
@@ -116,7 +136,7 @@ func SetupDb(timeoutContext context.Context, storeLogger *log.Logger, logger *lo
 	if err != nil {
 		logger.Fatal(err)
 	}
-	// insert(db, "flight")
+	// insertData(db, "flight")
 	db.Ping()
 	return db
 }

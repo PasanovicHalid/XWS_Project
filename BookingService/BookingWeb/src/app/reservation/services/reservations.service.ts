@@ -5,6 +5,7 @@ import { CreateReservationRequest } from '../contracts/create-reservation-reques
 import { Reservation } from '../contracts/reservation.model';
 import { Reservations } from '../contracts/reservations.model';
 import { ReservationId } from '../contracts/reservation-id.model';
+import { LocationResponse } from '../contracts/LocationResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class ReservationsService {
 
   basePath: string = "/booking/api/reservation/"
   constructor(private http: HttpClient) { }
+
+  public GetOfferLocation(id: string) : Observable<LocationResponse> {
+    return this.http.get<LocationResponse>("/booking/api/accommodation/getAll/" + id, {headers: this.headers})
+  }
 
   public CreateReservation(reservation: CreateReservationRequest): Observable<any> {
     return this.http.post(this.basePath + 'createReservation', reservation, {headers: this.headers,})

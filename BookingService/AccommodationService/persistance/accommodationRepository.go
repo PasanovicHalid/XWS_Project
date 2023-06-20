@@ -41,7 +41,6 @@ func (repository *AccommodationRepository) CreateAccomodationOffer(ctx *context.
 func (repository *AccommodationRepository) GetAllAccommodationOffers(ctx *context.Context) ([]*domain.AccommodationOffer, error) {
 	filter := bson.M{"deleted": false}
 	options := options.Find()
-
 	cur, err := repository.accommodationsOffers.Find(*ctx, filter, options)
 	if err != nil {
 		return nil, err

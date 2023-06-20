@@ -39,6 +39,9 @@ func SetupUserControllerRoutes(router *mux.Router) {
 	loginRouter.HandleFunc("/users/login", Login)
 	loginRouter.Use(MiddlewareLoginDeserialization)
 
+	existingUser := router.Methods(http.MethodGet).Subrouter()
+	existingUser.HandleFunc("/users/exist/{email}", UserExist)
+
 	userInfoRouter := router.Methods(http.MethodGet).Subrouter()
 	userInfoRouter.HandleFunc("/users/info", GetUserInfo)
 	userInfoRouter.Use(middleware.MiddlewareAuthentication)
@@ -54,6 +57,35 @@ func SetupUserControllerRoutes(router *mux.Router) {
 		w.Write([]byte("test"))
 	})
 	getRouter.Use(MiddlewareApiKeyAuthorization)
+}
+
+func UserExist(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	email := vars["email"]
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	cur, err := UserController.UserCollection.Collection.Find(ctx, bson.M{})
+	if err != nil {
+		// Handle the error, possibly by writing an error response
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	for cur.Next(ctx) {
+		var user model.User
+		if err := cur.Decode(&user); err == nil {
+			if user.Identity.Username == email {
+				// User exists, write true to the response
+				w.Write([]byte("true"))
+				return
+			}
+		}
+	}
+
+	// User doesn't exist, write false to the response
+	w.Write([]byte("false"))
 }
 
 func SignUpCustomer(rw http.ResponseWriter, h *http.Request) {
