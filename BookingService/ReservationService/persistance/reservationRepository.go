@@ -3,6 +3,7 @@ package persistance
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/PasanovicHalid/XWS_Project/BookingService/ReservationService/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -123,6 +124,7 @@ func (repository *ReservationRepository) GetAllReservations(ctx *context.Context
 	for cur.Next(*ctx) {
 		reservation := &domain.Reservation{}
 		err := cur.Decode(&reservation)
+		fmt.Println(reservation.Id)
 		if err != nil {
 			return nil, err
 		}

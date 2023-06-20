@@ -7,14 +7,17 @@ import { FormsModule } from '@angular/forms';
 import { PendingHostReservationsComponent } from './pending-host-reservations/pending-host-reservations.component';
 import { PendingGuestReservationsComponent } from './pending-guest-reservations/pending-guest-reservations.component';
 import { CancelReservationComponent } from './cancel-reservation/cancel-reservation.component';
+import { ReservationFlightsComponent } from './reservation-flights/reservation-flights.component';
 
 
 @NgModule({
   declarations: [
     CreateReservationComponent,
     PendingHostReservationsComponent,
+    ReservationFlightsComponent,
     PendingGuestReservationsComponent,
     CancelReservationComponent,
+    ReservationFlightsComponent,
   ],
   imports: [
     CommonModule,

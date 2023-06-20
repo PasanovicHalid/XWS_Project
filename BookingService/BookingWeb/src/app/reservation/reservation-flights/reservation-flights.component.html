@@ -1,0 +1,108 @@
+<mat-form-field>
+  <input matInput placeholder="Departure" [(ngModel)]="departure">
+</mat-form-field>
+
+<!-- Destination Textbox -->
+<mat-form-field>
+  <input matInput placeholder="Destination" [(ngModel)]="destination">
+</mat-form-field>
+
+<!-- table.component.html -->
+<h4>Accepted reservations of user:</h4>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Position Column -->
+  <ng-container matColumnDef="offer">
+    <th mat-header-cell *matHeaderCellDef> Accommodation offer id </th>
+    <td mat-cell *matCellDef="let element"> {{element.accommodationOfferId}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="customer">
+    <th mat-header-cell *matHeaderCellDef> Customer id </th>
+    <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef> Number of guests </th>
+    <td mat-cell *matCellDef="let element"> {{element.numberOfGuests}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="start">
+    <th mat-header-cell *matHeaderCellDef> Start </th>
+    <td mat-cell *matCellDef="let element"> {{element.startDateTimeUtc}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="end">
+    <th mat-header-cell *matHeaderCellDef> End </th>
+    <td mat-cell *matCellDef="let element"> {{element.endDateTimeUtc}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.selected-row]="isSelected(row)" (click)="selectRow(row)"></tr>
+</table>
+
+<h4>Flight possible for reservation(departure):</h4>
+<table mat-table [dataSource]="flights1" class="mat-elevation-z8">
+  <ng-container matColumnDef="start date">
+    <th mat-header-cell *matHeaderCellDef> Start </th>
+    <td mat-cell *matCellDef="let element"> {{element.Start | date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="end date">
+    <th mat-header-cell *matHeaderCellDef> End </th>
+    <td mat-cell *matCellDef="let element"> {{element.End | date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="departure">
+    <th mat-header-cell *matHeaderCellDef> Departure Location </th>
+    <td mat-cell *matCellDef="let element"> {{element.DepartureLocation}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="destination">
+    <th mat-header-cell *matHeaderCellDef> Destination Location </th>
+    <td mat-cell *matCellDef="let element"> {{element.DestinationLocation}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Price of Ticket </th>
+    <td mat-cell *matCellDef="let element"> {{element.PriceOfTicket | currency}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;" (click)="selectFlightOne(row)"></tr>
+</table>
+
+<h4>Flight possible for reservation(departure):</h4>
+<table mat-table [dataSource]="flights2" class="mat-elevation-z8">
+  <ng-container matColumnDef="start date">
+    <th mat-header-cell *matHeaderCellDef> Start </th>
+    <td mat-cell *matCellDef="let element"> {{element.Start | date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="end date">
+    <th mat-header-cell *matHeaderCellDef> End </th>
+    <td mat-cell *matCellDef="let element"> {{element.End | date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="departure">
+    <th mat-header-cell *matHeaderCellDef> Departure Location </th>
+    <td mat-cell *matCellDef="let element"> {{element.DepartureLocation}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="destination">
+    <th mat-header-cell *matHeaderCellDef> Destination Location </th>
+    <td mat-cell *matCellDef="let element"> {{element.DestinationLocation}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Price of Ticket </th>
+    <td mat-cell *matCellDef="let element"> {{element.PriceOfTicket | currency}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"  (click)="selectFlightTwo(row)"></tr>
+</table>
+
+<button mat-raised-button color="primary" (click)="purchase()">Purchase</button>

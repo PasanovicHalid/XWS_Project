@@ -71,6 +71,19 @@ func (handler *AccommodationHandler) GetAllAccommodationsByIdList(ctx context.Co
 	return response, nil
 }
 
+func (handler *AccommodationHandler) GetAll(ctx context.Context, request *accomodancePB.GetOwnerIdRequest) (*accomodancePB.LocationResponse, error) {
+	accommodation, err := handler.accomodationService.GetLocationById(request.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &accomodancePB.LocationResponse{
+		Location: accommodation,
+	}
+
+	return response, nil
+}
+
 func convertToNewAccommodation(accommodation domain.Accommodation) *accomodancePB.NewAccomodation {
 	return &accomodancePB.NewAccomodation{
 		Id:                accommodation.Id,

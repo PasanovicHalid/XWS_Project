@@ -39,6 +39,11 @@ func (handler *AccommodationHandler) Init(mux *runtime.ServeMux) {
 	if err != nil {
 		panic(err)
 	}
+
+	err = mux.HandlePath("GET", "/api/accommodation/getAll/{id}", handler.GetAllHandler)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (handler *AccommodationHandler) GetAccommodationsForRating(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -272,6 +277,43 @@ func (handler *AccommodationHandler) getRatingsOfCustomer(id string) (*ratingPB.
 	return ratingClient.GetAllRatingsMadeByCustomer(context.TODO(), &ratingPB.GetAllRatingsMadeByCustomerRequest{
 		Id: id,
 	})
+}
+
+func (handler *AccommodationHandler) GetAllHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	// Extract the ID from the request, assuming it's in the query parameters
+	id := pathParams["id"]
+
+	// Call the getAll method with the extracted ID
+	response, err := handler.getAll(id)
+	if err != nil {
+		// Handle the error, such as returning an appropriate HTTP response
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Assuming LocationResponse is the response message type
+	// Do something with the response if needed
+
+	// Convert the response to JSON and write it to the response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// Modify the getAll method to match the new signature
+func (handler *AccommodationHandler) getAll(id string) (*accommodationPB.LocationResponse, error) {
+	request := &accommodationPB.GetOwnerIdRequest{
+		Id: id,
+	}
+	accommodationClient := grpcservices.NewAccommodationClient(handler.AccommodationAddress)
+	response, err := accommodationClient.GetAll(context.TODO(), request)
+	if err != nil {
+		return nil, err
+	}
+
+	// Assuming LocationResponse is the response message type
+	// Do something with the response if needed
+
+	return response, nil
 }
 
 func (handler *AccommodationHandler) getAccomodationsFromIdList(idList *[]string) (*accommodationPB.GetFilteredAccommodationsResponse, error) {
